@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e7bf381a6e4d376428cab3eefd5c7cfd, type: 3}
+  m_Name: Europe
+  m_EditorClassIdentifier: 
+  size_x: 10
+  size_z: 10
+  tileOffset_x: 19
+  tileOffset_z: 19
+  tileSettings:
+  - {fileID: 11400000, guid: 6acc457604d815c43ac8083381efca34, type: 2}
+  - {fileID: 11400000, guid: dd6e45e19a0033f41aa15edde7787174, type: 2}

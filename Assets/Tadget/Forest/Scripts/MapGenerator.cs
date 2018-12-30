@@ -1,92 +1,65 @@
 ﻿namespace Tadget
 {
+    using System;
     using System.Collections;
     using System.Collections.Generic;
     using UnityEngine;
+    using Random = UnityEngine.Random;
 
     public class MapGenerator : MonoBehaviour
     {
-        public GameObject tilePrefab;
-        public GameObject treePrefab;
-        public GameObject mapContainer;
-        public float tileOffset = 10f;
+        private GameObject mapContainer;
+        public MapSettings mapSettings;
 
-        [SerializeField]
-        public List<List<MapTile>> map;
-
-        void Start()
+        private void OnValidate()
         {
-            GenerateMap();
+            Debug.AssertFormat(mapSettings != null, "Missing Map Settings");
+            if(mapSettings != null)
+            {
+                Debug.AssertFormat(mapSettings.tileSettings != null &&
+                    mapSettings.tileSettings.Count > 0, "Missing Tile Settings inside Map Settings");
+            }
         }
 
-        void GenerateMap()
+        public Dictionary<Vector3, MapTile> GenerateMapLayout()
         {
-            map = new List<List<MapTile>>();
+            Dictionary<Vector3, MapTile> mapLayout = new Dictionary<Vector3, MapTile>();
             mapContainer = new GameObject("Map container");
 
-            for (int y = 0; y < 10; y++)
-            {
-                List<MapTile> row = new List<MapTile>();
-                for (int x = 0; x < 10; x++)
+            for (int z = 0; z < mapSettings.size_z; z++)
+                for (int x = 0; x < mapSettings.size_x; x++)
                 {
-                    var pos_x = x * tileOffset + x;
-                    var pos_y = y * tileOffset + y;
-                    var tile = ScriptableObject.CreateInstance<MapTile>().Init(pos_x, pos_y, tilePrefab, treePrefab);
-                    row.Add(tile);
-                    var tile_go = tile.Generate();
-                    tile_go.transform.parent = mapContainer.transform;
+                    Vector3 pos = new Vector3(
+                        x * mapSettings.tileOffset_x + x,
+                        0,
+                        z * mapSettings.tileOffset_z + z);
+
+                    var tile = ScriptableObject.CreateInstance<MapTile>().Init(
+                        mapSettings.tileSettings[Random.Range(0, mapSettings.tileSettings.Count)]);
+
+                    mapLayout.Add(pos, tile);
                 }
-                map.Add(row);
-            }
+            return mapLayout;
         }
 
-        void Update()
+        public void LoadMapLayout(Dictionary<Vector3, MapTile> mapLayout)
         {
-
-        }
-    }
-
-    public class MapTile : ScriptableObject
-    {
-        public class Pos
-        {
-            public float x, y;
-
-            public Pos(float x, float y)
+            foreach (KeyValuePair<Vector3, MapTile> tile in mapLayout)
             {
-                this.x = x;
-                this.y = y;
+                var tile_go = tile.Value.Create();
+                tile_go.transform.position = tile.Key;
+                tile_go.transform.parent = mapContainer.transform;
             }
         }
 
-        public Pos pos;
-        public GameObject terrain;
-        public GameObject tree;
-
-        public MapTile Init(float x, float y, GameObject terrain, GameObject tree)
+        public void SaveMapLayout(Dictionary<Vector3, MapTile> mapLayout)
         {
-            this.pos = new Pos(x, y);
-            this.terrain = terrain;
-            this.tree = tree;
-            return this;
-        }
-
-        public GameObject Generate()
-        {
-            GameObject t = new GameObject("tile");
-            if(terrain != null)
-            {
-                terrain = Instantiate(terrain, new Vector3(pos.x, 0, pos.y), Quaternion.Euler(new Vector3(-90f,0,0)));
-                terrain.transform.parent = t.transform;
-            }
-            if (tree != null)
-            {
-                tree = Instantiate(tree, new Vector3(pos.x, 0, pos.y), Quaternion.Euler(new Vector3(-90f, 0, 0)));
-                tree.transform.parent = t.transform;
-            }
-            return t;
 
         }
+
+        /// Generate layout or load previous layout
+        /// Add cabin
+        /// Activate relevant map parts
+        /// Save layout
     }
 }
-
