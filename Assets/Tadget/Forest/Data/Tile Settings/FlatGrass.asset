@@ -9,7 +9,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ef4830b82d7cd6f4d8489b5595eb6abc, type: 3}
-  m_Name: Spawn
+  m_Name: FlatGrass
   m_EditorClassIdentifier: 
-  trees: []
-  terrains: []
+  objs:
+  - {fileID: 169050, guid: ff2098c0501788540ac0f68232a120ca, type: 2}
+  - {fileID: 155580, guid: 149bd14d5c2800b42ba8f89d0c68abd3, type: 2}
+  - {fileID: 189718, guid: bdb2dc9adbae3fb479d566153fc7b1a8, type: 2}
+  terrains:
+  - {fileID: 144034, guid: b7a5c51d805970e40af12625f2d90a91, type: 2}
+  isSpawn: 0

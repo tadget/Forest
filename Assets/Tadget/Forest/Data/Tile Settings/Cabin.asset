@@ -9,8 +9,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ef4830b82d7cd6f4d8489b5595eb6abc, type: 3}
-  m_Name: Wet
+  m_Name: Cabin
   m_EditorClassIdentifier: 
-  trees: []
+  objs:
+  - {fileID: 1706827740856462, guid: ddde1b136783d9f46ae9037071f4c522, type: 2}
   terrains:
-  - {fileID: 1124564022722800, guid: 525fda9417ad9c241accacb959259913, type: 2}
+  - {fileID: 144034, guid: b7a5c51d805970e40af12625f2d90a91, type: 2}
+  isSpawn: 1

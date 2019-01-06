@@ -7,22 +7,24 @@
     [CreateAssetMenu(fileName = "Tile Settings", menuName = "Map/Tile Settings", order = 1)]
     public class TileSettings : ScriptableObject
     {
-        public List<GameObject> trees;
+        public List<GameObject> objs;
         public List<GameObject> terrains;
+        public bool isSpawn;
 
-        public bool TryGetTree(out GameObject tree)
+        public bool TryGetObject(out GameObject obj)
         {
-            if (trees != null && trees.Count > 0)
+            if (objs != null && objs.Count > 0)
             {
-                tree = Instantiate(
-                    trees[Random.Range(0, trees.Count)],
+                var p = objs[Random.Range(0, objs.Count)];
+                obj = Instantiate(
+                    p,
                     Vector3.zero,
-                    Quaternion.Euler(new Vector3(-90f, 0, 0)));
+                    p.transform.rotation);
                 return true;
             }
             else
             {
-                tree = null;
+                obj = null;
                 return false;
             }
         }
@@ -31,10 +33,11 @@
         {
             if (terrains != null && terrains.Count > 0)
             {
+                var p = terrains[Random.Range(0, terrains.Count)];
                 terrain = Instantiate(
-                    terrains[Random.Range(0, terrains.Count)],
+                    p,
                     Vector3.zero,
-                    Quaternion.Euler(new Vector3(-90f, 0, 0)));
+                   p.transform.rotation);
                 return true;
             }
             else

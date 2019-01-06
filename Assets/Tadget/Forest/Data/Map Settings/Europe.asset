@@ -11,10 +11,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e7bf381a6e4d376428cab3eefd5c7cfd, type: 3}
   m_Name: Europe
   m_EditorClassIdentifier: 
-  size_x: 10
-  size_z: 10
-  tileOffset_x: 19
-  tileOffset_z: 19
-  tileSettings:
+  tileOffsetX: 19
+  tileOffsetZ: 19
+  yardSizeX: 6
+  yardSizeZ: 4
+  outerLayerCount: 6
+  yardTiles:
+  - {fileID: 11400000, guid: d737bcdde9884ea46a31f8659593d62d, type: 2}
   - {fileID: 11400000, guid: 6acc457604d815c43ac8083381efca34, type: 2}
+  outerLayerTiles:
+  - {fileID: 11400000, guid: 3bae7fea5c9b84f498138ef7c3df4fbe, type: 2}
   - {fileID: 11400000, guid: dd6e45e19a0033f41aa15edde7787174, type: 2}
+  - {fileID: 11400000, guid: d737bcdde9884ea46a31f8659593d62d, type: 2}
+  biome1Tiles:
+  - {fileID: 11400000, guid: 6acc457604d815c43ac8083381efca34, type: 2}

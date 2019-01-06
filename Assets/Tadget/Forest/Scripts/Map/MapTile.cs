@@ -22,10 +22,17 @@
                 terrain.transform.parent = tile.transform;
             }
 
-            GameObject tree;
-            if(tileSettings.TryGetTree(out tree))
+            int count = tileSettings.isSpawn ? 1 : Random.Range(3, 30);
+            for (int i = 0; i < count; i++)
             {
-                tree.transform.parent = tile.transform;
+                GameObject tree;
+                if(tileSettings.TryGetObject(out tree))
+                {
+                    float offset_x = Random.Range(-9f, 9f);
+                    float offset_z = Random.Range(-9f, 9f);
+                    tree.transform.position += new Vector3(offset_x, 0f, offset_z);
+                    tree.transform.parent = tile.transform;
+                }
             }
 
             return tile;
