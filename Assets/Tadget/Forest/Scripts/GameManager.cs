@@ -1,12 +1,16 @@
 ﻿namespace Tadget
 {
     using UnityEngine;
+    using UnityEngine.UI;
 
     [RequireComponent (typeof(MapGenerator))]
     public class GameManager : MonoBehaviour
     {
         public MapGenerator mapGenerator;
         public GameObject player;
+        private GameObject cameraPlayer;
+        public Text positionDisplay;
+        private TileMonitor tileMonitor;
 
         private void Awake()
         {
@@ -18,11 +22,13 @@
             InitVariables();
             LoadMap();
             PlacePlayer();
+            LinkPlayerData();
         }
 
         private void Update()
         {
             CheckForInput();
+            UpdatePositionDisplay();
         }
 
         private void InitVariables()
@@ -37,9 +43,15 @@
         }
 
         private void PlacePlayer()
+        {   
+            if(cameraPlayer == null)
+                cameraPlayer = Instantiate(player);
+            cameraPlayer.transform.position = new Vector3(60f, 0.5f, 20f);
+        }
+
+        private void LinkPlayerData()
         {
-            var cam = Instantiate(player);
-            cam.transform.position = new Vector3(60f, 0.5f, 20f);
+            tileMonitor = cameraPlayer.GetComponentInChildren<TileMonitor>();
         }
 
         private void Regenerate()
@@ -53,6 +65,22 @@
             if(Input.GetKeyDown(KeyCode.R))
             {
                 Regenerate();
+            }
+            if(Input.GetKeyDown(KeyCode.T))
+            {
+                PlacePlayer();
+            }
+        }
+
+        private void UpdatePositionDisplay()
+        {
+            if(tileMonitor)
+            {
+                positionDisplay.text = tileMonitor.tileDisplay;
+            }
+            else
+            {
+                positionDisplay.text = "No positional data";
             }
         }
     }

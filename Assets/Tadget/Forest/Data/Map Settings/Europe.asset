@@ -16,6 +16,9 @@ MonoBehaviour:
   yardSizeX: 6
   yardSizeZ: 6
   outerLayerCount: 6
+  tileLayerMask:
+    serializedVersion: 2
+    m_Bits: 512
   yardTiles:
   - {fileID: 11400000, guid: d737bcdde9884ea46a31f8659593d62d, type: 2}
   - {fileID: 11400000, guid: 6acc457604d815c43ac8083381efca34, type: 2}

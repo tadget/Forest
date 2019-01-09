@@ -11,12 +11,14 @@
 
         public GameObject Create(LayoutTile layoutTile)
         {
-            var tile = new GameObject(string.Format("{0}_{1}", layoutTile.mapTile.name, this.GetHashCode()));
-
-            GameObject terrain;
-            if (layoutTile.mapTile.TryGetTerrain(out terrain))
+            GameObject tile;
+            if (layoutTile.mapTile.TryGetTerrain(out tile))
             {
-                terrain.transform.parent = tile.transform;
+                tile.name = string.Format("{0}_{1}", layoutTile.mapTile.name, this.GetHashCode());
+            }
+            else
+            {
+                tile = new GameObject(string.Format("{0}_{1}", layoutTile.mapTile.name, this.GetHashCode()));
             }
 
             int count = layoutTile.mapTile.isFixedObjectCount ? layoutTile.mapTile.count : Random.Range(3, 30);
