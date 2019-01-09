@@ -1,41 +1,52 @@
 ﻿namespace Tadget
 {
+    using System.Collections;
+    using System.Collections.Generic;
     using UnityEngine;
 
+    [CreateAssetMenu(fileName = "Tile", menuName = "Map/Tile", order = 1)]
     public class MapTile : ScriptableObject
     {
-        public TileSettings tileSettings;
+        public List<GameObject> objs;
+        public List<GameObject> terrains;
+        public bool isRandomized;
+        public bool isFixedObjectCount;
+        public int count;
 
-        public MapTile Init(TileSettings tileSettings)
+        public bool TryGetObject(out GameObject obj)
         {
-            this.tileSettings = tileSettings;
-            return this;
+            if (objs != null && objs.Count > 0)
+            {
+                var p = objs[Random.Range(0, objs.Count)];
+                obj = Instantiate(
+                    p,
+                    isRandomized ? new Vector3(0,-0.5f,0f) : Vector3.zero,
+                    p.transform.rotation);
+                return true;
+            }
+            else
+            {
+                obj = null;
+                return false;
+            }
         }
 
-        public GameObject Create()
+        public bool TryGetTerrain(out GameObject terrain)
         {
-            var tile = new GameObject(string.Format("{0}_{1}", tileSettings.name, this.GetHashCode()));
-
-            GameObject terrain;
-            if (tileSettings.TryGetTerrain(out terrain))
+            if (terrains != null && terrains.Count > 0)
             {
-                terrain.transform.parent = tile.transform;
+                var p = terrains[Random.Range(0, terrains.Count)];
+                terrain = Instantiate(
+                    p,
+                    Vector3.zero,
+                   p.transform.rotation);
+                return true;
             }
-
-            int count = tileSettings.isSpawn ? 1 : Random.Range(3, 30);
-            for (int i = 0; i < count; i++)
+            else
             {
-                GameObject tree;
-                if(tileSettings.TryGetObject(out tree))
-                {
-                    float offset_x = Random.Range(-9f, 9f);
-                    float offset_z = Random.Range(-9f, 9f);
-                    tree.transform.position += new Vector3(offset_x, 0f, offset_z);
-                    tree.transform.parent = tile.transform;
-                }
+                terrain = null;
+                return false;
             }
-
-            return tile;
         }
     }
 }

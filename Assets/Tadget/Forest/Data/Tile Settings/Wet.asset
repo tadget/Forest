@@ -14,4 +14,6 @@ MonoBehaviour:
   objs: []
   terrains:
   - {fileID: 1124564022722800, guid: 525fda9417ad9c241accacb959259913, type: 2}
-  isSpawn: 0
+  isRandomized: 1
+  isFixedObjectCount: 0
+  count: 0

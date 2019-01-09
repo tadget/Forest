@@ -20,10 +20,11 @@
 
         [Header("Tile settings")]
         [Header("Fixed")]
-        public List<TileSettings> yardTiles;
-        public List<TileSettings> outerLayerTiles;
+        public List<MapTile> yardTiles;
+        public List<MapTile> outerLayerTiles;
+        public GameObject cabin;
 
         [Header("Randomized")]
-        public List<TileSettings> biome1Tiles;
+        public List<MapTile> biome1Tiles;
     }
 }

@@ -30,9 +30,9 @@
             Destroy(GameObject.Find("Map container"));
         }
 
-        public Dictionary<Vector3, MapTile> GenerateMapLayout()
+        public List<LayoutTile> GenerateMapLayout()
         {
-            Dictionary<Vector3, MapTile> mapLayout = new Dictionary<Vector3, MapTile>();
+            List<LayoutTile> mapLayout = new List<LayoutTile>();
             mapContainer = new GameObject("Map container");
 
             /// Generate the yard region (0,0) (yardSizeX,yardSizeZ)
@@ -46,20 +46,23 @@
                         z * mapSettings.tileOffsetZ + z);
 
                     // Choose tile type
-                    TileSettings tileSettings;
-                    if(x > 0 && x < mapSettings.yardSizeX - 1 &&
+                    MapTile mapTile;
+                    if(x == 3 && z == 2)
+                    {
+                        mapTile = mapSettings.yardTiles[2];
+                    }
+                    else if(x > 0 && x < mapSettings.yardSizeX - 1 &&
                        z > 0 && z < mapSettings.yardSizeZ - 1)
                     {
-                        tileSettings = mapSettings.yardTiles[0];
+                        mapTile = mapSettings.yardTiles[0];
                     }
                     else
                     {
-                        tileSettings = mapSettings.yardTiles[1];
+                        mapTile = mapSettings.yardTiles[1];
                     }
-                    // Create tile description and add to map
-                    MapTile tile;
-                    tile = ScriptableObject.CreateInstance<MapTile>().Init(tileSettings);
-                    mapLayout.Add(pos, tile);
+                    // Create layout tile and add to map
+                    LayoutTile layoutTile = new LayoutTile(mapTile, new Vector3(x, 0, z), pos);
+                    mapLayout.Add(layoutTile);
                 }
 
             /// Generate the outer regions with decreasing obstacle density
@@ -82,51 +85,48 @@
                             z * mapSettings.tileOffsetZ + z);
 
                         // Choose tile type
-                        TileSettings tileSettings;
+                        MapTile mapTile;
                         switch (layer)  
                         {
                             case 0:
                             case 1:
                             {
-                                tileSettings = mapSettings.outerLayerTiles[0];
+                                mapTile = mapSettings.outerLayerTiles[0];
                                 break;
                             }
                             case 2:
                             case 3:
                             {
                                 var r = Random.Range(0,2);
-                                tileSettings = mapSettings.outerLayerTiles[r];
+                                mapTile = mapSettings.outerLayerTiles[r];
                                 break;
                             }
                             case 4:
                             case 5:
+                            default:
                             {
                                 var r = Random.Range(0,3);
-                                Debug.LogFormat("Layer {0} tile random {1}", layer, r);
-                                tileSettings = mapSettings.outerLayerTiles[r];
+                                mapTile = mapSettings.outerLayerTiles[r];
                                 break;
                             }    
-                            default:
-                                tileSettings = mapSettings.outerLayerTiles[layer];
-                                break;
                         }
-                        // Create tile description and add to map
-                        MapTile tile;
-                        tile = ScriptableObject.CreateInstance<MapTile>().Init(tileSettings);
-                        mapLayout.Add(pos, tile);
+                        // Create layout tile and add to map
+                        LayoutTile layoutTile = new LayoutTile(mapTile, new Vector3(x, 0, z), pos);
+                        mapLayout.Add(layoutTile);
                     }
             }
-
-
             return mapLayout;
         }
 
-        public void LoadMapLayout(Dictionary<Vector3, MapTile> mapLayout)
+        public void LoadMapLayout(List<LayoutTile> mapLayout)
         {
-            foreach (KeyValuePair<Vector3, MapTile> tile in mapLayout)
+            TileFactory tileFactory = new TileFactory();
+            foreach (LayoutTile tile in mapLayout)
             {
-                var tile_go = tile.Value.Create();
-                tile_go.transform.position = tile.Key;
+                var tile_go = tileFactory.Create(tile);
+                var tileID = tile_go.AddComponent<TileID>();
+                tileID.gridPosition = tile.gridPosition;
+                tile_go.transform.position = tile.worldPosition;
                 tile_go.transform.parent = mapContainer.transform;
             }
         }

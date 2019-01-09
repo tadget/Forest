@@ -15,4 +15,6 @@ MonoBehaviour:
   - {fileID: 1706827740856462, guid: ddde1b136783d9f46ae9037071f4c522, type: 2}
   terrains:
   - {fileID: 144034, guid: b7a5c51d805970e40af12625f2d90a91, type: 2}
-  isSpawn: 1
+  isRandomized: 0
+  isFixedObjectCount: 1
+  count: 1

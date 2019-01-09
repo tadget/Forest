@@ -39,7 +39,7 @@
         private void PlacePlayer()
         {
             var cam = Instantiate(player);
-            cam.transform.position = new Vector3(0f, 0.5f, 0f);
+            cam.transform.position = new Vector3(60f, 0.5f, 20f);
         }
 
         private void Regenerate()
