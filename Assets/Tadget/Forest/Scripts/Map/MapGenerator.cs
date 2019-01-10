@@ -8,8 +8,8 @@
 
     public class MapGenerator : MonoBehaviour
     {
-        private GameObject mapContainer;
         public MapSettings mapSettings;
+        public TileFactory tileFactory;
 
         private void OnValidate()
         {
@@ -17,7 +17,7 @@
             if(mapSettings != null)
             {
                 Debug.AssertFormat(mapSettings.yardTiles != null &&
-                    mapSettings.yardTiles.Count > 1, "Missing Tile Settings inside Map Settings");
+                    mapSettings.yardTiles.Count > 2, "Missing Tile Settings inside Map Settings");
                 Debug.AssertFormat(mapSettings.outerLayerTiles != null &&
                     mapSettings.outerLayerTiles.Count >= 3, "Missing Tile Settings inside Map Settings");
                 Debug.AssertFormat(mapSettings.biome1Tiles != null &&
@@ -25,15 +25,14 @@
             }
         }
 
-        public void DestroyMap()
+        private void Start() 
         {
-            Destroy(GameObject.Find("Map container"));
+            tileFactory = new TileFactory();
         }
 
-        public List<LayoutTile> GenerateMapLayout()
+        public List<LayoutTile> GenerateHomeLayout()
         {
             List<LayoutTile> mapLayout = new List<LayoutTile>();
-            mapContainer = new GameObject("Map container");
 
             /// Generate the yard region (0,0) (yardSizeX,yardSizeZ)
             for (int z = 0; z < mapSettings.yardSizeZ; z++)
@@ -118,27 +117,23 @@
             return mapLayout;
         }
 
-        public void LoadMapLayout(List<LayoutTile> mapLayout)
+        public List<GameObject> InstantiateMapLayout(List<LayoutTile> mapLayout)
         {
-            TileFactory tileFactory = new TileFactory();
-            foreach (LayoutTile tile in mapLayout)
+            List<GameObject> tiles = new List<GameObject>();
+            foreach (LayoutTile layoutTile in mapLayout)
             {
-                var tile_go = tileFactory.Create(tile);
+                var tile_go = tileFactory.Create(layoutTile);
                 var tileID = tile_go.AddComponent<TileID>();
-                tileID.gridPosition = tile.gridPosition;
-                tile_go.transform.position = tile.worldPosition;
-                tile_go.transform.parent = mapContainer.transform;
+                tileID.gridPosition = layoutTile.gridPosition;
+                tile_go.transform.position = layoutTile.worldPosition;
+                tiles.Add(tile_go);
             }
+            return tiles;
         }
 
-        public void SaveMapLayout(Dictionary<Vector3, MapTile> mapLayout)
+        public void SaveMapLayout(List<LayoutTile> mapLayout)
         {
-
+            throw new System.NotImplementedException("Map saving not implemented!");
         }
-
-        /// Generate layout or load previous layout
-        /// Add cabin
-        /// Activate relevant map parts
-        /// Save layout
     }
 }

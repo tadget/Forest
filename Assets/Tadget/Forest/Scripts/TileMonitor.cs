@@ -1,4 +1,4 @@
-﻿namespace Tadget
+﻿	namespace Tadget
 {
 	using System.Collections;
 	using System.Collections.Generic;
@@ -24,13 +24,13 @@
 		private void RaycastDown()
 		{
 			RaycastHit hit;
-			if (Physics.Raycast(transform.position, transform.TransformDirection(Vector3.down), out hit, Mathf.Infinity, layerMask))
+			if (Physics.Raycast(transform.position, Vector3.down, out hit, Mathf.Infinity, layerMask))
 			{
-				Debug.DrawRay(transform.position, transform.TransformDirection(Vector3.down) * hit.distance, Color.yellow);
+				Debug.DrawRay(transform.position, Vector3.down * hit.distance, Color.yellow);
 				
 				if(hit.transform.gameObject != currentTile)
 				{
-					TileID tileID = hit.transform.GetComponentInParent<TileID>();
+					TileID tileID = hit.transform.GetComponent<TileID>();
 					currentTile = tileID.gameObject;
 					if(tileID == null)
 					{

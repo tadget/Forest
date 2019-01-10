@@ -20,7 +20,7 @@
                 var p = objs[Random.Range(0, objs.Count)];
                 obj = Instantiate(
                     p,
-                    isRandomized ? new Vector3(0,-0.5f,0f) : Vector3.zero,
+                    Vector3.zero,
                     p.transform.rotation);
                 return true;
             }

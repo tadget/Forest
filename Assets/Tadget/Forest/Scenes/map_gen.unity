@@ -14,7 +14,7 @@ OcclusionCullingSettings:
 RenderSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 9
-  m_Fog: 1
+  m_Fog: 0
   m_FogColor: {r: 1, g: 0.9143044, b: 0.7783019, a: 1}
   m_FogMode: 1
   m_FogDensity: 0.1
@@ -26,7 +26,7 @@ RenderSettings:
   m_AmbientIntensity: 1
   m_AmbientMode: 3
   m_SubtractiveShadowColor: {r: 0.42, g: 0.478, b: 0.627, a: 1}
-  m_SkyboxMaterial: {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
+  m_SkyboxMaterial: {fileID: 2100000, guid: bf1bf92a3ce592e40b898be6c21cc2fa, type: 2}
   m_HaloStrength: 0.5
   m_FlareStrength: 1
   m_FlareFadeSpeed: 3
@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 1440828961}
-  m_IndirectSpecularColor: {r: 0.5598584, g: 0.5598584, b: 0.6686841, a: 1}
+  m_IndirectSpecularColor: {r: 0.24414524, g: 0.30623993, b: 0.36262393, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -141,7 +141,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 745c69dc59f8fe247847118935dd26be, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mapSettings: {fileID: 11400000, guid: 07020883f74f56044aa2ae753390b42e, type: 2}
+  mapSettings: {fileID: 11400000, guid: 08873d48f3894814e97b108260517b24, type: 2}
 --- !u!4 &995101720
 Transform:
   m_ObjectHideFlags: 0
@@ -167,7 +167,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mapGenerator: {fileID: 995101719}
-  player: {fileID: 1656244399378930, guid: 791a8710770e0ca4ab2d247abb92bf10, type: 2}
+  player: {fileID: 1509273707262670, guid: 84a4ed9cd9318034eb5955c9e49d0b6e, type: 2}
+  playerSpawnPosition: {x: 0, y: 1, z: 0}
   positionDisplay: {fileID: 1049124648}
 --- !u!1 &1049124646
 GameObject:

@@ -14,11 +14,11 @@
             GameObject tile;
             if (layoutTile.mapTile.TryGetTerrain(out tile))
             {
-                tile.name = string.Format("{0}_{1}", layoutTile.mapTile.name, this.GetHashCode());
+                tile.name = string.Format("{0}_{1}", layoutTile.mapTile.name, tile.GetHashCode());
             }
             else
             {
-                tile = new GameObject(string.Format("{0}_{1}", layoutTile.mapTile.name, this.GetHashCode()));
+                tile = new GameObject(string.Format("{0}_{1}", layoutTile.mapTile.name, tile.GetHashCode()));
             }
 
             int count = layoutTile.mapTile.isFixedObjectCount ? layoutTile.mapTile.count : Random.Range(3, 30);

@@ -22,7 +22,6 @@
         [Header("Fixed")]
         public List<MapTile> yardTiles;
         public List<MapTile> outerLayerTiles;
-        public GameObject cabin;
 
         [Header("Randomized")]
         public List<MapTile> biome1Tiles;

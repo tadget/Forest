@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e7bf381a6e4d376428cab3eefd5c7cfd, type: 3}
+  m_Name: LightWeight
+  m_EditorClassIdentifier: 
+  tileOffsetX: 3.5
+  tileOffsetZ: 3.5
+  yardSizeX: 6
+  yardSizeZ: 4
+  outerLayerCount: 3
+  yardTiles:
+  - {fileID: 11400000, guid: 31d39748de8eb834d850cbb4f3ed05c2, type: 2}
+  - {fileID: 11400000, guid: 31d39748de8eb834d850cbb4f3ed05c2, type: 2}
+  - {fileID: 11400000, guid: 506d8f97a7994b340a0fe54f58f1df8d, type: 2}
+  outerLayerTiles:
+  - {fileID: 11400000, guid: 4ae85362565001d48b5c756a7dc226c0, type: 2}
+  - {fileID: 11400000, guid: 4ae85362565001d48b5c756a7dc226c0, type: 2}
+  - {fileID: 11400000, guid: 4ae85362565001d48b5c756a7dc226c0, type: 2}
+  biome1Tiles:
+  - {fileID: 11400000, guid: 6beb5eeb42e93b3419f833aa5468eeb8, type: 2}
