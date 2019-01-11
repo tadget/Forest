@@ -189,6 +189,7 @@ GameObject:
   - component: {fileID: 52570292}
   - component: {fileID: 52570291}
   - component: {fileID: 52570290}
+  - component: {fileID: 52570293}
   m_Layer: 0
   m_Name: Game Manager
   m_TagString: Untagged
@@ -219,9 +220,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7e37446362085804187d2c3f24d5db58, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mapGenerator: {fileID: 52570290}
-  player: {fileID: 1656244399378930, guid: 791a8710770e0ca4ab2d247abb92bf10, type: 2}
-  positionDisplay: {fileID: 1212278380}
+  settings: {fileID: 11400000, guid: 05b521c209cdd294ca588b80a14f9053, type: 2}
 --- !u!4 &52570292
 Transform:
   m_ObjectHideFlags: 0
@@ -235,6 +234,18 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &52570293
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 52570289}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dbad921c0aa673b44b0f5385892fb7ec, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  positionDisplay: {fileID: 1212278380}
 --- !u!1 &164707988
 GameObject:
   m_ObjectHideFlags: 0

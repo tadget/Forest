@@ -4,18 +4,30 @@
     using UnityEngine.UI;
     using System.Collections.Generic;
 
-    [RequireComponent (typeof(MapGenerator))]
+    [RequireComponent (typeof(MapGenerator), typeof(UIManager))]
     public class GameManager : MonoBehaviour
-    {
-        public MapGenerator mapGenerator;
-        public GameObject player;
-        public Vector3 playerSpawnPosition = new Vector3(60f, 0.5f, 20f);
-        private GameObject cameraPlayer;
-        public Text positionDisplay;
-        private TileMonitor tileMonitor;
+    {   
+        /// Map
+        private MapGenerator mapGenerator;
 
-        public List<LayoutTile> homeLayout;
         private GameObject mapContainer;
+        private List<LayoutTile> homeLayout;
+        private List<LayoutTile> forestLayout;
+
+        /// Player
+        private GameObject playerInstance;
+        private TileMonitor playerTileMonitor;
+
+        /// UI
+        private UIManager ui;
+
+        [Header("Settings")]
+        public GameSettings settings;
+
+        private void OnValidate()
+        {
+            Debug.Assert(settings != null, "Missing Game Settings");
+        }
 
         private void Awake()
         {
@@ -40,6 +52,7 @@
         {
             mapContainer = new GameObject("Map Container");
             mapGenerator = GetComponent<MapGenerator>();
+            ui = GetComponent<UIManager>();
         }
 
         private void LoadMap()
@@ -54,14 +67,14 @@
 
         private void PlacePlayer()
         {   
-            if(cameraPlayer == null)
-                cameraPlayer = Instantiate(player);
-            cameraPlayer.transform.position = playerSpawnPosition;
+            if(playerInstance == null)
+                playerInstance = Instantiate(settings.playerPrefab);
+            playerInstance.transform.position = settings.playerSpawnPosition;
         }
 
         private void LinkPlayerData()
         {
-            tileMonitor = cameraPlayer.GetComponentInChildren<TileMonitor>();
+            playerTileMonitor = playerInstance.GetComponentInChildren<TileMonitor>();
         }
 
         private void Regenerate()
@@ -85,13 +98,13 @@
 
         private void UpdatePositionDisplay()
         {
-            if(tileMonitor)
+            if(playerTileMonitor)
             {
-                positionDisplay.text = tileMonitor.tileDisplay;
+                ui.positionDisplay.text = playerTileMonitor.tileDisplay;
             }
             else
             {
-                positionDisplay.text = "No positional data";
+                ui.positionDisplay.text = "No positional data";
             }
         }
     }

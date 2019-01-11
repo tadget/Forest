@@ -123,6 +123,7 @@ GameObject:
   - component: {fileID: 995101720}
   - component: {fileID: 995101721}
   - component: {fileID: 995101719}
+  - component: {fileID: 995101722}
   m_Layer: 0
   m_Name: Game Manager
   m_TagString: Untagged
@@ -166,9 +167,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7e37446362085804187d2c3f24d5db58, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mapGenerator: {fileID: 995101719}
-  player: {fileID: 1509273707262670, guid: 84a4ed9cd9318034eb5955c9e49d0b6e, type: 2}
-  playerSpawnPosition: {x: 0, y: 1, z: 0}
+  settings: {fileID: 11400000, guid: 0dffc343247ceb4408b973bfd7b421dd, type: 2}
+--- !u!114 &995101722
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 995101718}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dbad921c0aa673b44b0f5385892fb7ec, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
   positionDisplay: {fileID: 1049124648}
 --- !u!1 &1049124646
 GameObject:
