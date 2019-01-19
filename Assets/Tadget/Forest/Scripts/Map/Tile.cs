@@ -5,13 +5,23 @@
     using UnityEngine;
 
     [CreateAssetMenu(fileName = "Tile", menuName = "Map/Tile", order = 1)]
-    public class MapTile : ScriptableObject
+    public class Tile : ScriptableObject
     {
         public List<GameObject> objs;
         public List<GameObject> terrains;
         public bool isRandomized;
         public bool isFixedObjectCount;
         public int count;
+		public Type type;
+        
+		public enum Type
+		{
+			UNKNOWN = -1,
+			CABIN = 0,
+			YARD = 1,
+			OUTER = 2,
+			BIOME = 3
+		}
 
         public bool TryGetObject(out GameObject obj)
         {

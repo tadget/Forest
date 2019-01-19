@@ -13,16 +13,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   tileOffsetX: 3.5
   tileOffsetZ: 3.5
-  yardSizeX: 6
-  yardSizeZ: 4
+  yardSizeX: 2
+  yardSizeZ: 2
   outerLayerCount: 3
   yardTiles:
-  - {fileID: 11400000, guid: 31d39748de8eb834d850cbb4f3ed05c2, type: 2}
-  - {fileID: 11400000, guid: 31d39748de8eb834d850cbb4f3ed05c2, type: 2}
   - {fileID: 11400000, guid: 506d8f97a7994b340a0fe54f58f1df8d, type: 2}
+  - {fileID: 11400000, guid: 31d39748de8eb834d850cbb4f3ed05c2, type: 2}
   outerLayerTiles:
   - {fileID: 11400000, guid: 4ae85362565001d48b5c756a7dc226c0, type: 2}
   - {fileID: 11400000, guid: 4ae85362565001d48b5c756a7dc226c0, type: 2}
   - {fileID: 11400000, guid: 4ae85362565001d48b5c756a7dc226c0, type: 2}
   biome1Tiles:
   - {fileID: 11400000, guid: 6beb5eeb42e93b3419f833aa5468eeb8, type: 2}
+  maxTileMemoryDistance: 0

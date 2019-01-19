@@ -20,10 +20,13 @@
 
         [Header("Tile settings")]
         [Header("Fixed")]
-        public List<MapTile> yardTiles;
-        public List<MapTile> outerLayerTiles;
+        public List<Tile> yardTiles;
+        public List<Tile> outerLayerTiles;
 
         [Header("Randomized")]
-        public List<MapTile> biome1Tiles;
+        public List<Tile> biome1Tiles;
+
+        [Header("Spawning")]
+        public int maxTileMemoryDistance;
     }
 }

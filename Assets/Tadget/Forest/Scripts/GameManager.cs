@@ -4,15 +4,11 @@
     using UnityEngine.UI;
     using System.Collections.Generic;
 
-    [RequireComponent (typeof(MapGenerator), typeof(UIManager))]
+    [RequireComponent (typeof(UIManager))]
     public class GameManager : MonoBehaviour
     {   
         /// Map
-        private MapGenerator mapGenerator;
-
-        private GameObject mapContainer;
-        private List<LayoutTile> homeLayout;
-        private List<LayoutTile> forestLayout;
+        private MapManager map;
 
         /// Player
         private GameObject playerInstance;
@@ -37,7 +33,7 @@
         private void Start()
         {
             InitVariables();
-            LoadMap();
+            map.Load();
             PlacePlayer();
             LinkPlayerData();
         }
@@ -50,19 +46,8 @@
 
         private void InitVariables()
         {
-            mapContainer = new GameObject("Map Container");
-            mapGenerator = GetComponent<MapGenerator>();
             ui = GetComponent<UIManager>();
-        }
-
-        private void LoadMap()
-        {
-            homeLayout = mapGenerator.GenerateHomeLayout();
-            var homeTiles = mapGenerator.InstantiateMapLayout(homeLayout);
-            GameObject homeTileContainer = new GameObject("Home Tile Container");
-            foreach(var tile in homeTiles)
-                tile.transform.parent = homeTileContainer.transform;
-            homeTileContainer.transform.parent = mapContainer.transform;
+            map = GetComponent<MapManager>();
         }
 
         private void PlacePlayer()
@@ -75,20 +60,14 @@
         private void LinkPlayerData()
         {
             playerTileMonitor = playerInstance.GetComponentInChildren<TileMonitor>();
-        }
-
-        private void Regenerate()
-        {
-            foreach(Transform container in mapContainer.transform)
-                Destroy(container.gameObject);
-            LoadMap();
+            playerTileMonitor.OnTileEnter += map.OnPlayerEnteredNewTile;
         }
 
         private void CheckForInput()
         {
             if(Input.GetKeyDown(KeyCode.R))
             {
-                Regenerate();
+                map.Regenerate();
             }
             if(Input.GetKeyDown(KeyCode.T))
             {
@@ -98,14 +77,9 @@
 
         private void UpdatePositionDisplay()
         {
-            if(playerTileMonitor)
-            {
-                ui.positionDisplay.text = playerTileMonitor.tileDisplay;
-            }
-            else
-            {
-                ui.positionDisplay.text = "No positional data";
-            }
+            ui.positionDisplay.text = playerTileMonitor ? 
+                playerTileMonitor.tileDisplay : 
+                "No positional data";
         }
     }
 }

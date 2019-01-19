@@ -122,8 +122,8 @@ GameObject:
   m_Component:
   - component: {fileID: 995101720}
   - component: {fileID: 995101721}
-  - component: {fileID: 995101719}
   - component: {fileID: 995101722}
+  - component: {fileID: 995101719}
   m_Layer: 0
   m_Name: Game Manager
   m_TagString: Untagged
@@ -139,7 +139,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 995101718}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 745c69dc59f8fe247847118935dd26be, type: 3}
+  m_Script: {fileID: 11500000, guid: 7056c092470301e44830afc496825fea, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   mapSettings: {fileID: 11400000, guid: 08873d48f3894814e97b108260517b24, type: 2}

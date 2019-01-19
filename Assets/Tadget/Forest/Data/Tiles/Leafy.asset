@@ -8,17 +8,19 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ef4830b82d7cd6f4d8489b5595eb6abc, type: 3}
+  m_Script: {fileID: 11500000, guid: 05306f21a86f94b46b0ff82c397238ae, type: 3}
   m_Name: Leafy
   m_EditorClassIdentifier: 
   objs:
+  - {fileID: 193752, guid: 23d309f2659236448a9ac43461336d52, type: 2}
+  - {fileID: 121006, guid: 680caff8855f27545bfadfbaefa281b9, type: 2}
+  - {fileID: 181142, guid: d2eb4c54826dc8d49926ce01a1b683d6, type: 2}
   - {fileID: 159194, guid: e0892e1ea1bfc4341b9ebc259a36a0c6, type: 2}
   - {fileID: 142528, guid: 6affd7a4d2817d34c86de238de109f8f, type: 2}
   - {fileID: 132534, guid: 35d4951e636d2ad429be57c270484724, type: 2}
-  - {fileID: 171372, guid: 94c8ba7c244e81d49a22239ae0d9252b, type: 2}
   terrains:
-  - {fileID: 144034, guid: b7a5c51d805970e40af12625f2d90a91, type: 2}
   - {fileID: 197976, guid: 2aad5742d97fdab4c98d95c48ec80453, type: 2}
   isRandomized: 1
   isFixedObjectCount: 0
   count: 0
+  type: 2

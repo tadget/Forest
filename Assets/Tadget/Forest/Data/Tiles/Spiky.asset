@@ -8,15 +8,19 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ef4830b82d7cd6f4d8489b5595eb6abc, type: 3}
+  m_Script: {fileID: 11500000, guid: 05306f21a86f94b46b0ff82c397238ae, type: 3}
   m_Name: Spiky
   m_EditorClassIdentifier: 
   objs:
   - {fileID: 153954, guid: d935b49771d5ae744bbaa0973bb39f77, type: 2}
   - {fileID: 190764, guid: b75d513df2c5cdb408d4a022c98cf202, type: 2}
-  - {fileID: 164152, guid: 1093da2b134a65e44b0cb16f24de4b22, type: 2}
+  - {fileID: 133368, guid: ab33205b4ef2c844c8ac6ac7950aa369, type: 2}
+  - {fileID: 126758, guid: 484d3cf124c98774f8060eabff39a104, type: 2}
+  - {fileID: 161188, guid: 9bb03150dc9d39a4e9760c61e7d01bcc, type: 2}
+  - {fileID: 184436, guid: 7f4e80c0be7bba54d99917b1fd9852a4, type: 2}
   terrains:
   - {fileID: 197976, guid: 2aad5742d97fdab4c98d95c48ec80453, type: 2}
   isRandomized: 1
   isFixedObjectCount: 0
   count: 0
+  type: 2
