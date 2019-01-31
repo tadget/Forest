@@ -12,7 +12,7 @@
         public GameObject Create(Tile tile)
         {
             GameObject tile_go;
-            if (tile.TryGetTerrain(out tile_go))
+        if (tile.TryGetTerrain(out tile_go))
             {
                 tile_go.name = string.Format("{0}_{1}", tile.name, tile_go.GetHashCode());
             }

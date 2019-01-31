@@ -2,7 +2,7 @@
 {
 	using UnityEngine;
 
-	public class TileID : MonoBehaviour 
+	public class TileData : MonoBehaviour 
 	{
 		public int id;
 		public int local_chunk_id;

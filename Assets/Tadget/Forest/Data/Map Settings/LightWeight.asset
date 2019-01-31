@@ -11,8 +11,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e7bf381a6e4d376428cab3eefd5c7cfd, type: 3}
   m_Name: LightWeight
   m_EditorClassIdentifier: 
-  tileOffsetX: 3.5
-  tileOffsetZ: 3.5
+  tileOffsetX: 4.5
+  tileOffsetZ: 4.5
   yardSizeX: 2
   yardSizeZ: 2
   outerLayerCount: 3
