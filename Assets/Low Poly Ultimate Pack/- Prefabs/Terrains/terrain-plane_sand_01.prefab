@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 3328934}
   - component: {fileID: 2359664}
   - component: {fileID: 6474290}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: terrain-plane_sand_01
   m_TagString: Untagged
   m_Icon: {fileID: 0}

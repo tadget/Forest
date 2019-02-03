@@ -11,16 +11,44 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 05306f21a86f94b46b0ff82c397238ae, type: 3}
   m_Name: Leafy
   m_EditorClassIdentifier: 
-  objs:
-  - {fileID: 193752, guid: 23d309f2659236448a9ac43461336d52, type: 2}
-  - {fileID: 121006, guid: 680caff8855f27545bfadfbaefa281b9, type: 2}
-  - {fileID: 181142, guid: d2eb4c54826dc8d49926ce01a1b683d6, type: 2}
-  - {fileID: 159194, guid: e0892e1ea1bfc4341b9ebc259a36a0c6, type: 2}
-  - {fileID: 142528, guid: 6affd7a4d2817d34c86de238de109f8f, type: 2}
-  - {fileID: 132534, guid: 35d4951e636d2ad429be57c270484724, type: 2}
-  terrains:
-  - {fileID: 197976, guid: 2aad5742d97fdab4c98d95c48ec80453, type: 2}
-  isRandomized: 1
-  isFixedObjectCount: 0
-  count: 0
   type: 2
+  objects:
+  - id: grass_02
+    positions: []
+    isPositionRandomized: 0
+    minOffsetX: 0
+    maxOffsetX: 0
+    minOffsetZ: 0
+    maxOffsetZ: 0
+    isFixedCount: 1
+    count: 1
+    minRandomCount: 0
+    maxRandomCount: 0
+    isRandomChanceToSpawn: 0
+    chance: 0
+  - id: tree_01
+    positions: []
+    isPositionRandomized: 1
+    minOffsetX: -8
+    maxOffsetX: 8
+    minOffsetZ: -8
+    maxOffsetZ: 8
+    isFixedCount: 0
+    count: 0
+    minRandomCount: 15
+    maxRandomCount: 17
+    isRandomChanceToSpawn: 0
+    chance: 0
+  - id: tree_02
+    positions: []
+    isPositionRandomized: 0
+    minOffsetX: 0
+    maxOffsetX: 0
+    minOffsetZ: 0
+    maxOffsetZ: 0
+    isFixedCount: 0
+    count: 0
+    minRandomCount: 15
+    maxRandomCount: 17
+    isRandomChanceToSpawn: 0
+    chance: 0

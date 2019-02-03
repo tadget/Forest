@@ -1,0 +1,30 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b99c32dba48a9b345ac844484d771c0b, type: 3}
+  m_Name: Tile Objects
+  m_EditorClassIdentifier: 
+  objects:
+  - prefab: {fileID: 153954, guid: d935b49771d5ae744bbaa0973bb39f77, type: 2}
+    id: tree_04
+  - prefab: {fileID: 1564086288209768, guid: aeb6b8b48b3aff9438d17b9afeaaf99b, type: 2}
+    id: p_biome_1
+  - prefab: {fileID: 1221674254251100, guid: 5edcfb8f948d5124c9865a654886baa8, type: 2}
+    id: p_cabin
+  - prefab: {fileID: 1131798246828432, guid: 4e8d133f5b2aa7c4f847b35329a88eab, type: 2}
+    id: p_outer
+  - prefab: {fileID: 1131798246828432, guid: 8491ec64b41ae0f429d87da99ff4ea7c, type: 2}
+    id: p_yard
+  - prefab: {fileID: 159194, guid: e0892e1ea1bfc4341b9ebc259a36a0c6, type: 2}
+    id: tree_01
+  - prefab: {fileID: 1706827740856462, guid: ddde1b136783d9f46ae9037071f4c522, type: 2}
+    id: cabin
+  - prefab: {fileID: 1564086288209768, guid: ab95796f3490fef498b0f17bb3041eec, type: 2}
+    id: p_biome_2

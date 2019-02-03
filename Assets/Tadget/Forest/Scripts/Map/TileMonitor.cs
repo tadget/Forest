@@ -12,10 +12,10 @@
 		public string tileDisplay;
 		private GameObject currentTile;
 		private RaycastHit hit;
-		private TileID currentTileID;
+		private TileData currentTileData;
 
 		public delegate void TileEvent<TileID>(TileID tileID);
-		public event TileEvent<TileID> OnTileEnter;
+		public event TileEvent<TileData> OnTileEnter;
 
 		public void Update () 
 		{
@@ -30,17 +30,18 @@
 				
 				if(hit.transform.gameObject != currentTile)
 				{
-					currentTileID = hit.transform.GetComponent<TileID>();
-					currentTile = currentTileID.gameObject;
-					if(currentTileID == null)
+					currentTileData = hit.transform.GetComponentInParent<TileData>();
+
+					if(currentTileData == null)
 					{
 						tileDisplay = "Standing on object which has no TileID";
-						Debug.LogWarningFormat("Hit {0} which has no TileID attached", currentTile);
+						Debug.LogWarningFormat("Hit {0} which has no TileID attached", hit.transform.gameObject);
 					}
 					else
 					{
-						tileDisplay = string.Format("{0}\n{1}", currentTileID.id, currentTileID.chunk_coord);
-						OnTileEnter.Invoke(currentTileID);
+                        currentTile = currentTileData.gameObject;
+                        tileDisplay = string.Format("{0}\n{1}", currentTileData.id, currentTileData.chunk_coord);
+						OnTileEnter.Invoke(currentTileData);
 					}	
 				}
 			}

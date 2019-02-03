@@ -127,7 +127,7 @@ Camera:
     width: 1
     height: 1
   near clip plane: 0.3
-  far clip plane: 1000
+  far clip plane: 200
   field of view: 60
   orthographic: 0
   orthographic size: 5
@@ -402,7 +402,7 @@ MonoBehaviour:
   layerMask:
     serializedVersion: 2
     m_Bits: 512
-  tileDisplay: {fileID: 0}
+  tileDisplay: '*'
 --- !u!114 &114925419490335038
 MonoBehaviour:
   m_ObjectHideFlags: 1

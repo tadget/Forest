@@ -1,0 +1,46 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b99c32dba48a9b345ac844484d771c0b, type: 3}
+  m_Name: Main Objects
+  m_EditorClassIdentifier: 
+  objects:
+  - prefab: {fileID: 144034, guid: b7a5c51d805970e40af12625f2d90a91, type: 2}
+    id: grass_01
+  - prefab: {fileID: 197976, guid: 2aad5742d97fdab4c98d95c48ec80453, type: 2}
+    id: grass_02
+  - prefab: {fileID: 170660, guid: 592d36973335ec54bbf1b1ce35581312, type: 2}
+    id: sand_01
+  - prefab: {fileID: 159194, guid: e0892e1ea1bfc4341b9ebc259a36a0c6, type: 2}
+    id: tree_01
+  - prefab: {fileID: 142528, guid: 6affd7a4d2817d34c86de238de109f8f, type: 2}
+    id: tree_02
+  - prefab: {fileID: 132534, guid: 35d4951e636d2ad429be57c270484724, type: 2}
+    id: tree_03
+  - prefab: {fileID: 153954, guid: d935b49771d5ae744bbaa0973bb39f77, type: 2}
+    id: tree_04
+  - prefab: {fileID: 190764, guid: b75d513df2c5cdb408d4a022c98cf202, type: 2}
+    id: tree_05
+  - prefab: {fileID: 133368, guid: ab33205b4ef2c844c8ac6ac7950aa369, type: 2}
+    id: stone_01
+  - prefab: {fileID: 126758, guid: 484d3cf124c98774f8060eabff39a104, type: 2}
+    id: stone_02
+  - prefab: {fileID: 161188, guid: 9bb03150dc9d39a4e9760c61e7d01bcc, type: 2}
+    id: stone_03
+  - prefab: {fileID: 184436, guid: 7f4e80c0be7bba54d99917b1fd9852a4, type: 2}
+    id: stone_04
+  - prefab: {fileID: 181142, guid: d2eb4c54826dc8d49926ce01a1b683d6, type: 2}
+    id: mushroom_01
+  - prefab: {fileID: 121006, guid: 680caff8855f27545bfadfbaefa281b9, type: 2}
+    id: mushroom_02
+  - prefab: {fileID: 193752, guid: 23d309f2659236448a9ac43461336d52, type: 2}
+    id: mushroom_03
+  - prefab: {fileID: 1706827740856462, guid: ddde1b136783d9f46ae9037071f4c522, type: 2}
+    id: cabin

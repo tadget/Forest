@@ -8,19 +8,17 @@
 		public Tile[] tiles {get; private set;}
 		public int size_x {get; private set;}
 		public int size_z {get; private set;}
-		public Vector3Int coord;
 
-		public static Chunk Create(Tile[] tiles, int size_x, int size_y, Vector3Int coord)
+		public static Chunk Create(Tile[] tiles, int size_x, int size_y)
 		{
-			return ScriptableObject.CreateInstance<Chunk>().Init(tiles, size_x, size_y, coord);
+			return ScriptableObject.CreateInstance<Chunk>().Init(tiles, size_x, size_y);
 		}
 
-		private Chunk Init(Tile[] tiles, int size_x, int size_z, Vector3Int coord)
+		private Chunk Init(Tile[] tiles, int size_x, int size_z)
 		{
 			this.tiles = tiles;
 			this.size_x = size_x;
 			this.size_z = size_z;
-			this.coord = coord;
 			return this;
 		}
 

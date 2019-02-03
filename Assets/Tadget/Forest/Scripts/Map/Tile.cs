@@ -7,11 +7,6 @@
     [CreateAssetMenu(fileName = "Tile", menuName = "Map/Tile", order = 1)]
     public class Tile : ScriptableObject
     {
-        public List<GameObject> objs;
-        public List<GameObject> terrains;
-        public bool isRandomized;
-        public bool isFixedObjectCount;
-        public int count;
 		public Type type;
         
 		public enum Type
@@ -23,40 +18,27 @@
 			BIOME = 3
 		}
 
-        public bool TryGetObject(out GameObject obj)
+        [System.Serializable]
+        public class Object
         {
-            if (objs != null && objs.Count > 0)
-            {
-                var p = objs[Random.Range(0, objs.Count)];
-                obj = Instantiate(
-                    p,
-                    Vector3.zero,
-                    p.transform.rotation);
-                return true;
-            }
-            else
-            {
-                obj = null;
-                return false;
-            }
+            public string id;
+
+            public List<Vector3> positions;
+            public bool isPositionRandomized;
+
+            public float minOffsetX, maxOffsetX;
+            public float minOffsetZ, maxOffsetZ;
+
+            public bool isFixedCount;
+            public int count;
+            public int minRandomCount, maxRandomCount;
+
+            public bool isRandomChanceToSpawn;
+            [Range(0,1)]
+            public float chance;
         }
 
-        public bool TryGetTerrain(out GameObject terrain)
-        {
-            if (terrains != null && terrains.Count > 0)
-            {
-                var p = terrains[Random.Range(0, terrains.Count)];
-                terrain = Instantiate(
-                    p,
-                    Vector3.zero,
-                   p.transform.rotation);
-                return true;
-            }
-            else
-            {
-                terrain = null;
-                return false;
-            }
-        }
+        public List<Object> objects;
+
     }
 }

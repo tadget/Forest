@@ -25,6 +25,7 @@
 
         [Header("Randomized")]
         public List<Tile> biome1Tiles;
+        public List<Tile> biome2Tiles;
 
         [Header("Spawning")]
         public int maxTileMemoryDistance;

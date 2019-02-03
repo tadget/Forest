@@ -22,7 +22,7 @@ GameObject:
   - component: {fileID: 33805668320429438}
   - component: {fileID: 23809077909551076}
   - component: {fileID: 64305098954473030}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: terrain_sea_01_collidable
   m_TagString: Untagged
   m_Icon: {fileID: 0}

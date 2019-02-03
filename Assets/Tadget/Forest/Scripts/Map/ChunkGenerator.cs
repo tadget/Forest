@@ -12,12 +12,12 @@
 		public const int chunkTileCount_y = 8;
 
 		private MapSettings mapSettings;
-		private TileFactory tileFactory;
+        private TileFactory tileFactory;
 
-		public ChunkGenerator(MapSettings mapSettings)
+		public ChunkGenerator(MapSettings mapSettings, TileObjects tileObjects)
 		{
 			this.mapSettings = mapSettings;
-			tileFactory = new TileFactory();
+            this.tileFactory = new TileFactory(tileObjects);
 		}
 
         public Chunk GenerateHomeChunk()
@@ -87,13 +87,39 @@
                         tiles[chunkTileCount_y * z + x] = tile;
                     }
             }
-			Vector3Int coord = new Vector3Int(0,0,0);
-            return Chunk.Create(tiles, 8, 8, coord);
+            return Chunk.Create(tiles, 8, 8);
         }
 
-        public List<GameObject> InstantiateChunk(Chunk chunk)
+        public Chunk GenerateBiomeChunk(int biome)
         {
+	        Tile[] tiles = new Tile[64];
+	        for (int i = 0; i < 64; i++)
+	        {
+                switch (biome)
+                {
+                    case 0:
+                        tiles[i] = mapSettings.biome1Tiles[Random.Range(0, mapSettings.biome1Tiles.Count)];
+                        break;
+                    case 1:
+                        tiles[i] = mapSettings.biome2Tiles[Random.Range(0, mapSettings.biome2Tiles.Count)];
+                        break;
+                    default:
+                        break;
+                }
+	        }
+	        return Chunk.Create(tiles, 8, 8);
+        }
+
+        public GameObject InstantiateChunk(Chunk chunk, Vector3Int coord)
+        {
+	        GameObject chunk_go = new GameObject();
+	        chunk_go.name = string.Format("Chunk {0}", chunk.GetInstanceID());
+
 	        List<GameObject> tiles = new List<GameObject>();
+	        var start = new Vector3(
+		        chunkTileCount_x * mapSettings.tileOffsetX * coord.x,
+		        0,
+		        chunkTileCount_y * mapSettings.tileOffsetZ * coord.z);
 	        var id = -1;
 	        for (int z = 0; z < chunk.size_z; z++)
 	        {
@@ -107,21 +133,26 @@
 				        continue;
 			        }
 			        var tile_go = tileFactory.Create(tile);
-			        var tileID = tile_go.AddComponent<TileID>();
+			        var tileID = tile_go.AddComponent<TileData>();
 			        tileID.id = tile_go.GetInstanceID();
 			        tileID.local_chunk_id = id;
 			        tileID.chunk_id = chunk.GetInstanceID();
-			        tileID.chunk_coord = chunk.coord;
+			        tileID.chunk_coord = coord;
 			        Vector3 pos = new Vector3(
-				        x * mapSettings.tileOffsetX + x,
+				        x * mapSettings.tileOffsetX,
 				        0,
-				        z * mapSettings.tileOffsetZ + z);
+				        z * mapSettings.tileOffsetZ);
+			        pos += start;
 			        tile_go.transform.position = pos;
+			        tile_go.transform.parent = chunk_go.transform;
 			        tiles.Add(tile_go);
-			        id++;
 		        }
 	        }
-	        return tiles;
+
+	        var chunkId = chunk_go.AddComponent<ChunkData>();
+	        chunkId.tiles = tiles;
+	        chunkId.coord = coord;
+	        return chunk_go;
         }
 	}
 }

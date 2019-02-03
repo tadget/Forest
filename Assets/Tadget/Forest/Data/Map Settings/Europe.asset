@@ -25,4 +25,6 @@ MonoBehaviour:
   - {fileID: 11400000, guid: d737bcdde9884ea46a31f8659593d62d, type: 2}
   biome1Tiles:
   - {fileID: 11400000, guid: 6acc457604d815c43ac8083381efca34, type: 2}
+  biome2Tiles:
+  - {fileID: 11400000, guid: 3bae7fea5c9b84f498138ef7c3df4fbe, type: 2}
   maxTileMemoryDistance: 0
