@@ -30,16 +30,17 @@
 				
 				if(hit.transform.gameObject != currentTile)
 				{
-					currentTileData = hit.transform.GetComponent<TileData>();
-					currentTile = currentTileData.gameObject;
+					currentTileData = hit.transform.GetComponentInParent<TileData>();
+
 					if(currentTileData == null)
 					{
 						tileDisplay = "Standing on object which has no TileID";
-						Debug.LogWarningFormat("Hit {0} which has no TileID attached", currentTile);
+						Debug.LogWarningFormat("Hit {0} which has no TileID attached", hit.transform.gameObject);
 					}
 					else
 					{
-						tileDisplay = string.Format("{0}\n{1}", currentTileData.id, currentTileData.chunk_coord);
+                        currentTile = currentTileData.gameObject;
+                        tileDisplay = string.Format("{0}\n{1}", currentTileData.id, currentTileData.chunk_coord);
 						OnTileEnter.Invoke(currentTileData);
 					}	
 				}

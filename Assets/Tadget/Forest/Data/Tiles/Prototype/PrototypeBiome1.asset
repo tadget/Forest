@@ -11,10 +11,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 05306f21a86f94b46b0ff82c397238ae, type: 3}
   m_Name: PrototypeBiome1
   m_EditorClassIdentifier: 
-  objs: []
-  terrains:
-  - {fileID: 1564086288209768, guid: aeb6b8b48b3aff9438d17b9afeaaf99b, type: 2}
-  isRandomized: 0
-  isFixedObjectCount: 0
-  count: 0
   type: 3
+  objects:
+  - id: p_biome_1
+    positions: []
+    isPositionRandomized: 0
+    minOffsetX: 0
+    maxOffsetX: 0
+    minOffsetZ: 0
+    maxOffsetZ: 0
+    isFixedCount: 1
+    count: 1
+    minRandomCount: 0
+    maxRandomCount: 0
+    isRandomChanceToSpawn: 0
+    chance: 0

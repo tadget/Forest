@@ -11,8 +11,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e7bf381a6e4d376428cab3eefd5c7cfd, type: 3}
   m_Name: LightWeight
   m_EditorClassIdentifier: 
-  tileOffsetX: 4.5
-  tileOffsetZ: 4.5
+  tileOffsetX: 4
+  tileOffsetZ: 4
   yardSizeX: 2
   yardSizeZ: 2
   outerLayerCount: 3
@@ -25,4 +25,6 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 4ae85362565001d48b5c756a7dc226c0, type: 2}
   biome1Tiles:
   - {fileID: 11400000, guid: 6beb5eeb42e93b3419f833aa5468eeb8, type: 2}
+  biome2Tiles:
+  - {fileID: 11400000, guid: f9f04b913fcfcf54eb5b0dedbb199a62, type: 2}
   maxTileMemoryDistance: 0

@@ -2,7 +2,8 @@
 {
 	using UnityEngine;
 
-	public class TileData : MonoBehaviour 
+    [DisallowMultipleComponent]
+    public class TileData : MonoBehaviour 
 	{
 		public int id;
 		public int local_chunk_id;

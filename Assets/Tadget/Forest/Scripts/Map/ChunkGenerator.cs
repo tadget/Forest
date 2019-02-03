@@ -12,12 +12,12 @@
 		public const int chunkTileCount_y = 8;
 
 		private MapSettings mapSettings;
-		private TileFactory tileFactory;
+        private TileFactory tileFactory;
 
-		public ChunkGenerator(MapSettings mapSettings)
+		public ChunkGenerator(MapSettings mapSettings, TileObjects tileObjects)
 		{
 			this.mapSettings = mapSettings;
-			tileFactory = new TileFactory();
+            this.tileFactory = new TileFactory(tileObjects);
 		}
 
         public Chunk GenerateHomeChunk()
@@ -90,12 +90,22 @@
             return Chunk.Create(tiles, 8, 8);
         }
 
-        public Chunk GenerateBiomeChunk()
+        public Chunk GenerateBiomeChunk(int biome)
         {
 	        Tile[] tiles = new Tile[64];
 	        for (int i = 0; i < 64; i++)
 	        {
-		        tiles[i] = mapSettings.biome1Tiles[Random.Range(0, mapSettings.biome1Tiles.Count)];
+                switch (biome)
+                {
+                    case 0:
+                        tiles[i] = mapSettings.biome1Tiles[Random.Range(0, mapSettings.biome1Tiles.Count)];
+                        break;
+                    case 1:
+                        tiles[i] = mapSettings.biome2Tiles[Random.Range(0, mapSettings.biome2Tiles.Count)];
+                        break;
+                    default:
+                        break;
+                }
 	        }
 	        return Chunk.Create(tiles, 8, 8);
         }

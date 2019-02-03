@@ -11,32 +11,21 @@ namespace Tadget
 	{
         private ChunkGenerator chunkGenerator;
 		private GameObject mapContainer;
-        private GameObject homeTileContainer;
-        private GameObject forestTileContainer;
 
         private Dictionary<Vector3Int, GameObject> active_chunks;
         private Dictionary<Vector3Int, Chunk> chunks;
 
+        private Chunk homeChunk;
+
         private Vector3Int lastChunkCoord;
 
         public MapSettings mapSettings;
-
-        public enum ChunkDir
-        {
-            MID,
-            TOP,
-            BOT,
-            LEFT,
-            RIGHT,
-            TOPLEFT,
-            TOPRIGHT,
-            BOTLEFT,
-            BOTRIGHT
-        }
+        public TileObjects tileObjects;
 
         private void OnValidate()
         {
             Debug.AssertFormat(mapSettings != null, "Missing Map Settings");
+            Debug.AssertFormat(tileObjects != null, "Missing Tile Objects");
             if(mapSettings != null)
             {
                 Debug.AssertFormat(mapSettings.yardTiles != null &&
@@ -61,7 +50,8 @@ namespace Tadget
 		private void InitVariables()
         {
             mapContainer = new GameObject("Map Container");
-            chunkGenerator = new ChunkGenerator(mapSettings);
+            tileObjects.Init();
+            chunkGenerator = new ChunkGenerator(mapSettings, tileObjects);
             chunks = new Dictionary<Vector3Int, Chunk>();
             active_chunks = new Dictionary<Vector3Int, GameObject>();
         }
@@ -71,10 +61,10 @@ namespace Tadget
             chunks.Clear();
             active_chunks.Clear();
 
-            var homeChunk = chunkGenerator.GenerateHomeChunk();
+            homeChunk = chunkGenerator.GenerateHomeChunk();
             chunks.Add(new Vector3Int(0,0,0), homeChunk);
 
-            var forestChunk = chunkGenerator.GenerateBiomeChunk();
+            var forestChunk = chunkGenerator.GenerateBiomeChunk(0);
             var positions = new List<Vector3Int>()
             {
                 new Vector3Int(-1,0,0),
@@ -107,12 +97,12 @@ namespace Tadget
 
         public void OnPlayerEnteredNewTile(TileData tileData)
         {
-            Debug.LogFormat("[Map Manager]: Player entered {0} {1} {2} {3}",
-                tileData.id, tileData.chunk_coord, tileData.chunk_id, tileData.local_chunk_id);
+            //Debug.LogFormat("[Map Manager]: Player entered {0} {1} {2} {3}",
+            //    tileData.id, tileData.chunk_coord, tileData.chunk_id, tileData.local_chunk_id);
 
             if (lastChunkCoord != tileData.chunk_coord)
             {
-                Debug.Log("Entered new chunk!");
+                //Debug.Log("Entered new chunk!");
                 lastChunkCoord = tileData.chunk_coord;
                 UpdateChunks(tileData.chunk_coord);
                 PurgeChunks(tileData.chunk_coord);
@@ -149,8 +139,22 @@ namespace Tadget
                     }
                     else
                     {
-                        // TODO: choose what chunk to generate
-                        chunk = chunkGenerator.GenerateBiomeChunk();
+                        if (Random.value > 0.99f)
+                            chunk = homeChunk;
+                        else
+                        {
+                            var val = Mathf.PerlinNoise(targetPos.x * 0.15f, targetPos.z * 0.15f);
+                            int biome = 0;
+                            if(val > 0.5f)
+                            {
+                                biome = 0;
+                            }
+                            else
+                            {
+                                biome = 1;
+                            }
+                            chunk = chunkGenerator.GenerateBiomeChunk(biome);
+                        }
                         chunks.Add(targetPos, chunk);
                     }
                     chunk_go = chunkGenerator.InstantiateChunk(chunk, targetPos);
@@ -163,13 +167,26 @@ namespace Tadget
         private void PurgeChunks(Vector3Int chunkPosition)
         {
             int purgeDistance = 3;
-            foreach (KeyValuePair<Vector3Int, GameObject> item in active_chunks)
+            //Transform child;
+            //List<Transform> tiles = new List<Transform>();
+            //List<Transform> objects = new List<Transform>();
+            var keys = new List<Vector3Int>(active_chunks.Keys);
+            foreach (var key in keys)
             {
-                var d = chunkPosition.ManhattanDistance(item.Key);
+                var d = chunkPosition.ManhattanDistance(key);
                 if (d >= purgeDistance)
                 {
-                    var chunk_go = item.Value;
-                    chunk_go.SetActive(false);
+                    var chunk_go = active_chunks[key];
+                    /*
+                    foreach(Transform tile in chunk_go.transform)
+                    {
+                        foreach (Transform obj in tile)
+                            Destroy(obj.gameObject);
+                        Destroy(tile.gameObject);
+                    }*/
+                    Destroy(chunk_go);
+                    active_chunks.Remove(key);
+                    chunks.Remove(key);
                 }
             }
         }
