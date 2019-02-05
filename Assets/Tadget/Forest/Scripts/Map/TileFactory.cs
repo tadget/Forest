@@ -54,35 +54,6 @@
             }
 
             return tile_go;
-
-            /*
-            GameObject tile_prefab;
-            if (tile.TryGetTerrain(out tile_prefab))
-            {
-                tile_go = GameObject.Instantiate(tile_prefab, Vector3.zero, tile_prefab.transform.rotation);
-                tile_go.name = string.Format("{0}_{1}", tile.name, tile_go.GetHashCode());
-            }
-            else
-            {
-                tile_go = new GameObject();
-                tile_go.name = string.Format("{0}_{1}", tile.name, tile_go.GetHashCode());
-            }
-
-            int count = tile.isFixedObjectCount ? tile.count : Random.Range(3, 30);
-            for (int i = 0; i < count; i++)
-            {
-                GameObject tree;
-                if(tile.TryGetObject(out tree))
-                {   
-                    float offset_x = tile.isRandomized ? Random.Range(-9f, 9f) : 0;
-                    float offset_z = tile.isRandomized ? Random.Range(-9f, 9f) : 0;
-                    var obj = GameObject.Instantiate(tree, new Vector3(offset_x, 0f, offset_z), tree.transform.rotation); 
-
-                    //tree.transform.position += new Vector3(offset_x, 0f, offset_z);
-                    if(obj != null)
-                        obj.transform.parent = tile_go.transform;
-                }
-            }*/
         }
     }
 }

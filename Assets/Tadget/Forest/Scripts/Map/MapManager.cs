@@ -14,6 +14,7 @@ namespace Tadget
 
         private Dictionary<Vector3Int, GameObject> active_chunks;
         private Dictionary<Vector3Int, Chunk> chunks;
+        private List<Vector3Int> construction_chunks;
 
         private Chunk homeChunk;
 
@@ -54,6 +55,7 @@ namespace Tadget
             chunkGenerator = new ChunkGenerator(mapSettings, tileObjects);
             chunks = new Dictionary<Vector3Int, Chunk>();
             active_chunks = new Dictionary<Vector3Int, GameObject>();
+            construction_chunks = new List<Vector3Int>();
         }
 
 		public void Load()
@@ -82,13 +84,11 @@ namespace Tadget
 
             foreach (KeyValuePair<Vector3Int, Chunk> item in chunks)
             {
-                var chunk_go = chunkGenerator.InstantiateChunk(item.Value, item.Key);
-                active_chunks.Add(item.Key, chunk_go);
-                chunk_go.transform.parent = mapContainer.transform;
+                StartCoroutine(chunkGenerator.InstantiateChunk(InstantiateChunkCallback, item.Value, item.Key));
             }
         }
 
-		public void Regenerate()
+        public void Regenerate()
         {
             foreach(Transform container in mapContainer.transform)
                 Destroy(container.gameObject);
@@ -104,8 +104,8 @@ namespace Tadget
             {
                 //Debug.Log("Entered new chunk!");
                 lastChunkCoord = tileData.chunk_coord;
-                UpdateChunks(tileData.chunk_coord);
                 PurgeChunks(tileData.chunk_coord);
+                UpdateChunks(tileData.chunk_coord);
             }
         }
 
@@ -125,6 +125,8 @@ namespace Tadget
             foreach (var dir in dirs)
             {
                 var targetPos = chunkPosition + dir;
+                if(construction_chunks.Contains(targetPos))
+                    continue;
                 GameObject chunk_go;
                 if (active_chunks.TryGetValue(targetPos, out chunk_go))
                 {
@@ -143,28 +145,39 @@ namespace Tadget
                             chunk = homeChunk;
                         else
                         {
-                            var val = Mathf.PerlinNoise(targetPos.x * 0.15f, targetPos.z * 0.15f);
+                            var val = Noise.GenerateNoiseMap(2, 2, 42, 10f, 2, 0.265f, 14, new Vector2(targetPos.x, targetPos.z))[0,0];
                             int biome = 0;
                             if(val > 0.5f)
                             {
                                 biome = 0;
                             }
-                            else
+                            else if(val > 0.6f)
                             {
                                 biome = 1;
+                            }
+                            else
+                            {
+                                biome = 2;
                             }
                             chunk = chunkGenerator.GenerateBiomeChunk(biome);
                         }
                         chunks.Add(targetPos, chunk);
                     }
-                    chunk_go = chunkGenerator.InstantiateChunk(chunk, targetPos);
-                    active_chunks.Add(targetPos, chunk_go);
-                    chunk_go.transform.parent = mapContainer.transform;
+                    construction_chunks.Add(targetPos);
+                    StartCoroutine(chunkGenerator.InstantiateChunk(InstantiateChunkCallback, chunk, targetPos));
                 }
             }
         }
 
-        private void PurgeChunks(Vector3Int chunkPosition)
+        public void InstantiateChunkCallback(Vector3Int pos, GameObject chunk_go)
+        {
+            if(construction_chunks.Contains(pos))
+                construction_chunks.Remove(pos);
+            active_chunks.Add(pos, chunk_go);
+            chunk_go.transform.parent = mapContainer.transform;
+        }
+
+        private void PurgeChunks(Vector3Int coord)
         {
             int purgeDistance = 3;
             //Transform child;
@@ -173,7 +186,9 @@ namespace Tadget
             var keys = new List<Vector3Int>(active_chunks.Keys);
             foreach (var key in keys)
             {
-                var d = chunkPosition.ManhattanDistance(key);
+                if (construction_chunks.Contains(key))
+                    continue;
+                var d = coord.ManhattanDistance(key);
                 if (d >= purgeDistance)
                 {
                     var chunk_go = active_chunks[key];

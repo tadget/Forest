@@ -9,9 +9,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 05306f21a86f94b46b0ff82c397238ae, type: 3}
-  m_Name: Leafy
+  m_Name: Deadish
   m_EditorClassIdentifier: 
-  type: 2
+  type: 3
   objects:
   - id: grass_02
     positions: []
@@ -26,7 +26,7 @@ MonoBehaviour:
     maxRandomCount: 0
     isRandomChanceToSpawn: 0
     chance: 0
-  - id: tree_01
+  - id: tree_05
     positions: []
     isPositionRandomized: 1
     minOffsetX: -9
@@ -35,20 +35,46 @@ MonoBehaviour:
     maxOffsetZ: 9
     isFixedCount: 0
     count: 0
-    minRandomCount: 5
-    maxRandomCount: 15
+    minRandomCount: 0
+    maxRandomCount: 7
     isRandomChanceToSpawn: 0
     chance: 0
-  - id: tree_02
+  - id: stone_01
     positions: []
-    isPositionRandomized: 0
+    isPositionRandomized: 1
     minOffsetX: -9
     maxOffsetX: 9
     minOffsetZ: -9
     maxOffsetZ: 9
     isFixedCount: 0
     count: 0
-    minRandomCount: 5
-    maxRandomCount: 15
+    minRandomCount: 0
+    maxRandomCount: 3
+    isRandomChanceToSpawn: 0
+    chance: 0
+  - id: stone_02
+    positions: []
+    isPositionRandomized: 1
+    minOffsetX: -9
+    maxOffsetX: 9
+    minOffsetZ: -9
+    maxOffsetZ: 9
+    isFixedCount: 0
+    count: 0
+    minRandomCount: 0
+    maxRandomCount: 2
+    isRandomChanceToSpawn: 0
+    chance: 0
+  - id: stone_03
+    positions: []
+    isPositionRandomized: 1
+    minOffsetX: -9
+    maxOffsetX: 9
+    minOffsetZ: -9
+    maxOffsetZ: 9
+    isFixedCount: 0
+    count: 0
+    minRandomCount: 0
+    maxRandomCount: 2
     isRandomChanceToSpawn: 0
     chance: 0
