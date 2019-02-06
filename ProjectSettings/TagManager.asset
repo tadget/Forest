@@ -15,8 +15,8 @@ TagManager:
   - 
   - PostProcessing
   - Tile
-  - 
-  - 
+  - Pickable
+  - Placable
   - 
   - 
   - 
