@@ -103,6 +103,9 @@
                     case 1:
                         tiles[i] = mapSettings.biome2Tiles[Random.Range(0, mapSettings.biome2Tiles.Count)];
                         break;
+                    case 2:
+                        tiles[i] = mapSettings.biome3Tiles[Random.Range(0, mapSettings.biome3Tiles.Count)];
+                        break;
                     default:
                         break;
                 }
@@ -110,7 +113,7 @@
 	        return Chunk.Create(tiles, 8, 8);
         }
 
-        public GameObject InstantiateChunk(Chunk chunk, Vector3Int coord)
+        public IEnumerator InstantiateChunk(Action<Vector3Int, GameObject> callback, Chunk chunk, Vector3Int coord)
         {
 	        GameObject chunk_go = new GameObject();
 	        chunk_go.name = string.Format("Chunk {0}", chunk.GetInstanceID());
@@ -146,13 +149,16 @@
 			        tile_go.transform.position = pos;
 			        tile_go.transform.parent = chunk_go.transform;
 			        tiles.Add(tile_go);
+                    if(x % 2 == 0)
+                        yield return new WaitForEndOfFrame();
 		        }
 	        }
 
 	        var chunkId = chunk_go.AddComponent<ChunkData>();
 	        chunkId.tiles = tiles;
 	        chunkId.coord = coord;
-	        return chunk_go;
+            callback(coord, chunk_go);
+            yield return null;
         }
 	}
 }

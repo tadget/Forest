@@ -23,6 +23,7 @@
      
         public float timeMultiplier = 1;
         public Gradient sunGradient;
+        public Gradient fogGradient;
         public Color currentColor;
 
         void Start()
@@ -65,6 +66,7 @@
             sun.transform.localEulerAngles = SunAngle();
             currentColor = sunGradient.Evaluate((timeOfDay+90)/360f);
             RenderSettings.ambientSkyColor = currentColor;
+            RenderSettings.fogColor = fogGradient.Evaluate((timeOfDay + 90) / 360f);
 
         }
      
