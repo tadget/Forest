@@ -9,6 +9,7 @@ namespace Tadget
     using System.Collections.Generic;
 
     [RequireComponent (typeof(UIManager), typeof(MapManager), typeof(LoadingManager))]
+    [RequireComponent((typeof(AudioManager)))]
     public class GameManager : MonoBehaviour
     {   
         /// Map
@@ -20,6 +21,9 @@ namespace Tadget
 
         /// UI
         private UIManager ui;
+
+        /// Audio
+        private AudioManager sound;
 
         /// Data
         private LoadingManager load;
@@ -51,6 +55,7 @@ namespace Tadget
             PlacePlayer();
             state.playerInstantiated = true;
             LinkPlayerData();
+            sound.PlayMainTheme();
             StartCoroutine(GameLoop());
         }
 
@@ -65,6 +70,7 @@ namespace Tadget
             ui = GetComponent<UIManager>();
             map = GetComponent<MapManager>();
             load = GetComponent<LoadingManager>();
+            sound = GetComponent<AudioManager>();
             state = GameState.Create();
         }
 

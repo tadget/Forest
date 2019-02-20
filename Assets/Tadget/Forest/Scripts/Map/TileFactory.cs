@@ -27,6 +27,13 @@
                 int count = item.isFixedCount ? item.count : Random.Range(item.minRandomCount, item.maxRandomCount + 1);
                 Vector3 position = Vector3.zero;
 
+                GameObject prefab;
+                if (!tileObjects.TryGetObject(item.id, out prefab))
+                {
+                    Debug.LogWarning("Unable to instantiate " + item.id);
+                    continue;
+                }
+
                 for (int i = 0; i < count; i++)
                 {
                     if (item.isPositionRandomized)
@@ -42,10 +49,6 @@
                             position = item.positions[i % item.positions.Count];
                         }
                     }
-
-                    GameObject prefab;
-                    if(!tileObjects.TryGetObject(item.id, out prefab))
-                        continue;
 
                     var obj = GameObject.Instantiate(prefab, position, prefab.transform.rotation);
                     if (obj != null)

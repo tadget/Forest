@@ -8,9 +8,6 @@
 
 	public class ChunkGenerator
 	{
-		public const int chunkTileCount_x = 8;
-		public const int chunkTileCount_y = 8;
-
 		private MapSettings mapSettings;
         private TileFactory tileFactory;
 
@@ -41,7 +38,7 @@
 						tile.type = Tile.Type.YARD;
                     }
 
-                    tiles[chunkTileCount_y * z + x] = tile;
+                    tiles[8 * z + x] = tile;
                 }
 
             /// Generate the outer regions with decreasing obstacle density
@@ -84,33 +81,41 @@
                             }
                         }
                         tile.type = Tile.Type.OUTER;
-                        tiles[chunkTileCount_y * z + x] = tile;
+                        tiles[8 * z + x] = tile;
                     }
             }
             return Chunk.Create(tiles, 8, 8);
         }
 
-        public Chunk GenerateBiomeChunk(int biome)
+        public Chunk GenerateChunk(Vector3Int targetPos)
         {
-	        Tile[] tiles = new Tile[64];
-	        for (int i = 0; i < 64; i++)
-	        {
-                switch (biome)
+            Tile[] tiles = new Tile[mapSettings.chunkTileCount_x * mapSettings.chunkTileCount_y];
+            for (int z = 0; z < mapSettings.chunkTileCount_y; z++)
+            {
+                for (int x = 0; x < mapSettings.chunkTileCount_x; x++)
                 {
-                    case 0:
-                        tiles[i] = mapSettings.biome1Tiles[Random.Range(0, mapSettings.biome1Tiles.Count)];
-                        break;
-                    case 1:
-                        tiles[i] = mapSettings.biome2Tiles[Random.Range(0, mapSettings.biome2Tiles.Count)];
-                        break;
-                    case 2:
-                        tiles[i] = mapSettings.biome3Tiles[Random.Range(0, mapSettings.biome3Tiles.Count)];
-                        break;
-                    default:
-                        break;
+                    var val = Noise.GenerateNoiseMap(2, 2, Random.Range(0, Int32.MaxValue), 10f, 2, 0.265f, 14,
+                        new Vector2(
+                            mapSettings.chunkTileCount_x * targetPos.x + x,
+                            mapSettings.chunkTileCount_y * targetPos.z + z))[0,0];
+
+                    int tile = z * mapSettings.chunkTileCount_y + x;
+
+                    if(val > 0.8f)
+                    {
+                        tiles[tile] = mapSettings.biome1Tiles[Random.Range(0, mapSettings.biome1Tiles.Count)];
+                    }
+                    else if(val > 0.5f)
+                    {
+                        tiles[tile] = mapSettings.biome2Tiles[Random.Range(0, mapSettings.biome2Tiles.Count)];
+                    }
+                    else
+                    {
+                        tiles[tile] = mapSettings.biome3Tiles[Random.Range(0, mapSettings.biome3Tiles.Count)];
+                    }
                 }
-	        }
-	        return Chunk.Create(tiles, 8, 8);
+            }
+            return Chunk.Create(tiles, mapSettings.chunkTileCount_x, mapSettings.chunkTileCount_y);
         }
 
         public IEnumerator InstantiateChunk(Action<Vector3Int, GameObject> callback, Chunk chunk, Vector3Int coord)
@@ -120,9 +125,9 @@
 
 	        List<GameObject> tiles = new List<GameObject>();
 	        var start = new Vector3(
-		        chunkTileCount_x * mapSettings.tileOffsetX * coord.x,
+                mapSettings.chunkTileCount_x * mapSettings.tileOffsetX * coord.x,
 		        0,
-		        chunkTileCount_y * mapSettings.tileOffsetZ * coord.z);
+                mapSettings.chunkTileCount_y * mapSettings.tileOffsetZ * coord.z);
 	        var id = -1;
 	        for (int z = 0; z < chunk.size_z; z++)
 	        {
@@ -149,7 +154,7 @@
 			        tile_go.transform.position = pos;
 			        tile_go.transform.parent = chunk_go.transform;
 			        tiles.Add(tile_go);
-                    if(x % 2 == 0)
+                    if (Random.value < 0.60f)
                         yield return new WaitForEndOfFrame();
 		        }
 	        }

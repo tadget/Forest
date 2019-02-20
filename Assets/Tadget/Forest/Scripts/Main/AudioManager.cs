@@ -14,7 +14,7 @@
             Debug.Assert(data != null, "Missing Audio Data");
         }
 
-        private void Start()
+        private void Awake()
         {
             var go = new GameObject("Main Audio Source");
             mainAudioSource = go.AddComponent<AudioSource>();

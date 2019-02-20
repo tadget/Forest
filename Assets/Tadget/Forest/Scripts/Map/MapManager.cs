@@ -66,7 +66,6 @@ namespace Tadget
             homeChunk = chunkGenerator.GenerateHomeChunk();
             chunks.Add(new Vector3Int(0,0,0), homeChunk);
 
-            var forestChunk = chunkGenerator.GenerateBiomeChunk(0);
             var positions = new List<Vector3Int>()
             {
                 new Vector3Int(-1,0,0),
@@ -80,7 +79,10 @@ namespace Tadget
             };
 
             foreach (var position in positions)
+            {
+                var forestChunk = chunkGenerator.GenerateChunk(position);
                 chunks.Add(position, forestChunk);
+            }
 
             foreach (KeyValuePair<Vector3Int, Chunk> item in chunks)
             {
@@ -105,11 +107,11 @@ namespace Tadget
                 //Debug.Log("Entered new chunk!");
                 lastChunkCoord = tileData.chunk_coord;
                 PurgeChunks(tileData.chunk_coord);
-                UpdateChunks(tileData.chunk_coord);
+                StartCoroutine(UpdateChunks(tileData.chunk_coord));
             }
         }
 
-        private void UpdateChunks(Vector3Int chunkPosition)
+        private IEnumerator UpdateChunks(Vector3Int chunkPosition)
         {
             List<Vector3Int> dirs = new List<Vector3Int>()
             {
@@ -145,27 +147,14 @@ namespace Tadget
                             chunk = homeChunk;
                         else
                         {
-                            var val = Noise.GenerateNoiseMap(2, 2, 42, 10f, 2, 0.265f, 14, new Vector2(targetPos.x, targetPos.z))[0,0];
-                            int biome = 0;
-                            if(val > 0.5f)
-                            {
-                                biome = 0;
-                            }
-                            else if(val > 0.6f)
-                            {
-                                biome = 1;
-                            }
-                            else
-                            {
-                                biome = 2;
-                            }
-                            chunk = chunkGenerator.GenerateBiomeChunk(biome);
+                            chunk = chunkGenerator.GenerateChunk(targetPos);
                         }
                         chunks.Add(targetPos, chunk);
                     }
                     construction_chunks.Add(targetPos);
                     StartCoroutine(chunkGenerator.InstantiateChunk(InstantiateChunkCallback, chunk, targetPos));
                 }
+                yield return new WaitForEndOfFrame();
             }
         }
 
@@ -173,37 +162,39 @@ namespace Tadget
         {
             if(construction_chunks.Contains(pos))
                 construction_chunks.Remove(pos);
-            active_chunks.Add(pos, chunk_go);
-            chunk_go.transform.parent = mapContainer.transform;
+
+            if (active_chunks.ContainsKey(pos))
+                active_chunks[pos] = chunk_go;
+            else
+                active_chunks.Add(pos, chunk_go);
         }
 
         private void PurgeChunks(Vector3Int coord)
         {
-            int purgeDistance = 3;
-            //Transform child;
-            //List<Transform> tiles = new List<Transform>();
-            //List<Transform> objects = new List<Transform>();
+            int count = 0;
             var keys = new List<Vector3Int>(active_chunks.Keys);
             foreach (var key in keys)
             {
+                count++;
                 if (construction_chunks.Contains(key))
                     continue;
                 var d = coord.ManhattanDistance(key);
-                if (d >= purgeDistance)
+                if (d >= mapSettings.chunkRenderDistance)
                 {
                     var chunk_go = active_chunks[key];
-                    /*
-                    foreach(Transform tile in chunk_go.transform)
-                    {
-                        foreach (Transform obj in tile)
-                            Destroy(obj.gameObject);
-                        Destroy(tile.gameObject);
-                    }*/
-                    Destroy(chunk_go);
+                    StartCoroutine(DelayedDestroy(chunk_go, count));
                     active_chunks.Remove(key);
                     chunks.Remove(key);
                 }
             }
         }
+
+        private IEnumerator DelayedDestroy(GameObject go, int frameCount)
+        {
+            for (int i = 0; i < frameCount; i++)
+                yield return new WaitForEndOfFrame();
+            Destroy(go);
+        }
+
 	}
 }
