@@ -19,6 +19,19 @@ namespace Tadget
         private Chunk homeChunk;
 
         private Vector3Int lastChunkCoord;
+        private bool isUpdatingChunks;
+
+        private readonly Vector3Int[] neighborCoords = new Vector3Int[]
+        {
+            new Vector3Int(-1, 0, 0),
+            new Vector3Int(1, 0, 0),
+            new Vector3Int(0, 0, -1),
+            new Vector3Int(0, 0, 1),
+            new Vector3Int(-1, 0, 1),
+            new Vector3Int(-1, 0, -1),
+            new Vector3Int(1, 0, 1),
+            new Vector3Int(1, 0, -1)
+        };
 
         public MapSettings mapSettings;
         public TileObjects tileObjects;
@@ -60,25 +73,10 @@ namespace Tadget
 
 		public void Load()
         {
-            chunks.Clear();
-            active_chunks.Clear();
-
             homeChunk = chunkGenerator.GenerateHomeChunk();
             chunks.Add(new Vector3Int(0,0,0), homeChunk);
 
-            var positions = new List<Vector3Int>()
-            {
-                new Vector3Int(-1,0,0),
-                new Vector3Int(1,0,0),
-                new Vector3Int(0,0,-1),
-                new Vector3Int(0,0,1),
-                new Vector3Int(-1,0,1),
-                new Vector3Int(-1,0,-1),
-                new Vector3Int(1,0,1),
-                new Vector3Int(1,0,-1)
-            };
-
-            foreach (var position in positions)
+            foreach (var position in neighborCoords)
             {
                 var forestChunk = chunkGenerator.GenerateChunk(position);
                 chunks.Add(position, forestChunk);
@@ -86,14 +84,23 @@ namespace Tadget
 
             foreach (KeyValuePair<Vector3Int, Chunk> item in chunks)
             {
+                construction_chunks.Add(item.Key);
                 StartCoroutine(chunkGenerator.InstantiateChunk(InstantiateChunkCallback, item.Value, item.Key));
             }
         }
 
         public void Regenerate()
         {
-            foreach(Transform container in mapContainer.transform)
-                Destroy(container.gameObject);
+            foreach (var pair in active_chunks)
+            {
+                if (!construction_chunks.Contains(pair.Key))
+                {
+                    if(pair.Value != null)
+                        Destroy(pair.Value);
+                }
+            }
+            active_chunks.Clear();
+            chunks.Clear();
             Load();
         }
 
@@ -106,25 +113,20 @@ namespace Tadget
             {
                 //Debug.Log("Entered new chunk!");
                 lastChunkCoord = tileData.chunk_coord;
-                PurgeChunks(tileData.chunk_coord);
                 StartCoroutine(UpdateChunks(tileData.chunk_coord));
             }
         }
 
         private IEnumerator UpdateChunks(Vector3Int chunkPosition)
         {
-            List<Vector3Int> dirs = new List<Vector3Int>()
-            {
-                new Vector3Int(-1, 0, 0),
-                new Vector3Int(1, 0, 0),
-                new Vector3Int(0, 0, -1),
-                new Vector3Int(0, 0, 1),
-                new Vector3Int(-1, 0, 1),
-                new Vector3Int(-1, 0, -1),
-                new Vector3Int(1, 0, 1),
-                new Vector3Int(1, 0, -1)
-            };
-            foreach (var dir in dirs)
+            if (isUpdatingChunks)
+                yield return null;
+            isUpdatingChunks = true;
+            // Debug.LogFormat("Purging chunks @ frame {0}", Time.frameCount);
+            yield return StartCoroutine(PurgeChunks(chunkPosition));
+            // Debug.LogFormat("Updating chunks @ frame {0}", Time.frameCount);
+
+            foreach (var dir in neighborCoords)
             {
                 var targetPos = chunkPosition + dir;
                 if(construction_chunks.Contains(targetPos))
@@ -143,12 +145,7 @@ namespace Tadget
                     }
                     else
                     {
-                        if (Random.value > 0.99f)
-                            chunk = homeChunk;
-                        else
-                        {
-                            chunk = chunkGenerator.GenerateChunk(targetPos);
-                        }
+                        chunk = chunkGenerator.GenerateChunk(targetPos);
                         chunks.Add(targetPos, chunk);
                     }
                     construction_chunks.Add(targetPos);
@@ -156,45 +153,49 @@ namespace Tadget
                 }
                 yield return new WaitForEndOfFrame();
             }
+
+            isUpdatingChunks = false;
         }
 
         public void InstantiateChunkCallback(Vector3Int pos, GameObject chunk_go)
         {
             if(construction_chunks.Contains(pos))
                 construction_chunks.Remove(pos);
+            else
+                Debug.LogWarningFormat("Chunk instantiated that was not marked as under construction.");
 
             if (active_chunks.ContainsKey(pos))
+            {
                 active_chunks[pos] = chunk_go;
+                Debug.LogWarningFormat("Overwriting chunk {0}.", pos);
+            }
             else
                 active_chunks.Add(pos, chunk_go);
         }
 
-        private void PurgeChunks(Vector3Int coord)
+        private IEnumerator PurgeChunks(Vector3Int coord)
         {
             int count = 0;
-            var keys = new List<Vector3Int>(active_chunks.Keys);
-            foreach (var key in keys)
+            var activeCoords = new List<Vector3Int>(active_chunks.Keys);
+            foreach (var activeCoord in activeCoords)
             {
-                count++;
-                if (construction_chunks.Contains(key))
+                if (construction_chunks.Contains(activeCoord))
                     continue;
-                var d = coord.ManhattanDistance(key);
-                if (d >= mapSettings.chunkRenderDistance)
+                var d = coord.ChebyshevDistance(activeCoord);
+                if (d > mapSettings.chunkRenderDistance)
                 {
-                    var chunk_go = active_chunks[key];
-                    StartCoroutine(DelayedDestroy(chunk_go, count));
-                    active_chunks.Remove(key);
-                    chunks.Remove(key);
+                    count++;
+                    for (int i = 0; i < count; i++)
+                        yield return new WaitForEndOfFrame();
+                    GameObject chunk_go;
+                    if (active_chunks.TryGetValue(activeCoord, out chunk_go))
+                    {
+                        Destroy(chunk_go);
+                        active_chunks.Remove(activeCoord);
+                        chunks.Remove(activeCoord);
+                    }
                 }
             }
         }
-
-        private IEnumerator DelayedDestroy(GameObject go, int frameCount)
-        {
-            for (int i = 0; i < frameCount; i++)
-                yield return new WaitForEndOfFrame();
-            Destroy(go);
-        }
-
 	}
 }

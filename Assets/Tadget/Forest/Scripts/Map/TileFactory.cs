@@ -26,6 +26,7 @@
 
                 int count = item.isFixedCount ? item.count : Random.Range(item.minRandomCount, item.maxRandomCount + 1);
                 Vector3 position = Vector3.zero;
+                Quaternion rotation = Quaternion.identity;
 
                 GameObject prefab;
                 if (!tileObjects.TryGetObject(item.id, out prefab))
@@ -50,7 +51,16 @@
                         }
                     }
 
-                    var obj = GameObject.Instantiate(prefab, position, prefab.transform.rotation);
+                    if (item.isRotationRandomized)
+                    {
+                        rotation = Quaternion.AngleAxis(Random.Range(0,360), Vector3.up) * prefab.transform.rotation;
+                    }
+                    else
+                    {
+                        rotation = prefab.transform.rotation;
+                    }
+
+                    var obj = GameObject.Instantiate(prefab, position, rotation);
                     if (obj != null)
                         obj.transform.parent = tile_go.transform;
                 }

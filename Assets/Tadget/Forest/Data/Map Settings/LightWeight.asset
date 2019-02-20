@@ -31,4 +31,4 @@ MonoBehaviour:
   - {fileID: 11400000, guid: f9f04b913fcfcf54eb5b0dedbb199a62, type: 2}
   biome3Tiles:
   - {fileID: 11400000, guid: f7f96a05af58082419ea077d78d4aa72, type: 2}
-  chunkRenderDistance: 3
+  chunkRenderDistance: 1

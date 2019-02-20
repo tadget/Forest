@@ -199,7 +199,7 @@ MonoBehaviour:
   secondsPerHour: 0
   secondsPerDay: 0
   currectMonth: 1
-  timeMultiplier: 50
+  timeMultiplier: 20
   sunGradient:
     serializedVersion: 2
     key0: {r: 0.054833323, g: 0.24425754, b: 0.32900003, a: 1}
@@ -307,7 +307,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   data: {fileID: 0}
   state: {fileID: 0}
-  settings: {fileID: 11400000, guid: 8268b97b3fce67e4c9934b1662fb8de8, type: 2}
+  settings: {fileID: 11400000, guid: 0dffc343247ceb4408b973bfd7b421dd, type: 2}
 --- !u!4 &52570292
 Transform:
   m_ObjectHideFlags: 0

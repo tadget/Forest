@@ -16,6 +16,7 @@ MonoBehaviour:
   - id: grass_02
     positions: []
     isPositionRandomized: 0
+    isRotationRandomized: 0
     minOffsetX: 0
     maxOffsetX: 0
     minOffsetZ: 0
@@ -29,6 +30,7 @@ MonoBehaviour:
   - id: tree_04
     positions: []
     isPositionRandomized: 1
+    isRotationRandomized: 1
     minOffsetX: -8
     maxOffsetX: 8
     minOffsetZ: -8
@@ -42,6 +44,7 @@ MonoBehaviour:
   - id: mushroom_01
     positions: []
     isPositionRandomized: 1
+    isRotationRandomized: 1
     minOffsetX: -5
     maxOffsetX: 5
     minOffsetZ: -5
@@ -55,6 +58,7 @@ MonoBehaviour:
   - id: mushroom_02
     positions: []
     isPositionRandomized: 1
+    isRotationRandomized: 1
     minOffsetX: -5
     maxOffsetX: 5
     minOffsetZ: -5
@@ -68,6 +72,7 @@ MonoBehaviour:
   - id: mushroom_03
     positions: []
     isPositionRandomized: 1
+    isRotationRandomized: 1
     minOffsetX: -5
     maxOffsetX: 5
     minOffsetZ: -5
