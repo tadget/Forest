@@ -8,8 +8,7 @@
         [HideInInspector]
         public Light sunLight;
      
-        [Range(0, 43200)]
-        public float timeOfDay = 0.0f;
+        public float timeOfDay = 0;
      
         public float secondsPerMinute = 60.0f;
         [HideInInspector]

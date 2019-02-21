@@ -10,11 +10,13 @@
     {
         private MapSettings mapSettings;
         private TileFactory tileFactory;
+        private LandmarkGenerator landmarkGenerator;
 
         public ChunkGenerator(MapSettings mapSettings, TileObjects tileObjects)
         {
             this.mapSettings = mapSettings;
             this.tileFactory = new TileFactory(tileObjects);
+            this.landmarkGenerator = new LandmarkGenerator();
         }
 
         public Chunk GenerateHomeChunk()
@@ -164,6 +166,11 @@
             chunkId.coord = coord;
             callback(coord, chunk_go);
             yield return null;
+        }
+
+        public void OnPlayerEnteredNewChunk(Vector3Int coord)
+        {
+
         }
     }
 }

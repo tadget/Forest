@@ -12,6 +12,7 @@ namespace Tadget
         public bool isFirstTimePlaying = true;
         public bool isLanternFound = false;
         public DateTime lastPlayedDateTime;
+        public float timeOfDay;
 
         public static GameData Create()
         {

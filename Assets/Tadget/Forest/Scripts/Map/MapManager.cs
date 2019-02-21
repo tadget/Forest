@@ -1,7 +1,4 @@
-﻿using System.Linq;
-using System.Net.NetworkInformation;
-
-namespace Tadget
+﻿namespace Tadget
 {
 	using System.Collections;
 	using System.Collections.Generic;
@@ -10,7 +7,6 @@ namespace Tadget
 	public class MapManager : MonoBehaviour 
 	{
         private ChunkGenerator chunkGenerator;
-		private GameObject mapContainer;
 
         private Dictionary<Vector3Int, GameObject> active_chunks;
         private Dictionary<Vector3Int, Chunk> chunks;
@@ -63,7 +59,6 @@ namespace Tadget
 		
 		private void InitVariables()
         {
-            mapContainer = new GameObject("Map Container");
             tileObjects.Init();
             chunkGenerator = new ChunkGenerator(mapSettings, tileObjects);
             chunks = new Dictionary<Vector3Int, Chunk>();
@@ -112,6 +107,7 @@ namespace Tadget
             if (lastChunkCoord != tileData.chunk_coord)
             {
                 //Debug.Log("Entered new chunk!");
+                chunkGenerator.OnPlayerEnteredNewChunk(tileData.chunk_coord);
                 lastChunkCoord = tileData.chunk_coord;
                 StartCoroutine(UpdateChunks(tileData.chunk_coord));
             }
@@ -121,10 +117,10 @@ namespace Tadget
         {
             if (isUpdatingChunks)
                 yield return null;
+
             isUpdatingChunks = true;
-            // Debug.LogFormat("Purging chunks @ frame {0}", Time.frameCount);
+
             yield return StartCoroutine(PurgeChunks(chunkPosition));
-            // Debug.LogFormat("Updating chunks @ frame {0}", Time.frameCount);
 
             foreach (var dir in neighborCoords)
             {

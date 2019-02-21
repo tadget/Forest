@@ -25,6 +25,9 @@ namespace Tadget
         /// Audio
         private AudioManager sound;
 
+        /// Day Cycle
+        private DayCycle day;
+
         /// Data
         private LoadingManager load;
         [SerializeField]
@@ -59,6 +62,18 @@ namespace Tadget
             StartCoroutine(GameLoop());
         }
 
+        private void OnApplicationQuit()
+        {
+            SyncDataFromGame();
+            load.SaveGameData(data);
+        }
+
+        private void OnApplicationPause(bool pauseStatus)
+        {
+            if(pauseStatus)
+                OnApplicationQuit();
+        }
+
         private void Update()
         {
             CheckForInput();
@@ -71,15 +86,20 @@ namespace Tadget
             map = GetComponent<MapManager>();
             load = GetComponent<LoadingManager>();
             sound = GetComponent<AudioManager>();
+            day = FindObjectOfType<DayCycle>();
             state = GameState.Create();
         }
 
         private void LoadGameData()
         {
-            if (data == null)
-            {
-                data = load.GetData();
-            }
+            data = load.GetData();
+            SyncGameFromData();
+        }
+
+        private void SaveGameData()
+        {
+            SyncDataFromGame();
+            load.SaveGameData(data);
         }
 
         private void PlacePlayer()
@@ -95,6 +115,38 @@ namespace Tadget
             playerTileMonitor.OnTileEnter += map.OnPlayerEnteredNewTile;
         }
 
+        private void SyncGameFromData()
+        {
+            Debug.Log("Syncing game from data...");
+            if (data.isFirstTimePlaying)
+            {
+                Debug.Log("* Playing for the first time!");
+                data.isFirstTimePlaying = false;
+            }
+            else
+            {
+                Debug.Log("* Last played " + data.lastPlayedDateTime);
+            }
+
+            Debug.Log("* Updating time of day.");
+            day.timeOfDay = data.timeOfDay;
+
+            Debug.Log("Data sync complete.");
+        }
+
+        private void SyncDataFromGame()
+        {
+            Debug.Log("Syncing data from game...");
+
+            Debug.Log("* Updating last played time.");
+            data.lastPlayedDateTime = DateTime.Now;
+
+            Debug.Log("* Updating time of day.");
+            data.timeOfDay = day.timeOfDay;
+
+            Debug.Log("Data sync complete.");
+        }
+
         private void CheckForInput()
         {
             if(Input.GetKeyDown(KeyCode.R))
@@ -107,14 +159,12 @@ namespace Tadget
             }
             if (Input.GetKeyDown(KeyCode.Z))
             {
-                load.SaveGameData(data);
-                Debug.Log("Saved game data!");
+                SaveGameData();
             }
             if (Input.GetKeyDown(KeyCode.X))
             {
                 load.ResetData();
-                data = load.GetData();
-                Debug.Log("Reset game data!");
+                LoadGameData();
             }
         }
 
@@ -127,18 +177,6 @@ namespace Tadget
 
         private IEnumerator GameLoop()
         {
-            if (data.isFirstTimePlaying)
-            {
-                Debug.Log("Playing for the first time!");
-                data.isFirstTimePlaying = false;
-            }
-            else
-            {
-                Debug.Log("Last played " + data.lastPlayedDateTime);
-            }
-            data.lastPlayedDateTime = DateTime.Now;
-            load.SaveGameData(data);
-
             while (true)
             {
                 yield return new WaitForEndOfFrame();
