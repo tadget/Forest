@@ -1,6 +1,9 @@
-﻿    using UnityEngine;
+﻿    using System;
+    using UnityEngine;
     using System.Collections;
-     
+    using System.Linq;
+    using Tadget;
+
     public class DayCycle : MonoBehaviour
     {
         [HideInInspector]
@@ -25,6 +28,8 @@
         public Gradient fogGradient;
         public Color currentColor;
 
+        public Action OnDayTimeEvening;
+
         void Start()
         {
             sun = gameObject;
@@ -33,13 +38,31 @@
             secondsPerHour = secondsPerMinute * 60.0f;
             secondsPerDay = secondsPerHour * 24.0f;
         }
-     
+
+        private int d;
+        private bool isEvening;
         void Update()
         {
             SunUpdate();
      
             timeOfDay += Time.deltaTime * timeMultiplier;
-     
+
+            d = (int)timeOfDay - 150;
+            if (d >= 0 && d <= timeMultiplier)
+            {
+                if(isEvening)
+                    return;
+                isEvening = true;
+                //Debug.Log("Evening");
+                //if(OnDayTimeEvening != null)
+                //    OnDayTimeEvening.Invoke();
+                EventManager.TriggerEvent<string>("OnDayTimeEvening", "Evening");
+            }
+            else
+            {
+                isEvening = false;
+            }
+
             if (timeOfDay >= 360)
             {
                 currentDay += 1;

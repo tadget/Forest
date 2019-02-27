@@ -1,21 +1,21 @@
 ﻿namespace Tadget
 {
-	using System.Collections;
-	using System.Collections.Generic;
-	using UnityEngine;
+    using System;
+    using System.Collections;
+    using System.Collections.Generic;
+    using UnityEngine;
 
-	public class MapManager : MonoBehaviour 
-	{
+    public class MapManager : MonoBehaviour
+    {
         private ChunkGenerator chunkGenerator;
 
-        private Dictionary<Vector3Int, GameObject> active_chunks;
-        private Dictionary<Vector3Int, Chunk> chunks;
-        private List<Vector3Int> construction_chunks;
+        private Dictionary<Vector3Int, Chunk> visibleChunks;
+        private Dictionary<Vector3Int, Chunk> cachedChunks;
+        private List<Vector3Int> chunksUnderConstruction;
+        private List<Chunk> chunksToRecycle;
 
-        private Chunk homeChunk;
-
-        private Vector3Int lastChunkCoord;
-        private bool isUpdatingChunks;
+        public MapSettings mapSettings;
+        public TileObjects tileObjects;
 
         private readonly Vector3Int[] neighborCoords = new Vector3Int[]
         {
@@ -23,14 +23,12 @@
             new Vector3Int(1, 0, 0),
             new Vector3Int(0, 0, -1),
             new Vector3Int(0, 0, 1),
+            new Vector3Int(0, 0, 0),
             new Vector3Int(-1, 0, 1),
             new Vector3Int(-1, 0, -1),
             new Vector3Int(1, 0, 1),
             new Vector3Int(1, 0, -1)
         };
-
-        public MapSettings mapSettings;
-        public TileObjects tileObjects;
 
         private void OnValidate()
         {
@@ -47,151 +45,133 @@
             }
         }
 
-		private void Awake()
-		{
-			InitVariables();	
-		}
-
-        private void Update()
+        private void Awake()
         {
-
+            Init();
         }
-		
-		private void InitVariables()
+
+        private void Init()
         {
             tileObjects.Init();
-            chunkGenerator = new ChunkGenerator(mapSettings, tileObjects);
-            chunks = new Dictionary<Vector3Int, Chunk>();
-            active_chunks = new Dictionary<Vector3Int, GameObject>();
-            construction_chunks = new List<Vector3Int>();
+            visibleChunks = new Dictionary<Vector3Int, Chunk>();
+            cachedChunks = new Dictionary<Vector3Int, Chunk>();
+            chunksUnderConstruction = new List<Vector3Int>();
+            chunkGenerator = gameObject.AddComponent<ChunkGenerator>().Init(mapSettings, tileObjects);
         }
 
-		public void Load()
+        public void Load(Vector3Int homeCoord)
         {
-            homeChunk = chunkGenerator.GenerateHomeChunk();
-            chunks.Add(new Vector3Int(0,0,0), homeChunk);
+            UpdateMapRender(homeCoord);
+        }
 
-            foreach (var position in neighborCoords)
+        private Vector3Int lastPositionRequest;
+        private bool posRequest;
+        private void Update()
+        {
+            if (posRequest)
             {
-                var forestChunk = chunkGenerator.GenerateChunk(position);
-                chunks.Add(position, forestChunk);
-            }
-
-            foreach (KeyValuePair<Vector3Int, Chunk> item in chunks)
-            {
-                construction_chunks.Add(item.Key);
-                StartCoroutine(chunkGenerator.InstantiateChunk(InstantiateChunkCallback, item.Value, item.Key));
+                UpdateMapRender(lastPositionRequest);
             }
         }
 
-        public void Regenerate()
+        public void UpdateMapRender(Vector3Int chunkCoord)
         {
-            foreach (var pair in active_chunks)
+            if (chunksUnderConstruction.Count > 0)
             {
-                if (!construction_chunks.Contains(pair.Key))
+                lastPositionRequest = chunkCoord;
+                posRequest = true;
+                return;
+            }
+            else
+            {
+                if (posRequest && lastPositionRequest == chunkCoord)
+                    posRequest = false;
+            }
+
+            var visibleChunkCoords = new List<Vector3Int>(visibleChunks.Keys);
+            foreach (var visibleChunkCoord in visibleChunkCoords)
+            {
+                var d = visibleChunkCoord.ChebyshevDistance(chunkCoord);
+                // Cache nearby chunks
+                if (d == mapSettings.chunkRenderDistance + 1)
                 {
-                    if(pair.Value != null)
-                        Destroy(pair.Value);
-                }
-            }
-            active_chunks.Clear();
-            chunks.Clear();
-            Load();
-        }
-
-        public void OnPlayerEnteredNewTile(TileData tileData)
-        {
-            //Debug.LogFormat("[Map Manager]: Player entered {0} {1} {2} {3}",
-            //    tileData.id, tileData.chunk_coord, tileData.chunk_id, tileData.local_chunk_id);
-
-            if (lastChunkCoord != tileData.chunk_coord)
-            {
-                //Debug.Log("Entered new chunk!");
-                chunkGenerator.OnPlayerEnteredNewChunk(tileData.chunk_coord);
-                lastChunkCoord = tileData.chunk_coord;
-                StartCoroutine(UpdateChunks(tileData.chunk_coord));
-            }
-        }
-
-        private IEnumerator UpdateChunks(Vector3Int chunkPosition)
-        {
-            if (isUpdatingChunks)
-                yield return null;
-
-            isUpdatingChunks = true;
-
-            yield return StartCoroutine(PurgeChunks(chunkPosition));
-
-            foreach (var dir in neighborCoords)
-            {
-                var targetPos = chunkPosition + dir;
-                if(construction_chunks.Contains(targetPos))
-                    continue;
-                GameObject chunk_go;
-                if (active_chunks.TryGetValue(targetPos, out chunk_go))
-                {
-                    chunk_go.SetActive(true);
-                }
-                else
-                {
-                    Chunk chunk;
-                    if (chunks.TryGetValue(targetPos, out chunk))
+                    var chunk = visibleChunks[visibleChunkCoord];
+                    chunk.Disable();
+                    visibleChunks.Remove(chunk.coord);
+                    if (cachedChunks.ContainsKey(chunk.coord))
                     {
-
+                        Debug.LogWarningFormat("Unable to cache chunk. {0} already cached. Recycling.", chunk.coord);
+                        chunkGenerator.Return(chunk);
                     }
                     else
                     {
-                        chunk = chunkGenerator.GenerateChunk(targetPos);
-                        chunks.Add(targetPos, chunk);
+                        cachedChunks.Add(chunk.coord, chunk);
                     }
-                    construction_chunks.Add(targetPos);
-                    StartCoroutine(chunkGenerator.InstantiateChunk(InstantiateChunkCallback, chunk, targetPos));
                 }
-                yield return new WaitForEndOfFrame();
             }
 
-            isUpdatingChunks = false;
-        }
-
-        public void InstantiateChunkCallback(Vector3Int pos, GameObject chunk_go)
-        {
-            if(construction_chunks.Contains(pos))
-                construction_chunks.Remove(pos);
-            else
-                Debug.LogWarningFormat("Chunk instantiated that was not marked as under construction.");
-
-            if (active_chunks.ContainsKey(pos))
+            var cachedChunkCoords = new List<Vector3Int>(cachedChunks.Keys);
+            foreach (var cachedChunkCoord in cachedChunkCoords)
             {
-                active_chunks[pos] = chunk_go;
-                Debug.LogWarningFormat("Overwriting chunk {0}.", pos);
-            }
-            else
-                active_chunks.Add(pos, chunk_go);
-        }
-
-        private IEnumerator PurgeChunks(Vector3Int coord)
-        {
-            int count = 0;
-            var activeCoords = new List<Vector3Int>(active_chunks.Keys);
-            foreach (var activeCoord in activeCoords)
-            {
-                if (construction_chunks.Contains(activeCoord))
-                    continue;
-                var d = coord.ChebyshevDistance(activeCoord);
-                if (d > mapSettings.chunkRenderDistance)
+                var d = cachedChunkCoord.ChebyshevDistance(chunkCoord);
+                // Remove old far away cached chunks
+                if (d > mapSettings.chunkRenderDistance + 1)
                 {
-                    count++;
-                    for (int i = 0; i < count; i++)
-                        yield return new WaitForEndOfFrame();
-                    GameObject chunk_go;
-                    if (active_chunks.TryGetValue(activeCoord, out chunk_go))
-                    {
-                        Destroy(chunk_go);
-                        active_chunks.Remove(activeCoord);
-                        chunks.Remove(activeCoord);
-                    }
+                    var chunk = cachedChunks[cachedChunkCoord];
+                    cachedChunks.Remove(cachedChunkCoord);
+                    chunkGenerator.Return(chunk);
+                }
+            }
+
+            foreach (var dir in neighborCoords)
+            {
+                var targetPos = chunkCoord + dir;
+                if(visibleChunks.ContainsKey(targetPos) || chunksUnderConstruction.Contains(targetPos))
+                    continue;
+                Chunk chunk;
+                if (cachedChunks.TryGetValue(targetPos, out chunk))
+                {
+                    Debug.LogFormat("Enabled cached chunk {0}.", targetPos);
+                    cachedChunks.Remove(targetPos);
+                    visibleChunks.Add(targetPos, chunk);
+                    chunk.Enable();
+                }
+                else
+                {
+                    Debug.LogFormat("Requested chunk {0} at frame {1}",
+                        targetPos, Time.frameCount);
+                    chunksUnderConstruction.Add(targetPos);
+                    chunkGenerator.Get(targetPos, ChunkCreatedCallback);
                 }
             }
         }
-	}
+
+        private void ChunkCreatedCallback(Chunk chunk)
+        {
+            Debug.LogFormat("Received chunk {0} at frame {1}",
+                chunk.coord, Time.frameCount);
+
+            if (chunksUnderConstruction.Contains(chunk.coord))
+            {
+                chunksUnderConstruction.Remove(chunk.coord);
+            }
+            else
+            {
+                Debug.LogWarning("Chunk was not marked for construction");
+            }
+
+            if (visibleChunks.ContainsKey(chunk.coord))
+            {
+                Debug.LogWarningFormat("Created chunk at {0} but another one is already visible at that coordinate. Recycling.",
+                    chunk.coord);
+                chunkGenerator.Return(chunk);
+            }
+            else
+            {
+                Debug.Log("Created chunk at " + chunk.coord);
+                visibleChunks.Add(chunk.coord, chunk);
+                chunk.Enable();
+            }
+        }
+    }
 }
