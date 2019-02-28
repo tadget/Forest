@@ -20,13 +20,22 @@
 
         public void Get(Vector3Int targetPos, Action<Chunk> callback)
         {
-            Chunk chunk = GenerateChunk(targetPos);
+            Chunk chunk;
+            if (GameManager.state.homeAvailable && targetPos == GameManager.state.homeCoord)
+            {
+                chunk = GenerateHomeChunk(targetPos);
+            }
+            else
+            {
+                chunk = GenerateBiomeChunk(targetPos);
+            }
+
             StartCoroutine(InstantiateChunk(chunk, callback));
         }
 
         public void Return(Chunk chunk)
         {
-            StartCoroutine(DelayedDestroy(chunk));
+            StartCoroutine(DestroyChunk(chunk));
         }
 
         private Chunk GenerateHomeChunk(Vector3Int targetPos)
@@ -99,45 +108,33 @@
             return Chunk.Create(tiles, 8, 8, targetPos);
         }
 
-        private Chunk GenerateChunk(Vector3Int targetPos)
+        private Chunk GenerateBiomeChunk(Vector3Int targetPos)
         {
-            if (GameManager.state.homeAvailable && targetPos == GameManager.state.homeCoord)
-            {
-                Debug.Log("Generating home @ " + targetPos);
-                return GenerateHomeChunk(targetPos);
-            }
+            var noise = Noise.GenerateNoiseMap(mapSettings.chunkTileCount_x, mapSettings.chunkTileCount_z,
+                Random.Range(0, Int32.MaxValue),
+                10f, 2, 0.265f, 14, Vector2.zero);
 
-            Tile[] tiles = new Tile[mapSettings.chunkTileCount_x * mapSettings.chunkTileCount_y];
-            for (int z = 0; z < mapSettings.chunkTileCount_y; z++)
+            Tile[] tiles = new Tile[mapSettings.chunkTileCount_x * mapSettings.chunkTileCount_z];
+            for (int z = 0; z < mapSettings.chunkTileCount_z; z++)
             {
                 for (int x = 0; x < mapSettings.chunkTileCount_x; x++)
                 {
-                    var val = Noise.GenerateNoiseMap(2, 2, Random.Range(0, Int32.MaxValue), 10f, 2, 0.265f, 14,
-                        new Vector2(
-                            mapSettings.chunkTileCount_x * targetPos.x + x,
-                            mapSettings.chunkTileCount_y * targetPos.z + z))[0,0];
-
-                    int tile = z * mapSettings.chunkTileCount_y + x;
+                    int tile = z * mapSettings.chunkTileCount_z + x;
+                    float val = noise[x, z];
 
                     if(val > 0.8f)
-                    {
                         tiles[tile] = mapSettings.biome1Tiles[Random.Range(0, mapSettings.biome1Tiles.Count)];
-                    }
                     else if(val > 0.5f)
-                    {
                         tiles[tile] = mapSettings.biome2Tiles[Random.Range(0, mapSettings.biome2Tiles.Count)];
-                    }
                     else
-                    {
                         tiles[tile] = mapSettings.biome3Tiles[Random.Range(0, mapSettings.biome3Tiles.Count)];
-                    }
                 }
             }
-            return Chunk.Create(tiles, mapSettings.chunkTileCount_x, mapSettings.chunkTileCount_y, targetPos);
+            return Chunk.Create(tiles, mapSettings.chunkTileCount_x, mapSettings.chunkTileCount_z, targetPos);
         }
 
         private bool isDestroying;
-        private IEnumerator DelayedDestroy(Chunk chunk)
+        private IEnumerator DestroyChunk(Chunk chunk)
         {
             while(isDestroying)
                 yield return new WaitForEndOfFrame();
@@ -158,7 +155,7 @@
             var start = new Vector3(
                 mapSettings.chunkTileCount_x * mapSettings.tileOffsetX * chunk.coord.x,
                 0,
-                mapSettings.chunkTileCount_y * mapSettings.tileOffsetZ * chunk.coord.z);
+                mapSettings.chunkTileCount_z * mapSettings.tileOffsetZ * chunk.coord.z);
 
             GameObject chunk_go = new GameObject();
             chunk_go.name = string.Format("Chunk {0}", chunk.GetInstanceID());

@@ -11,7 +11,7 @@ namespace Tadget
     {
         [Header("Chunk size")]
         public int chunkTileCount_x = 8;
-        public int chunkTileCount_y = 8;
+        public int chunkTileCount_z = 8;
 
         [Header("Tile position")]
         public float tileOffsetX = 10f;

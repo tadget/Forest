@@ -47,14 +47,15 @@
 
         }
 
-        private void Start()
+        private IEnumerator Start()
         {
             InitVariables();
             LoadGameData();
             state.SetDataLoaded(true);
-            state.SetHomeAvailable(true); //TODO fix to loaded state
-            map.Load(state.homeCoord);
-            state.SetMapLoaded(true);
+            var mapLoadCoroutine = map.Load(Vector3Int.zero, () =>
+                state.SetMapLoaded(true));
+            StartCoroutine(mapLoadCoroutine);
+            yield return new WaitUntil(() => state.mapLoaded);
             PlacePlayer();
             state.SetPlayerInstantiated(true);
             LinkPlayerData();
@@ -131,7 +132,6 @@
 
         private void LinkGameStateEvents()
         {
-            /*
             EventManager.StartListening<string>("OnHomeAvailable",
                 p =>
                 {
@@ -142,14 +142,13 @@
                     }
                     state.SetHomeAvailable(true);
                     state.SetWasHomeReachedSinceAvailable(false);
-                    landmarks.ChooseNewHomeChunkCoord();
+                    ChooseNewHomeCoord();
                     homeIndicator.transform.position = new Vector3(state.homeCoord.x, 0, state.homeCoord.z) *
                                                        map.mapSettings.tileOffsetX * map.mapSettings.chunkTileCount_x +
                                                        new Vector3(0.5f, 0, 0.5f) * map.mapSettings.tileOffsetX * map.mapSettings.chunkTileCount_x;
                     Debug.Log(p);
                 });
 
-            */
             EventManager.StartListening<TileData>("OnPlayerEnteredNewChunk",
                 tileData =>
                 {
@@ -158,7 +157,7 @@
                     if (state.homeAvailable)
                     {
                         var d = state.homeCoord.ChebyshevDistance(tileData.chunk_coord);
-                        if (state.wasHomeReachedSinceAvailable && d > map.mapSettings.chunkRenderDistance)
+                        if (state.wasHomeReachedSinceAvailable && d > map.mapSettings.chunkRenderDistance + 1)
                         {
                             state.SetHomeAvailable(false);
                             Debug.Log("Home unavailable due to player leaving visible home region.");
@@ -181,10 +180,14 @@
             {
                 Debug.Log("* Playing for the first time!");
                 data.isFirstTimePlaying = false;
+                state.SetHomeAvailable(true);
+                state.SetIsPlayerHome(true);
             }
             else
             {
                 Debug.Log("* Last played " + data.lastPlayedDateTime);
+                state.SetHomeAvailable(false);
+                state.SetIsPlayerHome(false);
             }
 
             Debug.Log("* Updating time of day.");
@@ -257,7 +260,13 @@
         {
             map.UpdateMapRender(tileData.chunk_coord);
         }
+
+        private void ChooseNewHomeCoord()
+        {
+            var v = UnityEngine.Random.Range(3, 5);
+            var x = UnityEngine.Random.value < .5? 1 : -1;
+            var z = UnityEngine.Random.value < .5? 1 : -1;
+            state.homeCoord = state.playerChunkCoord + new Vector3Int(x, 0, z) * v;
+        }
     }
-
-
 }

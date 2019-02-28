@@ -19,11 +19,11 @@
 
         private readonly Vector3Int[] neighborCoords = new Vector3Int[]
         {
+            new Vector3Int(0, 0, 0),
             new Vector3Int(-1, 0, 0),
             new Vector3Int(1, 0, 0),
             new Vector3Int(0, 0, -1),
             new Vector3Int(0, 0, 1),
-            new Vector3Int(0, 0, 0),
             new Vector3Int(-1, 0, 1),
             new Vector3Int(-1, 0, -1),
             new Vector3Int(1, 0, 1),
@@ -59,9 +59,12 @@
             chunkGenerator = gameObject.AddComponent<ChunkGenerator>().Init(mapSettings, tileObjects);
         }
 
-        public void Load(Vector3Int homeCoord)
+        public IEnumerator Load(Vector3Int startCoord, Action callback)
         {
-            UpdateMapRender(homeCoord);
+            isUpdatingRender = true;
+            UpdateMapRender(startCoord);
+            yield return new WaitWhile(() => isUpdatingRender);
+            callback();
         }
 
         private Vector3Int lastPositionRequest;
@@ -74,6 +77,7 @@
             }
         }
 
+        private bool isUpdatingRender;
         public void UpdateMapRender(Vector3Int chunkCoord)
         {
             if (chunksUnderConstruction.Count > 0)
@@ -87,6 +91,8 @@
                 if (posRequest && lastPositionRequest == chunkCoord)
                     posRequest = false;
             }
+
+            isUpdatingRender = true;
 
             var visibleChunkCoords = new List<Vector3Int>(visibleChunks.Keys);
             foreach (var visibleChunkCoord in visibleChunkCoords)
@@ -131,15 +137,15 @@
                 Chunk chunk;
                 if (cachedChunks.TryGetValue(targetPos, out chunk))
                 {
-                    Debug.LogFormat("Enabled cached chunk {0}.", targetPos);
+                    /*Debug.LogFormat("Enabled cached chunk {0}.", targetPos);*/
                     cachedChunks.Remove(targetPos);
                     visibleChunks.Add(targetPos, chunk);
                     chunk.Enable();
                 }
                 else
                 {
-                    Debug.LogFormat("Requested chunk {0} at frame {1}",
-                        targetPos, Time.frameCount);
+                    /*Debug.LogFormat("Requested chunk {0} at frame {1}",
+                        targetPos, Time.frameCount);*/
                     chunksUnderConstruction.Add(targetPos);
                     chunkGenerator.Get(targetPos, ChunkCreatedCallback);
                 }
@@ -148,12 +154,14 @@
 
         private void ChunkCreatedCallback(Chunk chunk)
         {
-            Debug.LogFormat("Received chunk {0} at frame {1}",
-                chunk.coord, Time.frameCount);
+            /*Debug.LogFormat("Received chunk {0} at frame {1}",
+                chunk.coord, Time.frameCount);*/
 
             if (chunksUnderConstruction.Contains(chunk.coord))
             {
                 chunksUnderConstruction.Remove(chunk.coord);
+                if (chunksUnderConstruction.Count == 0)
+                    isUpdatingRender = false;
             }
             else
             {
@@ -168,7 +176,7 @@
             }
             else
             {
-                Debug.Log("Created chunk at " + chunk.coord);
+                /*Debug.Log("Created chunk at " + chunk.coord);*/
                 visibleChunks.Add(chunk.coord, chunk);
                 chunk.Enable();
             }
