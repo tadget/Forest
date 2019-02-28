@@ -307,7 +307,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   data: {fileID: 0}
-  settings: {fileID: 11400000, guid: 05b521c209cdd294ca588b80a14f9053, type: 2}
+  settings: {fileID: 11400000, guid: 0dffc343247ceb4408b973bfd7b421dd, type: 2}
 --- !u!4 &52570292
 Transform:
   m_ObjectHideFlags: 0

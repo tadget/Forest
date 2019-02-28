@@ -11,13 +11,22 @@
         private MapSettings mapSettings;
         private TileFactory tileFactory;
 
-        // private Tile[] tiles;
-
         public ChunkGenerator Init(MapSettings mapSettings, TileObjects tileObjects)
         {
             this.mapSettings = mapSettings;
             tileFactory = new TileFactory(tileObjects);
             return this;
+        }
+
+        public void Get(Vector3Int targetPos, Action<Chunk> callback)
+        {
+            Chunk chunk = GenerateChunk(targetPos);
+            StartCoroutine(InstantiateChunk(chunk, callback));
+        }
+
+        public void Return(Chunk chunk)
+        {
+            StartCoroutine(DelayedDestroy(chunk));
         }
 
         private Chunk GenerateHomeChunk(Vector3Int targetPos)
@@ -127,26 +136,10 @@
             return Chunk.Create(tiles, mapSettings.chunkTileCount_x, mapSettings.chunkTileCount_y, targetPos);
         }
 
-        public void Get(Vector3Int targetPos, Action<Chunk> callback)
+        private bool isDestroying;
+        private IEnumerator DelayedDestroy(Chunk chunk)
         {
-            // Look at tiles that belong to the chunk coordinate
-            // Get them and return a logical rendering unit
-            Chunk chunk = GenerateChunk(targetPos);
-            StartCoroutine(InstantiateChunk(chunk, callback));
-        }
-
-        public void Return(Chunk chunk)
-        {
-            // Decompose chunk
-            StartCoroutine(DelayedDestroy(chunk));
-            // TODO: use the chunk for something
-            // TODO: fix this so it is not in one frame
-        }
-
-        bool isDestroying;
-        public IEnumerator DelayedDestroy(Chunk chunk)
-        {
-            if(isDestroying)
+            while(isDestroying)
                 yield return new WaitForEndOfFrame();
             isDestroying = true;
             chunk.Disable();
@@ -158,17 +151,22 @@
         private bool isInstantiating;
         private IEnumerator InstantiateChunk(Chunk chunk, Action<Chunk> callback)
         {
-            if(isInstantiating)
+            while(isInstantiating)
                 yield return new WaitForEndOfFrame();
             isInstantiating = true;
-            GameObject chunk_go = new GameObject();
-            chunk_go.name = string.Format("Chunk {0}", chunk.GetInstanceID());
 
-            List<GameObject> tiles = new List<GameObject>();
             var start = new Vector3(
                 mapSettings.chunkTileCount_x * mapSettings.tileOffsetX * chunk.coord.x,
                 0,
                 mapSettings.chunkTileCount_y * mapSettings.tileOffsetZ * chunk.coord.z);
+
+            GameObject chunk_go = new GameObject();
+            chunk_go.name = string.Format("Chunk {0}", chunk.GetInstanceID());
+            chunk_go.transform.position = start;
+            chunk.go = chunk_go;
+
+            List<GameObject> tiles = new List<GameObject>();
+
             var id = -1;
             for (int z = 0; z < chunk.size_z; z++)
             {
@@ -181,33 +179,31 @@
                         Debug.LogWarningFormat("Null Tile ({0},{1}) in chunk.", x, z);
                         continue;
                     }
-                    var tile_go = tileFactory.Create(tile);
-                    var tileID = tile_go.AddComponent<TileData>();
-                    tileID.id = tile_go.GetInstanceID();
-                    tileID.local_chunk_id = id;
-                    tileID.chunk_id = chunk.GetInstanceID();
-                    tileID.chunk_coord = chunk.coord;
-                    Vector3 pos = new Vector3(
-                        x * mapSettings.tileOffsetX,
-                        0,
-                        z * mapSettings.tileOffsetZ);
-                    pos += start;
-                    tile_go.transform.position = pos;
-                    tile_go.transform.parent = chunk_go.transform;
+
+                    var tile_go = tileFactory.Create(
+                        tile,
+                        start + new Vector3(
+                            x * mapSettings.tileOffsetX,
+                            0,
+                            z * mapSettings.tileOffsetZ),
+                        chunk_go.transform);
+
+                    tile_go.AddComponent<TileData>().Init(
+                        tile_go.GetInstanceID(),
+                        id,
+                        chunk.GetInstanceID(),
+                        chunk.coord);
+
                     tiles.Add(tile_go);
+
                     if (UnityEngine.Random.value < 0.60f)
                         yield return new WaitForEndOfFrame();
                 }
             }
 
-            chunk.go = chunk_go;
-            var chunkId = chunk_go.AddComponent<ChunkData>();
-            chunkId.tiles = tiles;
-            chunkId.coord = chunk.coord;
             yield return new WaitForEndOfFrame();
             callback(chunk);
             isInstantiating = false;
-            yield return null;
         }
     }
 }
