@@ -27,6 +27,11 @@
             CheckForInteractables("Interactable", maxDistance);
         }
 
+        void Interact()
+        {
+
+        }
+
         /// <summary>
         ///     Check for interactable objects through the camera
         /// </summary>
