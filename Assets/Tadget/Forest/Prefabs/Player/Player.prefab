@@ -262,7 +262,7 @@ Rigidbody:
   m_IsKinematic: 0
   m_Interpolate: 0
   m_Constraints: 112
-  m_CollisionDetection: 3
+  m_CollisionDetection: 0
 --- !u!54 &54818758086150632
 Rigidbody:
   m_ObjectHideFlags: 1
@@ -298,7 +298,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   notPlacable:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 1847
   jumpForce: 5
   speedMultiplier: 1
   maxSpeed: 8
