@@ -6,6 +6,8 @@
 
     public class PlayerMovement : MonoBehaviour
     {
+        public LayerMask notPlacable;
+
         public float jumpForce = 5;
         public float speedMultiplier = 1f;
         public float maxSpeed = 8;
@@ -109,7 +111,7 @@
         private void FixedUpdate()
         {
             //  Debug.Log(meRigid.velocity.magnitude);
-            if (Physics.SphereCast(new Ray(transform.position, Vector3.down), 0.4f, 0.65f))
+            if (Physics.SphereCast(new Ray(transform.position, Vector3.down), 0.4f, 0.65f, notPlacable, QueryTriggerInteraction.Ignore))
             {
                 isGrounded = true;
                 meRigid.drag = 6;
@@ -167,7 +169,7 @@
             {
                 autoJump = false;
                 isGrounded = false;
-                meRigid.velocity = new Vector3(meRigid.velocity.x, 5f, meRigid.velocity.z);
+                meRigid.velocity = new Vector3(meRigid.velocity.x, jumpForce, meRigid.velocity.z);
                 meRigid.drag = 0.5f;
             }
         }

@@ -8,7 +8,7 @@
     {
         public List<Transform> slots;
 
-        public void DoTheThing(Vector3 touchPoint, Transform hand, Transform item, bool placeCall)
+        public bool TrySnapItemToSlot(Vector3 touchPoint, Transform hand, Transform item, bool placeCall)
         {
             int closestSlot = -1;
 
@@ -46,6 +46,11 @@
                     item.transform.rotation = slots[closestSlot].rotation;
                     item.transform.localScale = Vector3.one * item.GetComponent<Item>().scaleWhenStored;
                 }
+                return false;
+            }
+            else
+            {
+                return true;
             }
         }
     }
