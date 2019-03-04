@@ -16,6 +16,7 @@ MonoBehaviour:
   - id: grass_02
     positions: []
     isPositionRandomized: 0
+    isRotationRandomized: 0
     minOffsetX: 0
     maxOffsetX: 0
     minOffsetZ: 0
@@ -29,6 +30,7 @@ MonoBehaviour:
   - id: tree_01
     positions: []
     isPositionRandomized: 1
+    isRotationRandomized: 1
     minOffsetX: -9
     maxOffsetX: 9
     minOffsetZ: -9
@@ -42,6 +44,7 @@ MonoBehaviour:
   - id: tree_02
     positions: []
     isPositionRandomized: 0
+    isRotationRandomized: 1
     minOffsetX: -9
     maxOffsetX: 9
     minOffsetZ: -9

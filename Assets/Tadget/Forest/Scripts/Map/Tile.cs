@@ -25,6 +25,7 @@
 
             public List<Vector3> positions;
             public bool isPositionRandomized;
+            public bool isRotationRandomized;
 
             public float minOffsetX, maxOffsetX;
             public float minOffsetZ, maxOffsetZ;
@@ -39,6 +40,5 @@
         }
 
         public List<Object> objects;
-
     }
 }

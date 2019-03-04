@@ -1,4 +1,6 @@
-﻿namespace Tadget
+﻿using UnityEngine.Serialization;
+
+namespace Tadget
 {
     using System.Collections;
     using System.Collections.Generic;
@@ -7,6 +9,10 @@
     [CreateAssetMenu(fileName = "Map Settings", menuName = "Map/Map Settings", order = 1)]
     public class MapSettings : ScriptableObject
     {
+        [Header("Chunk size")]
+        public int chunkTileCount_x = 8;
+        public int chunkTileCount_z = 8;
+
         [Header("Tile position")]
         public float tileOffsetX = 10f;
         public float tileOffsetZ = 10f;
@@ -28,7 +34,7 @@
         public List<Tile> biome2Tiles;
         public List<Tile> biome3Tiles;
 
-        [Header("Spawning")]
-        public int maxTileMemoryDistance;
+        [FormerlySerializedAs("maxTileMemoryDistance")] [Header("Spawning")]
+        public int chunkRenderDistance;
     }
 }

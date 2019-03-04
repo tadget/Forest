@@ -16,6 +16,7 @@ MonoBehaviour:
   - id: cabin
     positions: []
     isPositionRandomized: 0
+    isRotationRandomized: 1
     minOffsetX: 0
     maxOffsetX: 0
     minOffsetZ: 0
@@ -29,6 +30,7 @@ MonoBehaviour:
   - id: grass_01
     positions: []
     isPositionRandomized: 0
+    isRotationRandomized: 0
     minOffsetX: 0
     maxOffsetX: 0
     minOffsetZ: 0

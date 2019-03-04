@@ -1,31 +1,49 @@
 ﻿namespace Tadget
 {
-	using System;
-	using System.Collections;
-	using System.Collections.Generic;
-	using UnityEngine;
-	using Random = UnityEngine.Random;
+    using System;
+    using System.Collections;
+    using System.Collections.Generic;
+    using UnityEngine;
+    using Random = UnityEngine.Random;
 
-	public class ChunkGenerator
-	{
-		public const int chunkTileCount_x = 8;
-		public const int chunkTileCount_y = 8;
-
-		private MapSettings mapSettings;
+    public class ChunkGenerator : MonoBehaviour
+    {
+        private MapSettings mapSettings;
         private TileFactory tileFactory;
 
-		public ChunkGenerator(MapSettings mapSettings, TileObjects tileObjects)
-		{
-			this.mapSettings = mapSettings;
-            this.tileFactory = new TileFactory(tileObjects);
-		}
-
-        public Chunk GenerateHomeChunk()
+        public ChunkGenerator Init(MapSettings mapSettings, TileObjects tileObjects)
         {
-			Tile[] tiles = new Tile[64];
+            this.mapSettings = mapSettings;
+            tileFactory = new TileFactory(tileObjects);
+            return this;
+        }
 
-			/// Generate the yard region (3,3) (3+(yardSizeX-1),3+(yardSizeZ-1))
-			var origin = new Vector3Int(3, 0, 3);
+        public void Get(Vector3Int targetPos, Action<Chunk> callback)
+        {
+            Chunk chunk;
+            if (GameManager.state.homeAvailable && targetPos == GameManager.state.homeCoord)
+            {
+                chunk = GenerateHomeChunk(targetPos);
+            }
+            else
+            {
+                chunk = GenerateBiomeChunk(targetPos);
+            }
+
+            StartCoroutine(InstantiateChunk(chunk, callback));
+        }
+
+        public void Return(Chunk chunk)
+        {
+            StartCoroutine(DestroyChunk(chunk));
+        }
+
+        private Chunk GenerateHomeChunk(Vector3Int targetPos)
+        {
+            Tile[] tiles = new Tile[64];
+
+            /// Generate the yard region (3,3) (3+(yardSizeX-1),3+(yardSizeZ-1))
+            var origin = new Vector3Int(3, 0, 3);
             for (int z = origin.z; z < origin.z + mapSettings.yardSizeZ; z++)
                 for (int x = origin.x; x < origin.x + mapSettings.yardSizeX; x++)
                 {
@@ -38,10 +56,10 @@
                     else
                     {
                         tile = mapSettings.yardTiles[1];
-						tile.type = Tile.Type.YARD;
+                        tile.type = Tile.Type.YARD;
                     }
 
-                    tiles[chunkTileCount_y * z + x] = tile;
+                    tiles[8 * z + x] = tile;
                 }
 
             /// Generate the outer regions with decreasing obstacle density
@@ -84,83 +102,107 @@
                             }
                         }
                         tile.type = Tile.Type.OUTER;
-                        tiles[chunkTileCount_y * z + x] = tile;
+                        tiles[8 * z + x] = tile;
                     }
             }
-            return Chunk.Create(tiles, 8, 8);
+            return Chunk.Create(tiles, 8, 8, targetPos);
         }
 
-        public Chunk GenerateBiomeChunk(int biome)
+        private Chunk GenerateBiomeChunk(Vector3Int targetPos)
         {
-	        Tile[] tiles = new Tile[64];
-	        for (int i = 0; i < 64; i++)
-	        {
-                switch (biome)
+            var noise = Noise.GenerateNoiseMap(mapSettings.chunkTileCount_x, mapSettings.chunkTileCount_z,
+                Random.Range(0, Int32.MaxValue),
+                10f, 2, 0.265f, 14, Vector2.zero);
+
+            Tile[] tiles = new Tile[mapSettings.chunkTileCount_x * mapSettings.chunkTileCount_z];
+            for (int z = 0; z < mapSettings.chunkTileCount_z; z++)
+            {
+                for (int x = 0; x < mapSettings.chunkTileCount_x; x++)
                 {
-                    case 0:
-                        tiles[i] = mapSettings.biome1Tiles[Random.Range(0, mapSettings.biome1Tiles.Count)];
-                        break;
-                    case 1:
-                        tiles[i] = mapSettings.biome2Tiles[Random.Range(0, mapSettings.biome2Tiles.Count)];
-                        break;
-                    case 2:
-                        tiles[i] = mapSettings.biome3Tiles[Random.Range(0, mapSettings.biome3Tiles.Count)];
-                        break;
-                    default:
-                        break;
+                    int tile = z * mapSettings.chunkTileCount_z + x;
+                    float val = noise[x, z];
+
+                    if(val > 0.8f)
+                        tiles[tile] = mapSettings.biome1Tiles[Random.Range(0, mapSettings.biome1Tiles.Count)];
+                    else if(val > 0.5f)
+                        tiles[tile] = mapSettings.biome2Tiles[Random.Range(0, mapSettings.biome2Tiles.Count)];
+                    else
+                        tiles[tile] = mapSettings.biome3Tiles[Random.Range(0, mapSettings.biome3Tiles.Count)];
                 }
-	        }
-	        return Chunk.Create(tiles, 8, 8);
+            }
+            return Chunk.Create(tiles, mapSettings.chunkTileCount_x, mapSettings.chunkTileCount_z, targetPos);
         }
 
-        public IEnumerator InstantiateChunk(Action<Vector3Int, GameObject> callback, Chunk chunk, Vector3Int coord)
+        private bool isDestroying;
+        private IEnumerator DestroyChunk(Chunk chunk)
         {
-	        GameObject chunk_go = new GameObject();
-	        chunk_go.name = string.Format("Chunk {0}", chunk.GetInstanceID());
-
-	        List<GameObject> tiles = new List<GameObject>();
-	        var start = new Vector3(
-		        chunkTileCount_x * mapSettings.tileOffsetX * coord.x,
-		        0,
-		        chunkTileCount_y * mapSettings.tileOffsetZ * coord.z);
-	        var id = -1;
-	        for (int z = 0; z < chunk.size_z; z++)
-	        {
-		        for (int x = 0; x < chunk.size_x; x++)
-		        {
-			        id++;
-			        Tile tile = chunk.GetTile(x, z);
-			        if (tile == null)
-			        {
-				        Debug.LogWarningFormat("Null Tile ({0},{1}) in chunk.", x, z);
-				        continue;
-			        }
-			        var tile_go = tileFactory.Create(tile);
-			        var tileID = tile_go.AddComponent<TileData>();
-			        tileID.id = tile_go.GetInstanceID();
-			        tileID.local_chunk_id = id;
-			        tileID.chunk_id = chunk.GetInstanceID();
-			        tileID.chunk_coord = coord;
-			        Vector3 pos = new Vector3(
-				        x * mapSettings.tileOffsetX,
-				        0,
-				        z * mapSettings.tileOffsetZ);
-			        pos += start;
-			        tile_go.transform.position = pos;
-			        tile_go.transform.parent = chunk_go.transform;
-			        tiles.Add(tile_go);
-                    if(x % 2 == 0)
-                        yield return new WaitForEndOfFrame();
-		        }
-	        }
-
-	        var chunkId = chunk_go.AddComponent<ChunkData>();
-	        chunkId.tiles = tiles;
-	        chunkId.coord = coord;
-            callback(coord, chunk_go);
-            yield return null;
+            while(isDestroying)
+                yield return new WaitForEndOfFrame();
+            isDestroying = true;
+            chunk.Disable();
+            yield return new WaitForEndOfFrame();
+            Destroy(chunk.go);
+            isDestroying = false;
         }
-	}
+
+        private bool isInstantiating;
+        private IEnumerator InstantiateChunk(Chunk chunk, Action<Chunk> callback)
+        {
+            while(isInstantiating)
+                yield return new WaitForEndOfFrame();
+            isInstantiating = true;
+
+            var start = new Vector3(
+                mapSettings.chunkTileCount_x * mapSettings.tileOffsetX * chunk.coord.x,
+                0,
+                mapSettings.chunkTileCount_z * mapSettings.tileOffsetZ * chunk.coord.z);
+
+            GameObject chunk_go = new GameObject();
+            chunk_go.name = string.Format("Chunk {0}", chunk.GetInstanceID());
+            chunk_go.transform.position = start;
+            chunk.go = chunk_go;
+
+            List<GameObject> tiles = new List<GameObject>();
+
+            var id = -1;
+            for (int z = 0; z < chunk.size_z; z++)
+            {
+                for (int x = 0; x < chunk.size_x; x++)
+                {
+                    id++;
+                    Tile tile = chunk.GetTile(x, z);
+                    if (tile == null)
+                    {
+                        Debug.LogWarningFormat("Null Tile ({0},{1}) in chunk.", x, z);
+                        continue;
+                    }
+
+                    var tile_go = tileFactory.Create(
+                        tile,
+                        start + new Vector3(
+                            x * mapSettings.tileOffsetX,
+                            0,
+                            z * mapSettings.tileOffsetZ),
+                        chunk_go.transform);
+
+                    tile_go.AddComponent<TileData>().Init(
+                        tile_go.GetInstanceID(),
+                        id,
+                        chunk.GetInstanceID(),
+                        chunk.coord);
+
+                    tiles.Add(tile_go);
+
+                    if (UnityEngine.Random.value < 0.60f)
+                        yield return new WaitForEndOfFrame();
+                }
+            }
+
+            yield return new WaitForEndOfFrame();
+            callback(chunk);
+            isInstantiating = false;
+        }
+    }
 }
 
 

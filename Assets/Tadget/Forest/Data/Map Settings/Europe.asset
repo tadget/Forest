@@ -11,6 +11,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e7bf381a6e4d376428cab3eefd5c7cfd, type: 3}
   m_Name: Europe
   m_EditorClassIdentifier: 
+  chunkTileCount_x: 8
+  chunkTileCount_y: 8
   tileOffsetX: 19
   tileOffsetZ: 19
   yardSizeX: 2
@@ -29,4 +31,4 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 3bae7fea5c9b84f498138ef7c3df4fbe, type: 2}
   biome3Tiles:
   - {fileID: 11400000, guid: 327c483668161d9498f380bca93b6efb, type: 2}
-  maxTileMemoryDistance: 0
+  chunkRenderDistance: 1

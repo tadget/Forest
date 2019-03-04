@@ -1,6 +1,4 @@
-﻿using UnityEngine.Serialization;
-
-namespace Tadget
+﻿namespace Tadget
 {
     using System;
     using UnityEngine;
@@ -9,10 +7,12 @@ namespace Tadget
     using System.Collections.Generic;
 
     [RequireComponent (typeof(UIManager), typeof(MapManager), typeof(LoadingManager))]
+    [RequireComponent((typeof(AudioManager)))]
     public class GameManager : MonoBehaviour
     {   
         /// Map
         private MapManager map;
+        private GameObject homeIndicator;
 
         /// Player
         private GameObject playerInstance;
@@ -21,12 +21,18 @@ namespace Tadget
         /// UI
         private UIManager ui;
 
+        /// Audio
+        private AudioManager sound;
+
+        /// Day Cycle
+        private DayCycle day;
+
         /// Data
         private LoadingManager load;
         [SerializeField]
         private GameData data;
         [SerializeField]
-        private GameState state;
+        public static GameState state;
 
         [Header("Settings")]
         public GameSettings settings;
@@ -41,23 +47,45 @@ namespace Tadget
 
         }
 
-        private void Start()
+        private IEnumerator Start()
         {
             InitVariables();
             LoadGameData();
-            state.dataLoaded = true;
-            map.Load();
-            state.mapLoaded = true;
+            state.SetDataLoaded(true);
+            var mapLoadCoroutine = map.Load(Vector3Int.zero, () =>
+                state.SetMapLoaded(true));
+            StartCoroutine(mapLoadCoroutine);
+            yield return new WaitUntil(() => state.mapLoaded);
             PlacePlayer();
-            state.playerInstantiated = true;
+            state.SetPlayerInstantiated(true);
             LinkPlayerData();
-            StartCoroutine(GameLoop());
+            LinkDayCycleEvents();
+            LinkGameStateEvents();
+            sound.PlayMainTheme();
+
+            // DEBUG TEMPORARY
+            homeIndicator = GameObject.CreatePrimitive(PrimitiveType.Cube);
+            homeIndicator.transform.localScale *= 10f;
+            //
+        }
+
+        private void OnApplicationQuit()
+        {
+            SyncDataFromGame();
+            load.SaveGameData(data);
+        }
+
+        private void OnApplicationPause(bool pauseStatus)
+        {
+            if(pauseStatus)
+                OnApplicationQuit();
         }
 
         private void Update()
         {
             CheckForInput();
-            UpdatePositionDisplay();
+            //UpdatePositionDisplay();
+            UpdateStateDisplay();
         }
 
         private void InitVariables()
@@ -65,15 +93,21 @@ namespace Tadget
             ui = GetComponent<UIManager>();
             map = GetComponent<MapManager>();
             load = GetComponent<LoadingManager>();
+            sound = GetComponent<AudioManager>();
+            day = FindObjectOfType<DayCycle>();
             state = GameState.Create();
         }
 
         private void LoadGameData()
         {
-            if (data == null)
-            {
-                data = load.GetData();
-            }
+            data = load.GetData();
+            SyncGameFromData();
+        }
+
+        private void SaveGameData()
+        {
+            SyncDataFromGame();
+            load.SaveGameData(data);
         }
 
         private void PlacePlayer()
@@ -86,57 +120,153 @@ namespace Tadget
         private void LinkPlayerData()
         {
             playerTileMonitor = playerInstance.GetComponentInChildren<TileMonitor>();
-            playerTileMonitor.OnTileEnter += map.OnPlayerEnteredNewTile;
+            playerTileMonitor.OnChunkEnter += tileData =>
+                EventManager.TriggerEvent<TileData>("OnPlayerEnteredNewChunk", tileData);
+        }
+
+        private void LinkDayCycleEvents()
+        {
+            EventManager.StartListening<object>("OnDayTimeEvening",
+                p => EventManager.TriggerEvent<string>("OnHomeAvailable", "New home due to evening."));
+        }
+
+        private void LinkGameStateEvents()
+        {
+            EventManager.StartListening<string>("OnHomeAvailable",
+                p =>
+                {
+                    if (state.homeAvailable)
+                    {
+                        Debug.Log("Home already available");
+                        return;
+                    }
+                    state.SetHomeAvailable(true);
+                    state.SetWasHomeReachedSinceAvailable(false);
+                    ChooseNewHomeCoord();
+                    homeIndicator.transform.position = new Vector3(state.homeCoord.x, 0, state.homeCoord.z) *
+                                                       map.mapSettings.tileOffsetX * map.mapSettings.chunkTileCount_x +
+                                                       new Vector3(0.5f, 0, 0.5f) * map.mapSettings.tileOffsetX * map.mapSettings.chunkTileCount_x;
+                    Debug.Log(p);
+                });
+
+            EventManager.StartListening<TileData>("OnPlayerEnteredNewChunk",
+                tileData =>
+                {
+                    UpdatePlayerStatus(tileData);
+
+                    if (state.homeAvailable)
+                    {
+                        var d = state.homeCoord.ChebyshevDistance(tileData.chunk_coord);
+                        if (state.wasHomeReachedSinceAvailable && d > map.mapSettings.chunkRenderDistance + 1)
+                        {
+                            state.SetHomeAvailable(false);
+                            Debug.Log("Home unavailable due to player leaving visible home region.");
+                        }
+                        else if (d > 4)
+                        {
+                            state.SetHomeAvailable(false);
+                            Debug.Log("Unreached home unavailable due to distance.");
+                        }
+                    }
+
+                    UpdateMapCoordData(tileData);
+                });
+        }
+
+        private void SyncGameFromData()
+        {
+            Debug.Log("Syncing game from data...");
+            if (data.isFirstTimePlaying)
+            {
+                Debug.Log("* Playing for the first time!");
+                data.isFirstTimePlaying = false;
+                state.SetHomeAvailable(true);
+                state.SetIsPlayerHome(true);
+            }
+            else
+            {
+                Debug.Log("* Last played " + data.lastPlayedDateTime);
+                state.SetHomeAvailable(false);
+                state.SetIsPlayerHome(false);
+            }
+
+            Debug.Log("* Updating time of day.");
+            day.timeOfDay = data.timeOfDay;
+
+            Debug.Log("Data sync complete.");
+        }
+
+        private void SyncDataFromGame()
+        {
+            Debug.Log("Syncing data from game...");
+
+            Debug.Log("* Updating last played time.");
+            data.lastPlayedDateTime = DateTime.Now;
+
+            Debug.Log("* Updating time of day.");
+            data.timeOfDay = day.timeOfDay;
+
+            Debug.Log("Data sync complete.");
         }
 
         private void CheckForInput()
         {
-            if(Input.GetKeyDown(KeyCode.R))
-            {
-                map.Regenerate();
-            }
             if(Input.GetKeyDown(KeyCode.T))
             {
                 PlacePlayer();
             }
             if (Input.GetKeyDown(KeyCode.Z))
             {
-                load.SaveGameData(data);
-                Debug.Log("Saved game data!");
+                SaveGameData();
             }
             if (Input.GetKeyDown(KeyCode.X))
             {
                 load.ResetData();
-                data = load.GetData();
-                Debug.Log("Reset game data!");
+                LoadGameData();
             }
         }
 
         private void UpdatePositionDisplay()
         {
             ui.positionDisplay.text = playerTileMonitor ? 
-                playerTileMonitor.tileDisplay : 
+                playerTileMonitor.tileDisplay + "\n" + state.homeCoord :
                 "No positional data";
         }
 
-        private IEnumerator GameLoop()
+        private void UpdateStateDisplay()
         {
-            if (data.isFirstTimePlaying)
-            {
-                Debug.Log("Playing for the first time!");
-                data.isFirstTimePlaying = false;
-            }
-            else
-            {
-                Debug.Log("Last played " + data.lastPlayedDateTime);
-            }
-            data.lastPlayedDateTime = DateTime.Now;
-            load.SaveGameData(data);
+            ui.stateDisplay.text = string.Format(
+                "Player {0}\n" +
+                "Home {1}\n" +
+                "IsPlayerHome {2}\n" +
+                "Home Available {3}\n" +
+                "Home Reached {4}",
+                state.playerChunkCoord,
+                state.homeCoord,
+                state.isPlayerHome,
+                state.homeAvailable,
+                state.wasHomeReachedSinceAvailable);
+        }
 
-            while (true)
-            {
-                yield return new WaitForEndOfFrame();
-            }
+        private void UpdatePlayerStatus(TileData tileData)
+        {
+            state.playerChunkCoord = tileData.chunk_coord;
+            state.SetIsPlayerHome(state.playerChunkCoord == state.homeCoord);
+            if(state.homeAvailable && state.isPlayerHome)
+                state.SetWasHomeReachedSinceAvailable(true);
+        }
+
+        private void UpdateMapCoordData(TileData tileData)
+        {
+            map.UpdateMapRender(tileData.chunk_coord);
+        }
+
+        private void ChooseNewHomeCoord()
+        {
+            var v = UnityEngine.Random.Range(3, 5);
+            var x = UnityEngine.Random.value < .5? 1 : -1;
+            var z = UnityEngine.Random.value < .5? 1 : -1;
+            state.homeCoord = state.playerChunkCoord + new Vector3Int(x, 0, z) * v;
         }
     }
 }

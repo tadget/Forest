@@ -17,12 +17,14 @@
 
         private void OnApplicationQuit()
         {
+            Debug.Log("Saving data to file.");
             es3File.Sync();
         }
 
         private void OnApplicationPause(bool pauseStatus)
         {
-            OnApplicationQuit();
+            if(pauseStatus)
+                OnApplicationQuit();
         }
 
         private void LoadES3File()
@@ -49,6 +51,7 @@
         {
             var gameData = GameData.Create();
             SaveGameData(gameData);
+            Debug.Log("Reset game data!");
         }
 
         public void SaveGameData(GameData gameData)
