@@ -2,15 +2,23 @@
 {
     using UnityEngine;
 
-    public class Destroy : Actions
+    public class Spawn : Actions
     {
+        public GameObject objToSpawn;
+        public Transform whereToSpawn;
 
-        public GameObject objToDestroy;
+        public ParticleSystem spawnParticle;
 
-        /// Spawn items depending on the field "objToDestroy"
-        protected override void Use()
+        /// Spawn objects depending on the field "objToSpawn"
+        public override void Use()
         {
-            Destroy(objToDestroy);
+            Instantiate(objToSpawn, whereToSpawn.position, whereToSpawn.rotation);
+
+            // Particle effects are not required
+            if (spawnParticle != null)
+            {
+                spawnParticle.Play();
+            }
         }
     }
 }

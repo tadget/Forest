@@ -4,7 +4,7 @@
 
     abstract public class Actions : MonoBehaviour
     {
-        abstract protected void Use();
+        abstract public void Use();
     }
 }
 

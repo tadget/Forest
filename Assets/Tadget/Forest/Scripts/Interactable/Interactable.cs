@@ -3,6 +3,8 @@
     using UnityEngine;
     using UnityEngine.UI;
 
+    [RequireComponent(typeof(Spawn))]
+    [RequireComponent(typeof(Destroy))]
     public class Interactable : MonoBehaviour
     {
         GameObject playerCam;
@@ -12,9 +14,12 @@
         public Text timer;
 
         public float maxDistance = 5f;
+        public float maxMagnitude = 1f;
 
         public float timeToOpen = 2f;
         float timeToOpenCounter;
+
+        Touch touch = new Touch();
 
         private void Start()
         {
@@ -27,9 +32,11 @@
             CheckForInteractables("Interactable", maxDistance);
         }
 
+        // When interacting, an object will be destroyed. Another one will be intiated.
         void Interact()
         {
-
+            GetComponent<Spawn>().Use();
+            GetComponent<Destroy>().Use();
         }
 
         /// <summary>
@@ -69,13 +76,14 @@
         {
             if (Input.touchCount > 0)
             {
-                if (Input.GetTouch(0).phase == TouchPhase.Stationary)
+                if (Input.GetTouch(0).phase == TouchPhase.Stationary || (Input.GetTouch(0).phase == TouchPhase.Moved && touch.deltaPosition.magnitude < maxMagnitude))
                 {
                     timeToOpenCounter -= Time.deltaTime;
                     InitializeUI();
 
                     if (timeToOpenCounter <= 0)
                     {
+                        Interact();
                         timeToOpenCounter = 0;
                         TurnUIVisible(false);
                     }

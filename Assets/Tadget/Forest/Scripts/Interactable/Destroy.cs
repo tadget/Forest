@@ -2,14 +2,15 @@
 {
     using UnityEngine;
 
-    public class Spawn : Actions
+    public class Destroy : Actions
     {
-        public GameObject objToSpawn;
 
-        /// Spawn objects depending on the field "objToSpawn"
-        protected override void Use()
+        public GameObject objToDestroy;
+
+        /// Spawn items depending on the field "objToDestroy"
+        public override void Use()
         {
-            Instantiate(objToSpawn);
+            Destroy(objToDestroy);
         }
     }
 }
