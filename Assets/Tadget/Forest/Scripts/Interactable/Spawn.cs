@@ -37,7 +37,7 @@
             {
                 Instantiate(objToSpawn, 
                     whereToSpawn.position + new Vector3(Random.Range(radiusOfSquare, -radiusOfSquare), 0, Random.Range(radiusOfSquare, -radiusOfSquare)), 
-                    whereToSpawn.rotation);
+                    new Quaternion(Random.Range(0,180), Random.Range(0, 180), Random.Range(0, 180), Random.Range(0, 180)));
             }
         }
     }
