@@ -10,6 +10,11 @@
 
         public GameObject spawnParticle;
 
+        // Set to 'true' if you want the objects to randomly be spawned
+        public bool randomlySpawn;
+        // If randomlySpawn is set to 'true' then give the radius of the square
+        public float radiusOfSquare;
+
         /// Spawn objects depending on the field "objToSpawn"
         public override void Use()
         {
@@ -23,7 +28,17 @@
                 particleSystem.Play();
             }
 
-            Instantiate(objToSpawn, whereToSpawn.position, whereToSpawn.rotation);
+            if (!randomlySpawn)
+            {
+                Instantiate(objToSpawn, whereToSpawn.position, whereToSpawn.rotation);
+            }
+            // If spawning randomly
+            else
+            {
+                Instantiate(objToSpawn, 
+                    whereToSpawn.position + new Vector3(Random.Range(radiusOfSquare, -radiusOfSquare), 0, Random.Range(radiusOfSquare, -radiusOfSquare)), 
+                    whereToSpawn.rotation);
+            }
         }
     }
 }
