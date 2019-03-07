@@ -1,6 +1,4 @@
-﻿using UnityEngine.Serialization;
-
-namespace Tadget
+﻿namespace Tadget.Map
 {
     using System.Collections;
     using System.Collections.Generic;
@@ -34,7 +32,6 @@ namespace Tadget
         public List<Tile> biome2Tiles;
         public List<Tile> biome3Tiles;
 
-        [FormerlySerializedAs("maxTileMemoryDistance")] [Header("Spawning")]
         public int chunkRenderDistance;
     }
 }

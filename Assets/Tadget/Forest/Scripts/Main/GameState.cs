@@ -1,7 +1,6 @@
-﻿using System;
-
-namespace Tadget
+﻿namespace Tadget
 {
+    using System;
     using System.Collections;
     using System.Collections.Generic;
     using UnityEngine;
@@ -17,6 +16,7 @@ namespace Tadget
         public bool wasHomeReachedSinceAvailable { private set; get; }
         public Vector3Int homeCoord = Vector3Int.zero;
         public Vector3Int playerChunkCoord = Vector3Int.zero;
+        public GameObject savedHomeChunkObjects { private set; get; }
 
         public Action OnHomeBecameAvailable;
 
@@ -66,5 +66,11 @@ namespace Tadget
         {
             playerInstantiated = instantiated;
         }
+
+        public void SetSavedHomeChunkObjects(GameObject objects)
+        {
+            savedHomeChunkObjects = objects;
+        }
+
     }
 }

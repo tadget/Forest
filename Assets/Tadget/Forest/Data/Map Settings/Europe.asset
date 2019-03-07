@@ -11,13 +11,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e7bf381a6e4d376428cab3eefd5c7cfd, type: 3}
   m_Name: Europe
   m_EditorClassIdentifier: 
-  chunkTileCount_x: 8
-  chunkTileCount_y: 8
+  chunkTileCount_x: 4
+  chunkTileCount_z: 4
   tileOffsetX: 19
   tileOffsetZ: 19
   yardSizeX: 2
   yardSizeZ: 2
-  outerLayerCount: 3
+  outerLayerCount: 1
   yardTiles:
   - {fileID: 11400000, guid: ee896538da7b0294aa47d854977a1170, type: 2}
   - {fileID: 11400000, guid: d737bcdde9884ea46a31f8659593d62d, type: 2}

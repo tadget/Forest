@@ -1,4 +1,4 @@
-﻿namespace Tadget
+﻿namespace Tadget.Map
 {
     using System.Collections.Generic;
     using UnityEngine;

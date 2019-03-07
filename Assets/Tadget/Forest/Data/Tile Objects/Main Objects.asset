@@ -44,3 +44,11 @@ MonoBehaviour:
     id: mushroom_03
   - prefab: {fileID: 1706827740856462, guid: ddde1b136783d9f46ae9037071f4c522, type: 2}
     id: cabin
+  - prefab: {fileID: 113808, guid: 5a459641d59e2ca46b1f815c1c217cac, type: 2}
+    id: axe_01
+  - prefab: {fileID: 102628, guid: 641fec17292c7ac4a9607002d28dbde2, type: 2}
+    id: hammer_01
+  - prefab: {fileID: 194376, guid: 582f1a3b91a90974f9518032402cc5bc, type: 2}
+    id: shovel_01
+  - prefab: {fileID: 147880, guid: b2b39398f6848dc42a7b687287c18667, type: 2}
+    id: wheels_01

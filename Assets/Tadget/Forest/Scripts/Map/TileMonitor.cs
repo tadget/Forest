@@ -1,4 +1,4 @@
-﻿namespace Tadget
+﻿namespace Tadget.Map
 {
     using System;
     using System.Collections;
@@ -42,14 +42,14 @@
                     else
                     {
                         currentTile = currentTileData.gameObject;
-                        tileDisplay = string.Format("{0}\n{1}", currentTileData.id, currentTileData.chunk_coord);
+                        tileDisplay = string.Format("{0}\n{1}", currentTileData.id, currentTileData.chunk.coord);
                         if(OnTileEnter != null)
                             OnTileEnter.Invoke(currentTileData);
-                        if (lastChunkCoord != currentTileData.chunk_coord)
+                        if (lastChunkCoord != currentTileData.chunk.coord)
                         {
                             if (OnChunkEnter != null)
                                 OnChunkEnter.Invoke(currentTileData);
-                            lastChunkCoord = currentTileData.chunk_coord;
+                            lastChunkCoord = currentTileData.chunk.coord;
                         }
                     }
                 }

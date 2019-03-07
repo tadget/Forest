@@ -1,10 +1,9 @@
-﻿using System;
-
-namespace Tadget
+﻿namespace Tadget
 {
     using System.Collections;
     using System.Collections.Generic;
     using UnityEngine;
+    using System;
 
     [CreateAssetMenu(fileName = "Game data", menuName = "Game/Data", order = 1)]
     public class GameData : ScriptableObject
@@ -13,6 +12,7 @@ namespace Tadget
         public bool isLanternFound = false;
         public DateTime lastPlayedDateTime;
         public float timeOfDay;
+        public GameObject savedHomeChunkObjects;
 
         public static GameData Create()
         {

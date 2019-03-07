@@ -1,17 +1,19 @@
-﻿namespace Tadget
+﻿namespace Tadget.Main
 {
     using System;
     using UnityEngine;
     using UnityEngine.UI;
     using System.Collections;
     using System.Collections.Generic;
+    using Tadget.Map;
 
-    [RequireComponent (typeof(UIManager), typeof(MapManager), typeof(LoadingManager))]
+    [RequireComponent (typeof(UIManager), typeof(Tadget.Map.MapRenderer), typeof(LoadingManager))]
     [RequireComponent((typeof(AudioManager)))]
-    public class GameManager : MonoBehaviour
-    {   
+    public class GameManager : MonoBehaviour, IMapStateProvider
+    {
         /// Map
-        private MapManager map;
+        [SerializeField] private GameObject savedObject;
+        private MapRenderer map;
         private GameObject homeIndicator;
 
         /// Player
@@ -32,7 +34,7 @@
         [SerializeField]
         private GameData data;
         [SerializeField]
-        public static GameState state;
+        public GameState state;
 
         [Header("Settings")]
         public GameSettings settings;
@@ -61,6 +63,7 @@
             LinkPlayerData();
             LinkDayCycleEvents();
             LinkGameStateEvents();
+            LinkMapEvents();
             sound.PlayMainTheme();
 
             // DEBUG TEMPORARY
@@ -91,7 +94,7 @@
         private void InitVariables()
         {
             ui = GetComponent<UIManager>();
-            map = GetComponent<MapManager>();
+            map = GetComponent<MapRenderer>().Init(this);
             load = GetComponent<LoadingManager>();
             sound = GetComponent<AudioManager>();
             day = FindObjectOfType<DayCycle>();
@@ -156,7 +159,7 @@
 
                     if (state.homeAvailable)
                     {
-                        var d = state.homeCoord.ChebyshevDistance(tileData.chunk_coord);
+                        var d = state.homeCoord.ChebyshevDistance(tileData.chunk.coord);
                         if (state.wasHomeReachedSinceAvailable && d > map.mapSettings.chunkRenderDistance + 1)
                         {
                             state.SetHomeAvailable(false);
@@ -173,6 +176,11 @@
                 });
         }
 
+        private void LinkMapEvents()
+        {
+            map.OnDestroyChunkWithSavedObjects += SaveHomeChunkObjects;
+        }
+
         private void SyncGameFromData()
         {
             Debug.Log("Syncing game from data...");
@@ -182,12 +190,16 @@
                 data.isFirstTimePlaying = false;
                 state.SetHomeAvailable(true);
                 state.SetIsPlayerHome(true);
+                var savedHomeChunkObjects = Instantiate(savedObject);
+                savedHomeChunkObjects.name = "Saved Home Chunk Objects";
+                state.SetSavedHomeChunkObjects(savedHomeChunkObjects);
             }
             else
             {
                 Debug.Log("* Last played " + data.lastPlayedDateTime);
                 state.SetHomeAvailable(false);
                 state.SetIsPlayerHome(false);
+                //state.SetSavedHomeChunkObjects(data.savedHomeChunkObjects);
             }
 
             Debug.Log("* Updating time of day.");
@@ -205,6 +217,10 @@
 
             Debug.Log("* Updating time of day.");
             data.timeOfDay = day.timeOfDay;
+
+            Debug.Log("* Updating saved home chunk objects");
+            Debug.Log("Saving an object " + state.savedHomeChunkObjects);
+            //data.savedHomeChunkObjects = state.savedHomeChunkObjects;
 
             Debug.Log("Data sync complete.");
         }
@@ -250,7 +266,7 @@
 
         private void UpdatePlayerStatus(TileData tileData)
         {
-            state.playerChunkCoord = tileData.chunk_coord;
+            state.playerChunkCoord = tileData.chunk.coord;
             state.SetIsPlayerHome(state.playerChunkCoord == state.homeCoord);
             if(state.homeAvailable && state.isPlayerHome)
                 state.SetWasHomeReachedSinceAvailable(true);
@@ -258,7 +274,7 @@
 
         private void UpdateMapCoordData(TileData tileData)
         {
-            map.UpdateMapRender(tileData.chunk_coord);
+            map.UpdateMapRender(tileData.chunk.coord);
         }
 
         private void ChooseNewHomeCoord()
@@ -267,6 +283,22 @@
             var x = UnityEngine.Random.value < .5? 1 : -1;
             var z = UnityEngine.Random.value < .5? 1 : -1;
             state.homeCoord = state.playerChunkCoord + new Vector3Int(x, 0, z) * v;
+        }
+
+        private void SaveHomeChunkObjects(GameObject objects)
+        {
+            Debug.Log("Saved some objects from destroyed home chunk");
+            state.SetSavedHomeChunkObjects(objects);
+        }
+
+        public bool ShouldRenderHomeAtCoord(Vector3Int coord)
+        {
+            return state.homeAvailable && coord == state.homeCoord;
+        }
+
+        public GameObject GetSavedHomeChunkObjects()
+        {
+            return state.savedHomeChunkObjects;
         }
     }
 }

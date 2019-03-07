@@ -1,4 +1,4 @@
-﻿namespace Tadget
+﻿namespace Tadget.Map
 {
 	using UnityEngine;
 
@@ -7,15 +7,13 @@
 	{
         public int id { get; private set; }
         public int local_chunk_id  { get; private set; }
-		public int chunk_id  { get; private set; }
-		public Vector3Int chunk_coord { get; private set; }
+		public Chunk chunk { get; private set; }
 
-        public TileData Init(int id, int local_chunk_id, int chunk_id, Vector3Int chunk_coord)
+        public TileData Init(int id, int local_chunk_id, Chunk chunk)
         {
             this.id = id;
             this.local_chunk_id = local_chunk_id;
-            this.chunk_id = chunk_id;
-            this.chunk_coord = chunk_coord;
+            this.chunk = chunk;
             return this;
         }
 	}

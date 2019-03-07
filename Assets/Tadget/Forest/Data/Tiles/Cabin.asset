@@ -16,7 +16,7 @@ MonoBehaviour:
   - id: cabin
     positions: []
     isPositionRandomized: 0
-    isRotationRandomized: 1
+    isRotationRandomized: 0
     minOffsetX: 0
     maxOffsetX: 0
     minOffsetZ: 0
