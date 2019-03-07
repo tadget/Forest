@@ -15,16 +15,10 @@
             LoadES3File();
         }
 
-        private void OnApplicationQuit()
+        public void SyncToFile()
         {
             Debug.Log("Saving data to file.");
             es3File.Sync();
-        }
-
-        private void OnApplicationPause(bool pauseStatus)
-        {
-            if(pauseStatus)
-                OnApplicationQuit();
         }
 
         private void LoadES3File()
@@ -37,11 +31,12 @@
             var gameData = GameData.Create();
             if (es3File.KeyExists("gameData"))
             {
-                es3File.LoadInto("gameData", gameData);
+                gameData = es3File.Load<GameData>("gameData", gameData);
+                gameData.savedHomeChunkObjects = LoadGameObject("savedHomeChunkObjects");
             }
             else
             {
-                SaveGameData(gameData);
+                SaveGameData(GameData.Create());
             }
 
             return gameData;
@@ -57,6 +52,20 @@
         public void SaveGameData(GameData gameData)
         {
             es3File.Save<GameData>("gameData", gameData);
+            SaveGameObject(gameData.savedHomeChunkObjects, "savedHomeChunkObjects");
+        }
+
+        public void SaveGameObject(GameObject go, string key)
+        {
+            es3File.Save<GameObject>(key, go);
+        }
+
+        public GameObject LoadGameObject(string key)
+        {
+            if (es3File.KeyExists(key))
+                return es3File.Load<GameObject>(key);
+            else
+                return null;
         }
     }
 }
