@@ -10,6 +10,7 @@ GameObject:
   - component: {fileID: 440430}
   - component: {fileID: 3383110}
   - component: {fileID: 2303530}
+  - component: {fileID: 114013476352849522}
   m_Layer: 0
   m_Name: hammer_01
   m_TagString: Untagged
@@ -85,3 +86,29 @@ Prefab:
   m_SourcePrefab: {fileID: 0}
   m_RootGameObject: {fileID: 102628}
   m_IsPrefabAsset: 1
+--- !u!114 &114013476352849522
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 102628}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: baff8732cd3074ef88b34f9cc487846d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  prefabId: 1516391310584324645
+  localRefs:
+    _Keys:
+    - {fileID: 3383110}
+    - {fileID: 6, guid: 0000000000000000f000000000000000, type: 0}
+    - {fileID: 46, guid: 0000000000000000f000000000000000, type: 0}
+    - {fileID: 11500000, guid: baff8732cd3074ef88b34f9cc487846d, type: 3}
+    - {fileID: 4300000, guid: 989b477ec80e93e4f980b805e28af924, type: 3}
+    - {fileID: 440430}
+    - {fileID: 2303530}
+    - {fileID: 102628}
+    - {fileID: 2100000, guid: 0a38aab55a3ead84bbd99a59c4a7e2ef, type: 2}
+    - {fileID: 2100000, guid: 0de74cacf6310c64ca1b6862ba4b219c, type: 2}
+    - {fileID: 114013476352849522}
+    _Values: 44929fa67603e461922a932029856c5beaead23de69cac7e1eb74705594bc900493cfd95d1537917b5c0818fdf1cd25b984bee2c9091d34224245cf32bc724578a2d60655ab07671ac79b145f4e55425dc6b624d7790240d

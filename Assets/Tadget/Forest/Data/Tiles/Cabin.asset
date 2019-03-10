@@ -27,7 +27,7 @@ MonoBehaviour:
     maxRandomCount: 0
     isRandomChanceToSpawn: 0
     chance: 0
-  - id: grass_01
+  - id: terrain-plane_grass_01
     positions: []
     isPositionRandomized: 0
     isRotationRandomized: 0

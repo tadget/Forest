@@ -7,12 +7,11 @@
     using System.Collections.Generic;
     using Tadget.Map;
 
-    [RequireComponent (typeof(UIManager), typeof(Tadget.Map.MapRenderer), typeof(LoadingManager))]
+    [RequireComponent (typeof(UIManager), typeof(MapRenderer), typeof(LoadingManager))]
     [RequireComponent((typeof(AudioManager)))]
     public class GameManager : MonoBehaviour, IMapStateProvider
     {
         /// Map
-        [SerializeField] private GameObject savedObject;
         private MapRenderer map;
         private GameObject homeIndicator;
 
@@ -63,11 +62,11 @@
             LinkPlayerData();
             LinkDayCycleEvents();
             LinkGameStateEvents();
-            LinkMapEvents();
             sound.PlayMainTheme();
 
             // DEBUG TEMPORARY
             homeIndicator = GameObject.CreatePrimitive(PrimitiveType.Cube);
+            homeIndicator.name = "Home Indicator";
             homeIndicator.transform.localScale *= 10f;
             //
         }
@@ -76,6 +75,7 @@
         {
             SyncDataFromGame();
             load.SaveGameData(data);
+            load.SyncToFile();
         }
 
         private void OnApplicationPause(bool pauseStatus)
@@ -140,7 +140,7 @@
                 {
                     if (state.homeAvailable)
                     {
-                        Debug.Log("Home already available");
+                        // Debug.Log("Home already available");
                         return;
                     }
                     state.SetHomeAvailable(true);
@@ -176,11 +176,6 @@
                 });
         }
 
-        private void LinkMapEvents()
-        {
-            map.OnDestroyChunkWithSavedObjects += SaveHomeChunkObjects;
-        }
-
         private void SyncGameFromData()
         {
             Debug.Log("Syncing game from data...");
@@ -190,17 +185,23 @@
                 data.isFirstTimePlaying = false;
                 state.SetHomeAvailable(true);
                 state.SetIsPlayerHome(true);
-                var savedHomeChunkObjects = Instantiate(savedObject);
-                savedHomeChunkObjects.name = "Saved Home Chunk Objects";
-                state.SetSavedHomeChunkObjects(savedHomeChunkObjects);
             }
             else
             {
                 Debug.Log("* Last played " + data.lastPlayedDateTime);
                 state.SetHomeAvailable(false);
                 state.SetIsPlayerHome(false);
-                //state.SetSavedHomeChunkObjects(data.savedHomeChunkObjects);
             }
+
+            if (data.savedHomeChunkObjects != null)
+                Debug.Log("* Loaded saved objects");
+            else
+            {
+                Debug.Log("* No saved objects found");
+                data.savedHomeChunkObjects = GameObject.Find("Root");
+            }
+            data.savedHomeChunkObjects.transform.position = Vector3.zero;
+            data.savedHomeChunkObjects.SetActive(false);
 
             Debug.Log("* Updating time of day.");
             day.timeOfDay = data.timeOfDay;
@@ -217,10 +218,6 @@
 
             Debug.Log("* Updating time of day.");
             data.timeOfDay = day.timeOfDay;
-
-            Debug.Log("* Updating saved home chunk objects");
-            Debug.Log("Saving an object " + state.savedHomeChunkObjects);
-            //data.savedHomeChunkObjects = state.savedHomeChunkObjects;
 
             Debug.Log("Data sync complete.");
         }
@@ -285,20 +282,14 @@
             state.homeCoord = state.playerChunkCoord + new Vector3Int(x, 0, z) * v;
         }
 
-        private void SaveHomeChunkObjects(GameObject objects)
-        {
-            Debug.Log("Saved some objects from destroyed home chunk");
-            state.SetSavedHomeChunkObjects(objects);
-        }
-
         public bool ShouldRenderHomeAtCoord(Vector3Int coord)
         {
             return state.homeAvailable && coord == state.homeCoord;
         }
 
-        public GameObject GetSavedHomeChunkObjects()
+        public GameObject GetSavedObjects()
         {
-            return state.savedHomeChunkObjects;
+            return data.savedHomeChunkObjects;
         }
     }
 }

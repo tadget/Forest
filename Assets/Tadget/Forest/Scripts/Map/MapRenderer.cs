@@ -17,7 +17,7 @@
 
         public MapSettings mapSettings;
         public TileObjects tileObjects;
-        public Action<GameObject> OnDestroyChunkWithSavedObjects;
+        private GameObject savedObjects;
 
         private readonly Vector3Int[] neighborCoords = new Vector3Int[]
         {
@@ -60,6 +60,7 @@
 
         public IEnumerator Load(Vector3Int startCoord, Action callback)
         {
+            savedObjects = mapStateProvider.GetSavedObjects();
             isUpdatingRender = true;
             UpdateMapRender(startCoord);
             yield return new WaitWhile(() => isUpdatingRender);
@@ -101,12 +102,14 @@
                 if (d == mapSettings.chunkRenderDistance + 1)
                 {
                     var chunk = visibleChunks[visibleChunkCoord];
+                    if(chunk.type == Chunk.ChunkType.HOME)
+                        savedObjects.SetActive(false);
                     chunk.Disable();
                     visibleChunks.Remove(chunk.coord);
                     if (cachedChunks.ContainsKey(chunk.coord))
                     {
                         Debug.LogWarningFormat("Unable to cache chunk. {0} already cached. Recycling.", chunk.coord);
-                        chunkFactory.Return(chunk, OnDestroyChunkWithSavedObjects);
+                        chunkFactory.Return(chunk);
                     }
                     else
                     {
@@ -124,7 +127,9 @@
                 {
                     var chunk = cachedChunks[cachedChunkCoord];
                     cachedChunks.Remove(cachedChunkCoord);
-                    chunkFactory.Return(chunk, OnDestroyChunkWithSavedObjects);
+                    if(chunk.type == Chunk.ChunkType.HOME)
+                        savedObjects.SetActive(false);
+                    chunkFactory.Return(chunk);
                 }
             }
 
@@ -140,6 +145,8 @@
                     cachedChunks.Remove(targetPos);
                     visibleChunks.Add(targetPos, chunk);
                     chunk.Enable();
+                    if(chunk.type == Chunk.ChunkType.HOME)
+                        savedObjects.SetActive(true);
                 }
                 else
                 {
@@ -147,7 +154,7 @@
                         targetPos, Time.frameCount);*/
                     chunksUnderConstruction.Add(targetPos);
                     if(mapStateProvider.ShouldRenderHomeAtCoord(targetPos))
-                        chunkFactory.Get(targetPos, Chunk.ChunkType.HOME, ChunkCreatedCallback, mapStateProvider.GetSavedHomeChunkObjects());
+                        chunkFactory.Get(targetPos, Chunk.ChunkType.HOME, ChunkCreatedCallback);
                     else
                         chunkFactory.Get(targetPos, Chunk.ChunkType.BIOME, ChunkCreatedCallback);
                 }
@@ -174,13 +181,18 @@
             {
                 Debug.LogWarningFormat("Created chunk at {0} but another one is already visible at that coordinate. Recycling.",
                     chunk.coord);
-                chunkFactory.Return(chunk, OnDestroyChunkWithSavedObjects);
+                chunkFactory.Return(chunk);
             }
             else
             {
                 /*Debug.Log("Created chunk at " + chunk.coord);*/
                 visibleChunks.Add(chunk.coord, chunk);
                 chunk.Enable();
+                if (chunk.type == Chunk.ChunkType.HOME)
+                {
+                    savedObjects.transform.position = chunk.go.transform.position;
+                    savedObjects.SetActive(true);
+                }
             }
         }
     }
@@ -188,6 +200,6 @@
     public interface IMapStateProvider
     {
         bool ShouldRenderHomeAtCoord(Vector3Int coord);
-        GameObject GetSavedHomeChunkObjects();
+        GameObject GetSavedObjects();
     }
 }

@@ -13,7 +13,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   type: 2
   objects:
-  - id: grass_02
+  - id: terrain-plane_grass_02
     positions: []
     isPositionRandomized: 0
     isRotationRandomized: 0

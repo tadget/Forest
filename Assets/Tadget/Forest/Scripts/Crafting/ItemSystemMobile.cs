@@ -3,657 +3,384 @@
     using System.Collections;
     using System.Collections.Generic;
     using UnityEngine;
+    using System.Linq;
 
     public class ItemSystemMobile : MonoBehaviour
     {
-
         public PhysicMaterial noFric;
         public Material buildMat;
         public Material buildSnapMat;
-        private Material[] savedMatsOfItem;
+        private Dictionary<Renderer, Material[]> rendererMaterialDict;
 
         public LayerMask buildMask;
         public LayerMask onlyPickable;
-        public LayerMask onlyPlacable;
+        public LayerMask onlyPlaceable;
 
         public GameObject itemInHand;
         public GameObject hand;
-        public GameObject myBackpack;
 
         private Camera mainCam;
         private SpringJoint tempSpring;
-        private Rigidbody tempRigid;
+        private Rigidbody itemInHandRigidbody;
         private PlayerMovement playerMovement;
 
-        private int holdMode = 0; // 0 = none, 1 = holding, 2 = action mode (removed), 3 = build mode;
-        private float tapTime;
+        private HoldMode holdMode;
+        private float lastItemBeginTouchTime;
+        private float lastItemEndTouchTime;
+        private int lastItemTouchFingerId = -1;
 
         private Vector2 touchZoomBegan;
 
         private float zoom;
         private float rotation;
 
-        private int itemTouchId = -1;
-
-        private Animator anim;
+        private enum HoldMode
+        {
+            NONE = 0,
+            HOLDING = 1,
+            ACTION = 2,
+            BUILD = 3
+        }
 
         private void Start()
         {
             mainCam = Camera.main;
             playerMovement = GetComponent<PlayerMovement>();
-            anim = myBackpack.GetComponent<Animator>();
         }
+
+        private Touch touch;
 
         private void Update()
         {
-
-
-            for (int i = 0; i < Input.touchCount; i++) // Mobile controlls
+            for (int i = 0; i < Input.touchCount; i++)
             {
-                Touch touch = Input.touches[i];
+                touch = Input.GetTouch(i);
 
-                if (holdMode == 0) // not picked up
+                switch (holdMode)
                 {
-                    if (itemTouchId == -1)
-                    {
-                        if (touch.phase == TouchPhase.Began)
-                        {
-                            /* if (tapTime + 0.3f > Time.time)
-                             {
-                                 // Debug.Log("Mode: 0 - double tap - use item");
-                                 UseItemFunction(touch.position);
-                                 playerMovement.doMove = false;
-                             }*/
+                    case HoldMode.NONE:
+                        ProcessHoldModeNone();
+                        break;
+                    case HoldMode.HOLDING:
+                        ProcessHoldModeHolding();
+                        break;
+                    case HoldMode.ACTION:
+                        break;
+                    case HoldMode.BUILD:
+                        ProcessHoldModeBuild();
+                        break;
+                    default:
+                        break;
+                }
 
-                            if (IsPressedOnItem(touch.position))
-                            {
-                                // Debug.Log("Mode: 0 - touch began");
-                                tapTime = Time.time;
-                                itemTouchId = touch.fingerId;
-                                break;
-                            }
-                        }
-                    }
-                    if (touch.fingerId == itemTouchId)
-                    {
-                        if (touch.phase == TouchPhase.Ended)
-                        {
-                            UseItemFunction(touch.position);
-                            playerMovement.doMove = false;
-                            // Debug.Log("Mode: 0 - tapped - use item");
-                        }
-                        if (touch.phase == TouchPhase.Stationary)
-                        {
-                            if (Time.time > tapTime + 0.25f)
-                            {
-                                if (IsPressedOnItem(touch.position))
-                                {
-                                    // Debug.Log("Mode: 0 - pick up item");
-                                    itemTouchId = -1;
-                                    TryPickUpItem(touch.position);
-                                }
-                            }
-                        }
-                        else
-                        {
-                            // Debug.Log("Mode: 0 - pick up failed" + " mode: " + touch.phase);
-                            itemTouchId = -1;
-                        }
-                    }
-                } // not picked up
-                else if (holdMode == 1) // holding mode
-                {
-                    if (itemTouchId == -1 || itemTouchId == touch.fingerId)
-                    {
-                        if (touch.phase == TouchPhase.Began)
-                        {
-                            if (IsPressedOnItemInHand(touch.position))
-                            {
-                                itemTouchId = touch.fingerId;
-                                /* if (tapTime + 0.3f > Time.time) //if double tap
-                                 {
-                                     // Debug.Log("Mode: 1 - double tapped, to action mode");
-                                     itemTouchId = -1;
-                                     UseItemFunction(touch.position);
-                                 }*/
-                                tapTime = Time.time;
-                            }
-                            else
-                            {
-                                // Debug.Log("Mode: 1 - missed double tapped");
-                                itemTouchId = -1;
-                            }
-                        }
+                playerMovement.doMove = lastItemTouchFingerId == -1;
 
-                    }
-                    if (itemTouchId == touch.fingerId)
-                    {
-                        if (touch.phase == TouchPhase.Moved || touch.phase == TouchPhase.Stationary)
-                        {
-                            if (tapTime + 0.3f < Time.time)
-                            {
-                                // Debug.Log("Mode: 1 - long press, to build mode");
-                                InitiateBuildMode();
-                            }
-                        }
-                        if (touch.phase == TouchPhase.Ended)
-                        {
-
-                            if (!IsPressedOnItemInHand(touch.position))
-                            {
-                                // Debug.Log("Mode: 1 - short swipe, drop item");
-                                itemTouchId = -1;
-                                DropItem();
-                                itemInHand = null;
-                            }
-                            else if (tapTime + 0.3f > Time.time)
-                            {
-                                itemTouchId = -1;
-                                UseItemFunction(touch.position);
-                            }
-                        }
-                    }
-                } // holding mode
-                if (holdMode == 3) // build mode
-                {
-                    if (touch.fingerId == itemTouchId)
-                    {
-                        BuildModeDragNDrop(touch.position, touch.phase == TouchPhase.Ended);
-                        if (touch.phase == TouchPhase.Ended)
-                        {
-                            itemTouchId = -1;
-                        }
-                    }
-                    else
-                    {
-                        if (touch.phase == TouchPhase.Moved)
-                        {
-                            zoom += touch.deltaPosition.y / playerMovement.screenRes.y * 5;
-                            zoom = Mathf.Clamp(zoom, 3f, 5f);
-                            rotation -= touch.deltaPosition.x / playerMovement.screenRes.x * 360;
-                        }
-                    }
-                } // build mode
             }
-            if (itemTouchId != -1)
+        }
+
+        private void ProcessHoldModeNone()
+        {
+            if (lastItemTouchFingerId == -1)
             {
-                playerMovement.doMove = false;
+                if (touch.phase == TouchPhase.Began && IsTouchingItem(touch.position, onlyPickable))
+                {
+                    lastItemBeginTouchTime = Time.time;
+                    lastItemTouchFingerId = touch.fingerId;
+                }
+            }
+            else if (lastItemTouchFingerId == touch.fingerId)
+            {
+                if (touch.phase == TouchPhase.Stationary)
+                {
+                    if (lastItemBeginTouchTime + 0.25f < Time.time)
+                    {
+                        lastItemTouchFingerId = -1;
+                        if (TryPickUpItem(touch.position))
+                            holdMode = HoldMode.HOLDING;
+                    }
+                }
+                else
+                {
+                    lastItemTouchFingerId = -1;
+
+                    if (touch.phase == TouchPhase.Ended)
+                    {
+                        TryUseItem(touch.position);
+                        playerMovement.doMove = false;
+                    }
+                }
+            }
+        }
+
+        private void ProcessHoldModeHolding()
+        {
+            if (lastItemTouchFingerId == -1)
+            {
+                if (touch.phase == TouchPhase.Began && IsTouchingItem(touch.position, onlyPlaceable))
+                {
+                    lastItemTouchFingerId = touch.fingerId;
+                    lastItemBeginTouchTime = Time.time;
+                }
+            }
+            else if (lastItemTouchFingerId == touch.fingerId)
+            {
+                if (touch.phase == TouchPhase.Stationary)
+                {
+                    if (lastItemBeginTouchTime + 0.01f < Time.time)
+                    {
+                        InitiateBuildMode();
+                    }
+                }
+                else
+                {
+                    if (touch.phase == TouchPhase.Ended)
+                    {
+                        if (Time.time - lastItemEndTouchTime < 0.3f)
+                            DropItem();
+
+                        lastItemEndTouchTime = Time.time;
+                    // TryUseItem(touch.position);
+                    }
+
+                    lastItemTouchFingerId = -1;
+
+                }
+            }
+        }
+
+        private void ProcessHoldModeBuild()
+        {
+            if (touch.fingerId == lastItemTouchFingerId)
+            {
+                BuildModeDragNDrop(touch.position, touch.phase == TouchPhase.Ended);
+                if (touch.phase == TouchPhase.Ended)
+                {
+                    lastItemTouchFingerId = -1;
+                }
             }
             else
             {
-                playerMovement.doMove = true;
+                if (touch.phase == TouchPhase.Moved)
+                {
+                    zoom += touch.deltaPosition.y / playerMovement.screenRes.y * 5;
+                    zoom = Mathf.Clamp(zoom, 3f, 5f);
+                    rotation -= touch.deltaPosition.x / playerMovement.screenRes.x * 360;
+                }
             }
-
         }
-        private Vector3 myHold1;
+
         private void FixedUpdate()
         {
-            if (tempSpring == null && itemInHand != null)
+            if (holdMode == HoldMode.HOLDING)
             {
-                DropItem();
-                itemInHand = null;
-                // Debug.Log("broke");
+                if(tempSpring == null)
+                    DropItem();
+                else if (itemInHand.transform.localScale.x != 1 && !isLookingAtStorage)
+                    itemInHand.transform.localScale = Vector3.Lerp(
+                        itemInHand.transform.localScale, Vector3.one, Time.deltaTime * 3f);
             }
-            if (holdMode == 1)
+            else if (holdMode == HoldMode.BUILD)
             {
-                //hand.transform.localPosition =  myHold1;
-                itemInHand.transform.rotation = Quaternion.Lerp(itemInHand.transform.rotation,
-                    Quaternion.Euler(0, transform.eulerAngles.y + 180f, 0), 0.25f);
-                // tempSpring.anchor = transform.transform.InverseTransformPoint(MainCam.transform.position + MainCam.transform.forward * zoom);
-            }
-            /*else if (holdMode == 2) // lol removed
-            {
-                hand.transform.position = mainCam.transform.position + new Vector3(0, -1f, 0) +
-                                          mainCam.transform.forward * 2 + transform.right * 1.5f;
-                itemInHand.transform.rotation = Quaternion.Lerp(itemInHand.transform.rotation,
-                    Quaternion.Euler(0, transform.eulerAngles.y + 180f, 0), 0.25f);
-            }*/
-            else if (holdMode == 3 && !isLookingAtStorage)
-            {
-                hand.transform.position = snappedPos;
-                itemInHand.transform.rotation = Quaternion.Lerp(itemInHand.transform.rotation, snappedRot, 0.25f);
-            }
-            if (itemInHand != null)
-            {
-                if (itemInHand.transform.localScale.x != 1 && !isLookingAtStorage)
+                if (!isLookingAtStorage)
                 {
-                    itemInHand.transform.localScale = Vector3.Lerp(itemInHand.transform.localScale, Vector3.one, 0.2f);
+                    hand.transform.position = snappedPos;
+                    itemInHand.transform.rotation = Quaternion.Lerp(itemInHand.transform.rotation, snappedRot, 0.25f);
                 }
-                NudgeItem();
             }
         }
-        private bool IsPressedOnItem(Vector3 pressPosition)
+
+        private bool IsTouchingItem(Vector3 touchPosition, int layerMask)
         {
-            return Physics.SphereCast(mainCam.ScreenPointToRay(pressPosition), 0.2f, 5, onlyPickable);
-            // return Physics.Raycast(mainCam.ScreenPointToRay(pressPosition), 5, onlyPickable); // layer 9 = pickable
+            return Physics.SphereCast(mainCam.ScreenPointToRay(touchPosition), 0.2f, 5, layerMask);
         }
-        private bool IsPressedOnItemInHand(Vector3 pressPosition)
+
+        RaycastHit pickupItemHit;
+        private bool TryPickUpItem(Vector3 pressPosition)
         {
-            RaycastHit hit;
-            //if (Physics.Raycast(mainCam.ScreenPointToRay(pressPosition), out hit, 5, onlyPlacable))
-            if (Physics.SphereCast(mainCam.ScreenPointToRay(pressPosition), 0.2f, out hit, 5, onlyPlacable))
+            if (Physics.SphereCast(mainCam.ScreenPointToRay(pressPosition), 0.2f, out pickupItemHit, 3, onlyPickable))
             {
-                if (itemInHand == null)
-                {
-                    return false;
-                }
-
-                return hit.transform.gameObject == itemInHand ? true : false;
+                zoom = Mathf.Clamp(pickupItemHit.distance, 1f, pickupItemHit.distance);
+                ResetHandPosition();
+                PickUpItem(pickupItemHit.transform.gameObject);
+                return true;
             }
-
             return false;
         }
 
-        private void TryPickUpItem(Vector3 pressPosition)
+        private void PickUpItem(GameObject item)
         {
-            RaycastHit hit;
-            //if (Physics.Raycast(mainCam.ScreenPointToRay(pressPosition), out hit, 5, onlyPickable))
-            if (Physics.SphereCast(mainCam.ScreenPointToRay(pressPosition), 0.2f, out hit, 5, onlyPickable))
-            {
-                zoom = Mathf.Clamp(hit.distance, 3f, 5f);
-                holdMode = 1;
-                itemInHand = hit.transform.gameObject;
-                RemoveSavedItem(itemInHand);
-                savedMatsOfItem = ChangeMaterialsOfItemHierarchy(true);
-                PickUpItem();
-                myHold1 = mainCam.transform.position + new Vector3(0, -1f, 0) + mainCam.transform.forward * 3.5f;
-                hand.transform.position = myHold1;
-
-            }
-        }
-
-        private void PickUpItem()
-        {
-            if (myBackpack == itemInHand)
-            {
-                myBackpack.GetComponent<Animator>().enabled = false;
-                myBackpack = null;
-            }
-            //ChangeMaterialOfItemHierarchy(pickedUpMat);
+            itemInHand = item;
             itemInHand.transform.parent = null;
-            ChangeLayerOfItemHierarchy(LayerMask.NameToLayer("Placeable"));
+            rendererMaterialDict = Tools.GetRendererMaterialDict(itemInHand);
+            Tools.SetLayerRecursively(itemInHand, LayerMask.NameToLayer("Placeable"));
             tempSpring = hand.AddComponent<SpringJoint>();
-            tempRigid = itemInHand.GetComponent<Rigidbody>();
+            itemInHandRigidbody = itemInHand.GetComponent<Rigidbody>();
 
-            tempSpring.connectedBody = tempRigid;
+            tempSpring.connectedBody = itemInHandRigidbody;
             tempSpring.spring = 200;
             tempSpring.breakForce = 2000;
             tempSpring.anchor = new Vector3(0, 0, 0);
             tempSpring.autoConfigureConnectedAnchor = false;
             tempSpring.connectedAnchor = new Vector3(0, 0, 0);
 
-            tempRigid.drag = 10;
-            tempRigid.isKinematic = false;
-            tempRigid.constraints = RigidbodyConstraints.FreezeRotation;
-            tempRigid.useGravity = false;
+            itemInHandRigidbody.drag = 10;
+            itemInHandRigidbody.isKinematic = false;
+            itemInHandRigidbody.constraints = RigidbodyConstraints.FreezeRotation;
+            itemInHandRigidbody.useGravity = false;
 
-            ChangeColliderOfItemHierarchy(true);
+            Tools.SetPhysicMaterialRecursively(itemInHand, noFric);
 
             if (itemInHand.GetComponent<Item>())
+                Tools.SetTriggerRecursively(itemInHand, false);
+        }
+
+        private void DropItem()
+        {
+            holdMode = HoldMode.NONE;
+
+            Destroy(tempSpring);
+
+            if (itemInHandRigidbody)
             {
-                ChangeTriggerOfItemHierarchy(false);
+                itemInHandRigidbody.drag = 0;
+                itemInHandRigidbody.constraints = RigidbodyConstraints.None;
+                itemInHandRigidbody.useGravity = true;
             }
+
+            Tools.SetPhysicMaterialRecursively(itemInHand, null);
+            Tools.SetLayerRecursively(itemInHand, LayerMask.NameToLayer("Pickable"));
+            if (rendererMaterialDict != null)
+                Tools.SetRendererMaterials(rendererMaterialDict);
+
+            itemInHand = null;
+        }
+
+        private RaycastHit tryUseItemHit;
+        private Crafting tempCrafting;
+        private void TryUseItem(Vector3 pressPosition)
+        {
+            if (Physics.Raycast(mainCam.ScreenPointToRay(pressPosition), out tryUseItemHit, 5, onlyPickable + onlyPlaceable))
+            {
+                tempCrafting = tryUseItemHit.transform.GetComponent<Crafting>();
+                if(tempCrafting != null)
+                    tempCrafting.Check4Craft();
+            }
+        }
+
+        private void ResetHandPosition()
+        {
+            hand.transform.position = mainCam.transform.position + new Vector3(0, -1f, 0) + mainCam.transform.forward * 3.5f;
+        }
+
+        private void InitiateBuildMode()
+        {
+            if (rendererMaterialDict != null)
+                Tools.SetRendererMaterials(rendererMaterialDict.Keys.ToArray(), buildMat);
+            holdMode = HoldMode.BUILD;
+            itemInHandRigidbody.drag = 20;
+            // TODO: init snaps
+        }
+
+        private void ExitBuildMode()
+        {
+            if (rendererMaterialDict != null)
+                Tools.SetRendererMaterials(rendererMaterialDict);
+            holdMode = HoldMode.HOLDING;
+            itemInHandRigidbody.drag = 10;
         }
 
         private Vector3 snappedPos;
         private Quaternion snappedRot;
         private bool isLookingAtStorage = false;
         bool sameMatUpdateLock = false;
+        RaycastHit buildModeHit;
 
         private void BuildModeDragNDrop(Vector3 pressPosition, bool placeCall)
         {
+            bool isPlaced = false;
 
-            bool isNotPlacable = true; // fix
-            RaycastHit hit;
-            if (Physics.Raycast(mainCam.ScreenPointToRay(pressPosition), out hit, zoom, buildMask))
+            // Placing somewhere
+            if (Physics.Raycast(mainCam.ScreenPointToRay(pressPosition), out buildModeHit, zoom, buildMask))
             {
-                isNotPlacable = false;
                 if (sameMatUpdateLock)
                 {
-                    ChangeMaterialOfItemHierarchy(buildSnapMat);
+                    if (rendererMaterialDict != null)
+                        Tools.SetRendererMaterials(rendererMaterialDict.Keys.ToArray(), buildSnapMat);
                     sameMatUpdateLock = !sameMatUpdateLock;
                 }
 
-                //try place in backpack
-                bool notPlacingInStorage = true; // false if placed in backpack
-                if (hit.transform.GetComponent<Storage>() && itemInHand.GetComponent<Item>()) // place on storage
+                // Try to place in storage
+                if (buildModeHit.transform.GetComponent<Storage>())
                 {
                     if (!isLookingAtStorage)
                     {
-                        ChangeTriggerOfItemHierarchy(true);
+                        Tools.SetTriggerRecursively(itemInHand, true);
                         isLookingAtStorage = true;
                     }
 
-                    notPlacingInStorage = hit.transform.GetComponent<Storage>().TrySnapItemToSlot(hit.point, hand.transform, itemInHand.transform, placeCall);
-                    isNotPlacable = notPlacingInStorage;
-                    if (placeCall && !notPlacingInStorage)
+                    isPlaced = buildModeHit.transform.GetComponent<Storage>().TrySnapItemToSlot(buildModeHit.point, hand.transform, itemInHand.transform, placeCall);
+
+                    if (placeCall && isPlaced)
                     {
                         isLookingAtStorage = false;
-                        tempRigid.isKinematic = true;
+                        itemInHandRigidbody.isKinematic = true;
                         DropItem();
-                        itemInHand = null;
-                        SaveItem(hit.transform.gameObject);
                     }
                 }
-                //====
-
-                //try place on ground
-                if (notPlacingInStorage) // place on ground
+                else
                 {
-                    // if in bounds
-                    if (hit.normal.y > 0.9f && hit.point.y < 5f) // if in bounds
+                    if (isLookingAtStorage)
                     {
-                        isNotPlacable = false;
-                        if (isLookingAtStorage)
-                        {
-                            ChangeTriggerOfItemHierarchy(false);
-                            isLookingAtStorage = false;
-                        }
-
-                        snappedPos = new Vector3(Mathf.RoundToInt(hit.point.x * 2) / 2f, hit.point.y, Mathf.RoundToInt(hit.point.z * 2) / 2f);
-
-                        snappedRot = Quaternion.Euler(0, Mathf.RoundToInt(rotation / 45f) * 45, 0);
-
-                        //tempSpring.anchor = transform.InverseTransformPoint(snappedPos);
-                        if (placeCall)
-                        {        
-                            itemInHand.transform.position = new Vector3(
-                                Mathf.RoundToInt(itemInHand.transform.position.x * 2) / 2f,
-                                itemInHand.transform.position.y,
-                                Mathf.RoundToInt(itemInHand.transform.position.z * 2) / 2f);
-                            itemInHand.transform.rotation = snappedRot;
-
-
-                            isLookingAtStorage = false;
-                            tempRigid.isKinematic = true;
-                            
-                            DropItem();
-                            SaveItem(itemInHand);
-                            itemInHand = null;
-                        }
-                    }
-                    else
-                    {
-                        isNotPlacable = true;
+                        Tools.SetTriggerRecursively(itemInHand,false);
+                        isLookingAtStorage = false;
                     }
                 }
-                //==========
 
-                //==============
-            } // is placing somewhere
+                // Try to place on ground
+                if (!isPlaced && buildModeHit.normal.y > 0.9f && buildModeHit.point.y < 5f)
+                {
+                    isPlaced = true;
+                    snappedPos = new Vector3(Mathf.RoundToInt(buildModeHit.point.x * 2) / 2f, buildModeHit.point.y, Mathf.RoundToInt(buildModeHit.point.z * 2) / 2f);
+                    snappedRot = Quaternion.Euler(0, Mathf.RoundToInt(rotation / 45f) * 45, 0);
 
-            if (isNotPlacable)// fix
+                    if (placeCall)
+                    {
+                        // TODO: remove this somehow
+                        itemInHand.transform.position = new Vector3(
+                            Mathf.RoundToInt(itemInHand.transform.position.x * 2) / 2f,
+                            itemInHand.transform.position.y,
+                            Mathf.RoundToInt(itemInHand.transform.position.z * 2) / 2f);
+                        itemInHand.transform.rotation = snappedRot;
+
+                        isLookingAtStorage = false;
+                        itemInHandRigidbody.isKinematic = true;
+
+                        DropItem();
+                    }
+                }
+            }
+
+            // Floating
+            if (!isPlaced)
             {
                 if (!sameMatUpdateLock)
                 {
-                    ChangeMaterialOfItemHierarchy(buildMat);
+                    if (rendererMaterialDict != null)
+                        Tools.SetRendererMaterials(rendererMaterialDict.Keys.ToArray(), buildMat);
                     sameMatUpdateLock = !sameMatUpdateLock;
                 }
                 if (isLookingAtStorage)
                 {
-                    ChangeTriggerOfItemHierarchy(false);
+                    Tools.SetTriggerRecursively(itemInHand,false);
                     isLookingAtStorage = false;
                 }
 
                 snappedPos = mainCam.transform.position + mainCam.ScreenPointToRay(pressPosition).direction * zoom;
-                myHold1 = snappedPos;
-                hand.transform.position = myHold1;
-                // Debug.Log(zoom);
                 snappedRot = Quaternion.Euler(0, rotation, 0);
 
-                //tempSpring.anchor = transform.InverseTransformPoint(snappedPos);
                 if (placeCall)
-                {
-                    // Debug.Log("RESET");
-                    ResetItem();
-                }
-            } // is floating 
-        }
-
-        private void InitiateBuildMode()
-        {
-            ChangeMaterialOfItemHierarchy(buildMat);
-            rotation = mainCam.transform.eulerAngles.y + 180;
-            holdMode = 3;
-            tempRigid.drag = 20;
-        }
-
-        private void DropItem()
-        {
-            holdMode = 0;
-
-            Destroy(tempSpring);
-            tempRigid = itemInHand.GetComponent<Rigidbody>();
-
-            tempRigid.drag = 0;
-            tempRigid.constraints = RigidbodyConstraints.None;
-            tempRigid.useGravity = true;
-            NudgeItem();
-            ChangeColliderOfItemHierarchy(false);
-
-            ChangeLayerOfItemHierarchy(LayerMask.NameToLayer("Pickable"));
-            ChangeMaterialsOfItemHierarchy(false);
-
-            
-        }
-
-        private void ResetItem()
-        {
-            GameObject tempItem = itemInHand;
-
-            DropItem();
-
-            itemInHand = tempItem;
-            PickUpItem();
-            holdMode = 1;
-        }
-
-        private void NudgeItem()
-        {
-            tempRigid.AddForce(0, 0.05f, 0);
-        }
-
-        private void ChangeLayerOfItemHierarchy(int newLayer)
-        {
-            List<Transform> children = new List<Transform>();
-            children.Add(itemInHand.transform);
-            while (children.Count != 0)
-            {
-                Transform child = children[0];
-                children.RemoveAt(0);
-                for (int i = 0; i < child.childCount; i++)
-                {
-                    children.Add(child.GetChild(i));
-                }
-
-                child.gameObject.layer = newLayer;
+                    ExitBuildMode();
             }
         }
-
-        private Material[] ChangeMaterialsOfItemHierarchy(bool readTwriteF)
-        {
-            int b = 0;
-            List<Material> mats = new List<Material>();
-
-            List<Transform> children = new List<Transform>();
-            children.Add(itemInHand.transform);
-            while (children.Count != 0)
-            {
-                Transform child = children[0];
-                children.RemoveAt(0);
-                for (int i = 0; i < child.childCount; i++)
-                {
-                    children.Add(child.GetChild(i));
-                }
-                tempRend = child.GetComponent<Renderer>();
-
-                if (tempRend != null)
-                {
-                    if (readTwriteF)
-                    {
-                        for (int i = 0; i < tempRend.materials.Length; i++)
-                        {
-                            mats.Add(tempRend.materials[i]);
-                        }
-                        //mats.Add(child.GetComponent<Renderer>().material);
-                    }
-                    else
-                    {
-                        tempmats = new Material[tempRend.materials.Length];
-                        for (int i = 0; i < tempRend.materials.Length; i++)
-                        {
-                            tempmats[i] = savedMatsOfItem[b];
-                            //tempRend.materials[i] = savedMatsOfItem[b];
-                            b++;
-                        }
-                        tempRend.materials = tempmats;
-                    }
-                }
-            }
-            return mats.ToArray();
-        }
-
-        private Renderer tempRend;
-        private Material[] tempmats;
-
-        private Material ChangeMaterialOfItemHierarchy(Material mat)
-        {
-            List<Transform> children = new List<Transform>();
-            children.Add(itemInHand.transform);
-            while (children.Count != 0)
-            {
-                Transform child = children[0];
-                children.RemoveAt(0);
-                for (int i = 0; i < child.childCount; i++)
-                {
-                    children.Add(child.GetChild(i));
-                }
-
-                tempRend = child.GetComponent<Renderer>();
-                if (tempRend != null)
-                {
-                    tempmats = new Material[tempRend.materials.Length];
-                    for (int i = 0; i < tempRend.materials.Length; i++)
-                    {
-                        tempmats[i] = mat;
-                        //Debug.Log( "change mat" + i);
-                        //tempRend.materials = mat; // neveikia
-                    }
-                    tempRend.materials = tempmats; // veikia
-                }
-            }
-            return null;
-        }
-
-        private void ChangeColliderOfItemHierarchy(bool isNoFriction)
-        {
-            List<Transform> children = new List<Transform>();
-            children.Add(itemInHand.transform);
-            while (children.Count != 0)
-            {
-                Transform child = children[0];
-                children.RemoveAt(0);
-                for (int i = 0; i < child.childCount; i++)
-                {
-                    children.Add(child.GetChild(i));
-                }
-
-                if (child.GetComponent<Collider>())
-                {
-                    if (isNoFriction)
-                    {
-                        child.GetComponent<Collider>().material = noFric;
-                    }
-                    else
-                    {
-                        child.GetComponent<Collider>().material = null;
-                    }
-                }
-            }
-        }
-
-        private void ChangeTriggerOfItemHierarchy(bool isTrigger)
-        {
-            List<Transform> children = new List<Transform>();
-            children.Add(itemInHand.transform);
-            while (children.Count != 0)
-            {
-                Transform child = children[0];
-                children.RemoveAt(0);
-                for (int i = 0; i < child.childCount; i++)
-                {
-                    children.Add(child.GetChild(i));
-                }
-
-                if (child.GetComponent<Collider>())
-                {
-                    child.GetComponent<Collider>().isTrigger = isTrigger;
-                }
-            }
-        }
-
-        private void UseItemFunction(Vector3 pressPosition)
-        {
-            RaycastHit hit;
-            if (Physics.Raycast(mainCam.ScreenPointToRay(pressPosition), out hit, 5, onlyPickable + onlyPlacable))
-            {
-                if (hit.transform.GetComponent<Crafting>())
-                {
-                    hit.transform.GetComponent<Crafting>().Check4Craft();
-                    SaveItem(hit.transform.gameObject);
-                    SaveItem(hit.transform.gameObject);
-                }
-            }
-        }
-
-        public void BackpackCall()
-        {
-
-            if (anim.GetBool("isOpen"))
-            {
-                anim.SetBool("isOpen", false);
-                // anim.Play("Backpack_toFront",0,Mathf.NegativeInfinity);
-            }
-            else
-            {
-                anim.SetBool("isOpen", true);
-                //anim.Play("Backpack_toFront", 0, 0);
-            }
-            //anim.Play("Backpack_toFront", -1, 0);
-
-        }
-
-        // other stuff
-
-        private void SaveItem(GameObject Item)
-        {
-            Debug.Log("saved");
-            Debug.Log(Item.name);
-        }
-
-        GameObject findStorage;
-        private void RemoveSavedItem(GameObject Item)
-        {
-            Debug.Log("Removed");
-            Debug.Log(Item.name);
-
-            if(Item.transform.parent != null)
-            {
-                findStorage = Item.transform.parent.gameObject;
-                while (!findStorage.GetComponent<Storage>())
-                {
-                    if (findStorage.transform.parent == null) break;
-
-                    findStorage = findStorage.transform.parent.gameObject; 
-                }
-                if(findStorage.GetComponent<Storage>())
-                {
-                    Item = findStorage;
-                }
-            } // finds storage device
-
-            Debug.Log(Item.name);
-        }
-
     }
 }

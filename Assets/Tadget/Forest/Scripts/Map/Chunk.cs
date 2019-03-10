@@ -8,23 +8,23 @@
     {
         public Vector3Int coord;
         public GameObject go;
-        public GameObject savedObjects;
+        public ChunkType type;
         public Tile[] tiles {get; private set;}
         public int size_x {get; private set;}
         public int size_z {get; private set;}
 
-        public static Chunk Create(Tile[] tiles, int size_x, int size_y, Vector3Int coord, GameObject savedObjects = null)
+        public static Chunk Create(Tile[] tiles, int size_x, int size_y, Vector3Int coord, ChunkType chunkType)
         {
-            return ScriptableObject.CreateInstance<Chunk>().Init(tiles, size_x, size_y, coord, savedObjects);
+            return ScriptableObject.CreateInstance<Chunk>().Init(tiles, size_x, size_y, coord, chunkType);
         }
 
-        private Chunk Init(Tile[] tiles, int size_x, int size_z, Vector3Int coord, GameObject savedObjects = null)
+        private Chunk Init(Tile[] tiles, int size_x, int size_z, Vector3Int coord, ChunkType chunkType)
         {
             this.tiles = tiles;
             this.size_x = size_x;
             this.size_z = size_z;
             this.coord = coord;
-            this.savedObjects = savedObjects;
+            this.type = chunkType;
             return this;
         }
 
@@ -69,10 +69,6 @@
             {
                 Debug.LogWarning("Could not enable chunk go.");
             }
-            if (savedObjects != null)
-            {
-                savedObjects.SetActive(true);
-            }
         }
 
         public void Disable()
@@ -82,11 +78,6 @@
             else
             {
                 Debug.LogWarning("Could not disable chunk go.");
-            }
-
-            if (savedObjects != null)
-            {
-                savedObjects.SetActive(false);
             }
         }
     }

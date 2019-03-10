@@ -19,5 +19,11 @@ namespace Tadget
             const int D2 = 1;
             return D * (dx + dy) + (D2 - 2 * D) * Mathf.Min(dx, dy);
         }
+
+        public static void Fill<T>(this T[] originalArray, T with)
+        {
+            for(int i = 0; i < originalArray.Length; i++)
+                originalArray[i] = with;
+        }
     }
 }

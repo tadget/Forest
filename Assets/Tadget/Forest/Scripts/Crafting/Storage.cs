@@ -46,12 +46,10 @@
                     item.transform.rotation = slots[closestSlot].rotation;
                     item.transform.localScale = Vector3.one * item.GetComponent<Item>().scaleWhenStored;
                 }
-                return false;
-            }
-            else
-            {
                 return true;
             }
+
+            return false;
         }
     }
 }

@@ -8,16 +8,16 @@ EditorBuildSettings:
   - enabled: 0
     path: Assets/Tadget/Forest/Scenes/map_gen.unity
     guid: 9e22e79edfb7f7747a2d99dc6e98fb2b
-  - enabled: 0
+  - enabled: 1
     path: Assets/Tadget/Forest/Scenes/main.unity
     guid: 99c9720ab356a0642a771bea13969a05
   - enabled: 0
-    path: Assets/Tadget/Forest/Scenes/Controller.unity
+    path: Assets/Tadget/Forest/Scenes/controller.unity
     guid: 8dcadd3898034044188d668e7adf59ae
   - enabled: 0
     path: Assets/Tadget/Forest/Scenes/item_system.unity
     guid: 233d65d514e9c594a9f5a193cdad921d
-  - enabled: 1
+  - enabled: 0
     path: Assets/Tadget/Forest/Scenes/interactable_objects.unity
     guid: 0ba6f0c6f8d41be4985fc0aeb1189457
   m_configObjects: {}

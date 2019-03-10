@@ -12,43 +12,30 @@ MonoBehaviour:
   m_Name: Main Objects
   m_EditorClassIdentifier: 
   objects:
-  - prefab: {fileID: 144034, guid: b7a5c51d805970e40af12625f2d90a91, type: 2}
-    id: grass_01
-  - prefab: {fileID: 197976, guid: 2aad5742d97fdab4c98d95c48ec80453, type: 2}
-    id: grass_02
-  - prefab: {fileID: 170660, guid: 592d36973335ec54bbf1b1ce35581312, type: 2}
-    id: sand_01
-  - prefab: {fileID: 159194, guid: e0892e1ea1bfc4341b9ebc259a36a0c6, type: 2}
-    id: tree_01
-  - prefab: {fileID: 142528, guid: 6affd7a4d2817d34c86de238de109f8f, type: 2}
-    id: tree_02
-  - prefab: {fileID: 132534, guid: 35d4951e636d2ad429be57c270484724, type: 2}
-    id: tree_03
-  - prefab: {fileID: 153954, guid: d935b49771d5ae744bbaa0973bb39f77, type: 2}
-    id: tree_04
-  - prefab: {fileID: 190764, guid: b75d513df2c5cdb408d4a022c98cf202, type: 2}
-    id: tree_05
-  - prefab: {fileID: 133368, guid: ab33205b4ef2c844c8ac6ac7950aa369, type: 2}
-    id: stone_01
-  - prefab: {fileID: 126758, guid: 484d3cf124c98774f8060eabff39a104, type: 2}
-    id: stone_02
-  - prefab: {fileID: 161188, guid: 9bb03150dc9d39a4e9760c61e7d01bcc, type: 2}
-    id: stone_03
-  - prefab: {fileID: 184436, guid: 7f4e80c0be7bba54d99917b1fd9852a4, type: 2}
-    id: stone_04
-  - prefab: {fileID: 181142, guid: d2eb4c54826dc8d49926ce01a1b683d6, type: 2}
-    id: mushroom_01
-  - prefab: {fileID: 121006, guid: 680caff8855f27545bfadfbaefa281b9, type: 2}
-    id: mushroom_02
-  - prefab: {fileID: 193752, guid: 23d309f2659236448a9ac43461336d52, type: 2}
-    id: mushroom_03
-  - prefab: {fileID: 1706827740856462, guid: ddde1b136783d9f46ae9037071f4c522, type: 2}
-    id: cabin
-  - prefab: {fileID: 113808, guid: 5a459641d59e2ca46b1f815c1c217cac, type: 2}
-    id: axe_01
-  - prefab: {fileID: 102628, guid: 641fec17292c7ac4a9607002d28dbde2, type: 2}
-    id: hammer_01
-  - prefab: {fileID: 194376, guid: 582f1a3b91a90974f9518032402cc5bc, type: 2}
-    id: shovel_01
-  - prefab: {fileID: 147880, guid: b2b39398f6848dc42a7b687287c18667, type: 2}
-    id: wheels_01
+  - {fileID: 159194, guid: e0892e1ea1bfc4341b9ebc259a36a0c6, type: 2}
+  - {fileID: 142528, guid: 6affd7a4d2817d34c86de238de109f8f, type: 2}
+  - {fileID: 132534, guid: 35d4951e636d2ad429be57c270484724, type: 2}
+  - {fileID: 153954, guid: d935b49771d5ae744bbaa0973bb39f77, type: 2}
+  - {fileID: 190764, guid: b75d513df2c5cdb408d4a022c98cf202, type: 2}
+  - {fileID: 171372, guid: 94c8ba7c244e81d49a22239ae0d9252b, type: 2}
+  - {fileID: 169050, guid: ff2098c0501788540ac0f68232a120ca, type: 2}
+  - {fileID: 155580, guid: 149bd14d5c2800b42ba8f89d0c68abd3, type: 2}
+  - {fileID: 100680, guid: 74c214f0739460f48a3ea12a42918452, type: 2}
+  - {fileID: 189718, guid: bdb2dc9adbae3fb479d566153fc7b1a8, type: 2}
+  - {fileID: 164152, guid: 1093da2b134a65e44b0cb16f24de4b22, type: 2}
+  - {fileID: 133368, guid: ab33205b4ef2c844c8ac6ac7950aa369, type: 2}
+  - {fileID: 126758, guid: 484d3cf124c98774f8060eabff39a104, type: 2}
+  - {fileID: 161188, guid: 9bb03150dc9d39a4e9760c61e7d01bcc, type: 2}
+  - {fileID: 184436, guid: 7f4e80c0be7bba54d99917b1fd9852a4, type: 2}
+  - {fileID: 181142, guid: d2eb4c54826dc8d49926ce01a1b683d6, type: 2}
+  - {fileID: 121006, guid: 680caff8855f27545bfadfbaefa281b9, type: 2}
+  - {fileID: 193752, guid: 23d309f2659236448a9ac43461336d52, type: 2}
+  - {fileID: 147880, guid: b2b39398f6848dc42a7b687287c18667, type: 2}
+  - {fileID: 102628, guid: 641fec17292c7ac4a9607002d28dbde2, type: 2}
+  - {fileID: 194376, guid: 582f1a3b91a90974f9518032402cc5bc, type: 2}
+  - {fileID: 1706827740856462, guid: ddde1b136783d9f46ae9037071f4c522, type: 2}
+  - {fileID: 113808, guid: 5a459641d59e2ca46b1f815c1c217cac, type: 2}
+  - {fileID: 144034, guid: b7a5c51d805970e40af12625f2d90a91, type: 2}
+  - {fileID: 197976, guid: 2aad5742d97fdab4c98d95c48ec80453, type: 2}
+  - {fileID: 136598, guid: 71c3890e51327c74eb2088c01b7b1a4f, type: 2}
+  - {fileID: 170660, guid: 592d36973335ec54bbf1b1ce35581312, type: 2}

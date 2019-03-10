@@ -18,13 +18,13 @@
             return this;
         }
 
-        public void Get(Vector3Int targetPos, Chunk.ChunkType chunkType, Action<Chunk> callback, GameObject savedObjects = null)
+        public void Get(Vector3Int targetPos, Chunk.ChunkType chunkType, Action<Chunk> callback)
         {
             Chunk chunk;
             switch (chunkType)
             {
                 case Chunk.ChunkType.HOME:
-                    chunk = GenerateHomeChunk(targetPos, savedObjects);
+                    chunk = GenerateHomeChunk(targetPos);
                     break;
                 case Chunk.ChunkType.BIOME:
                 default:
@@ -34,12 +34,12 @@
             StartCoroutine(InstantiateChunk(chunk, callback));
         }
 
-        public void Return(Chunk chunk, Action<GameObject> callback)
+        public void Return(Chunk chunk)
         {
-            StartCoroutine(DestroyChunk(chunk, callback));
+            StartCoroutine(DestroyChunk(chunk));
         }
 
-        private Chunk GenerateHomeChunk(Vector3Int targetPos, GameObject savedObjects)
+        private Chunk GenerateHomeChunk(Vector3Int targetPos)
         {
             Tile[] tiles = new Tile[mapSettings.chunkTileCount_x * mapSettings.chunkTileCount_z];
 
@@ -54,7 +54,7 @@
                         tiles[tile] = mapSettings.yardTiles[1];
                 }
             }
-            return Chunk.Create(tiles, mapSettings.chunkTileCount_x, mapSettings.chunkTileCount_z, targetPos, savedObjects);
+            return Chunk.Create(tiles, mapSettings.chunkTileCount_x, mapSettings.chunkTileCount_z, targetPos, Chunk.ChunkType.HOME);
         }
 
         private Chunk GenerateBiomeChunk(Vector3Int targetPos)
@@ -79,11 +79,11 @@
                         tiles[tile] = mapSettings.biome3Tiles[Random.Range(0, mapSettings.biome3Tiles.Count)];
                 }
             }
-            return Chunk.Create(tiles, mapSettings.chunkTileCount_x, mapSettings.chunkTileCount_z, targetPos);
+            return Chunk.Create(tiles, mapSettings.chunkTileCount_x, mapSettings.chunkTileCount_z, targetPos, Chunk.ChunkType.BIOME);
         }
 
         private bool isDestroying;
-        private IEnumerator DestroyChunk(Chunk chunk, Action<GameObject> callback)
+        private IEnumerator DestroyChunk(Chunk chunk)
         {
             while(isDestroying)
                 yield return new WaitForEndOfFrame();
@@ -91,10 +91,6 @@
             chunk.Disable();
             yield return new WaitForEndOfFrame();
             Destroy(chunk.go);
-            yield return new WaitForEndOfFrame();
-            if (chunk.savedObjects != null)
-                if(callback != null)
-                    callback(chunk.savedObjects);
             yield return new WaitForEndOfFrame();
             Destroy(chunk);
             isDestroying = false;
@@ -150,14 +146,6 @@
                     if (UnityEngine.Random.value < 0.60f)
                         yield return new WaitForEndOfFrame();
                 }
-            }
-
-            yield return new WaitForEndOfFrame();
-
-            if (chunk.savedObjects != null)
-            {
-                chunk.savedObjects.transform.position = start;
-                chunk.savedObjects.SetActive(true);
             }
 
             yield return new WaitForEndOfFrame();

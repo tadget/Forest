@@ -16,7 +16,6 @@
         public bool wasHomeReachedSinceAvailable { private set; get; }
         public Vector3Int homeCoord = Vector3Int.zero;
         public Vector3Int playerChunkCoord = Vector3Int.zero;
-        public GameObject savedHomeChunkObjects { private set; get; }
 
         public Action OnHomeBecameAvailable;
 
@@ -66,11 +65,5 @@
         {
             playerInstantiated = instantiated;
         }
-
-        public void SetSavedHomeChunkObjects(GameObject objects)
-        {
-            savedHomeChunkObjects = objects;
-        }
-
     }
 }
