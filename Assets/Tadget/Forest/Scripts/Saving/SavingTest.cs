@@ -24,7 +24,7 @@
             else
             {
                 Debug.Log("No objects found");
-                gameData.savedHomeChunkObjects = GameObject.Find("Root");
+                gameData.savedHomeChunkObjects = FindObjectOfType<ES3AutoSave>().gameObject;
             }
             gameData.savedHomeChunkObjects.transform.position = Vector3.zero;
             gameData.savedHomeChunkObjects.SetActive(false);

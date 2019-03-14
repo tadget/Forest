@@ -1,4 +1,6 @@
-﻿namespace Tadget.Main
+﻿using UnityEngine.SceneManagement;
+
+namespace Tadget.Main
 {
     using System;
     using UnityEngine;
@@ -50,6 +52,7 @@
 
         private IEnumerator Start()
         {
+            SceneManager.SetActiveScene(SceneManager.GetSceneByName("main"));
             InitVariables();
             LoadGameData();
             state.SetDataLoaded(true);
@@ -58,6 +61,12 @@
             StartCoroutine(mapLoadCoroutine);
             yield return new WaitUntil(() => state.mapLoaded);
             PlacePlayer();
+            if (SceneManager.GetSceneByName("loading").isLoaded)
+            {
+                playerInstance.SetActive(false);
+                yield return SceneManager.UnloadSceneAsync("loading");
+                playerInstance.SetActive(true);
+            }
             state.SetPlayerInstantiated(true);
             LinkPlayerData();
             LinkDayCycleEvents();
@@ -96,7 +105,7 @@
             ui = GetComponent<UIManager>();
             map = GetComponent<MapRenderer>().Init(this);
             load = GetComponent<LoadingManager>();
-            sound = GetComponent<AudioManager>();
+            sound = GetComponent<AudioManager>().Init();
             day = FindObjectOfType<DayCycle>();
             state = GameState.Create();
         }
@@ -198,7 +207,7 @@
             else
             {
                 Debug.Log("* No saved objects found");
-                data.savedHomeChunkObjects = GameObject.Find("Root");
+                data.savedHomeChunkObjects = FindObjectOfType<ES3AutoSave>().gameObject;
             }
             data.savedHomeChunkObjects.transform.position = Vector3.zero;
             data.savedHomeChunkObjects.SetActive(false);

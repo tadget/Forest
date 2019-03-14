@@ -11,6 +11,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f3e8860342664f049b5d671c8ddef512, type: 3}
   m_Name: Mobile
   m_EditorClassIdentifier: 
-  playerPrefab: {fileID: 1091742162435720, guid: 37687e76930f2c148b32d5b71e6cc869,
+  playerPrefab: {fileID: 1091742162435720, guid: d51ab2902ca3b6a42bfa5174235ef6a6,
     type: 2}
   playerSpawnPosition: {x: 60, y: 0.5, z: 20}

@@ -19,8 +19,8 @@ public class ES3AutoSaveMgr : MonoBehaviour, ISerializationCallbackReceiver
 	public enum SaveEvent { None, OnApplicationQuit, OnApplicationPause }
 
 	public string key = System.Guid.NewGuid().ToString();
-	public SaveEvent saveEvent = SaveEvent.OnApplicationQuit;
-	public LoadEvent loadEvent = LoadEvent.Awake;
+	public SaveEvent saveEvent = SaveEvent.None;
+	public LoadEvent loadEvent = LoadEvent.None;
 	public ES3SerializableSettings settings = null;
 
 	public List<ES3AutoSave> autoSaves = null;
@@ -54,20 +54,6 @@ public class ES3AutoSaveMgr : MonoBehaviour, ISerializationCallbackReceiver
 
 		if(loadEvent == LoadEvent.Awake)
 			Load();
-	}
-
-	void OnApplicationQuit()
-	{
-		if(saveEvent == SaveEvent.OnApplicationQuit)
-			Save();
-	}
-
-	void OnApplicationPause(bool paused)
-	{
-		if(	(saveEvent == SaveEvent.OnApplicationPause || 
-			(Application.isMobilePlatform && saveEvent == SaveEvent.OnApplicationQuit)) && 
-			paused)
-			Save();
 	}
 
 	/* Register an ES3AutoSave with the ES3AutoSaveMgr, if there is one */

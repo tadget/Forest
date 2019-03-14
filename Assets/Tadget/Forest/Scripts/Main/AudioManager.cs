@@ -14,10 +14,11 @@
             Debug.Assert(data != null, "Missing Audio Data");
         }
 
-        private void Awake()
+        public AudioManager Init()
         {
             var go = new GameObject("Main Audio Source");
             mainAudioSource = go.AddComponent<AudioSource>();
+            return this;
         }
 
         public void PlayMainTheme()

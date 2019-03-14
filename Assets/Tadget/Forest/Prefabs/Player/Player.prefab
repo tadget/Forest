@@ -187,7 +187,7 @@ Camera:
     width: 1
     height: 1
   near clip plane: 0.3
-  far clip plane: 100
+  far clip plane: 75
   field of view: 60
   orthographic: 0
   orthographic size: 5
@@ -195,7 +195,7 @@ Camera:
   m_CullingMask:
     serializedVersion: 2
     m_Bits: 4294967295
-  m_RenderingPath: 1
+  m_RenderingPath: 3
   m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0
   m_TargetEye: 3
@@ -327,12 +327,11 @@ MonoBehaviour:
   onlyPickable:
     serializedVersion: 2
     m_Bits: 1024
-  onlyPlacable:
+  onlyPlaceable:
     serializedVersion: 2
-    m_Bits: 2048
+    m_Bits: 0
   itemInHand: {fileID: 0}
   hand: {fileID: 1166591399320896}
-  myBackpack: {fileID: 0}
 --- !u!114 &114394672818354816
 MonoBehaviour:
   m_ObjectHideFlags: 1

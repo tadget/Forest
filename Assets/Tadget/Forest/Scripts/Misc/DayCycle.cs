@@ -10,6 +10,8 @@
         public GameObject sun;
         [HideInInspector]
         public Light sunLight;
+
+        public AnimationCurve curve;
      
         public float timeOfDay = 0;
      
@@ -89,6 +91,7 @@
             currentColor = sunGradient.Evaluate((timeOfDay+90)/360f);
             RenderSettings.ambientSkyColor = currentColor;
             RenderSettings.fogColor = fogGradient.Evaluate((timeOfDay + 90) / 360f);
+            sunLight.intensity = curve.Evaluate((timeOfDay + 90) / 360f);
 
         }
      
