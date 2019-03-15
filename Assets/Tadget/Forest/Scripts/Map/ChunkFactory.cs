@@ -48,7 +48,7 @@
                 for (int x = 0; x < mapSettings.chunkTileCount_x; x++)
                 {
                     int tile = z * mapSettings.chunkTileCount_z + x;
-                    if(tile == tiles.Length / 2)
+                    if(tile == 6)
                         tiles[tile] = mapSettings.yardTiles[0];
                     else
                         tiles[tile] = mapSettings.yardTiles[1];

@@ -83,3 +83,115 @@ MonoBehaviour:
     maxRandomCount: 2
     isRandomChanceToSpawn: 0
     chance: 0
+  - id: Rock1
+    positions: []
+    isPositionRandomized: 1
+    isRotationRandomized: 1
+    minOffsetX: -9
+    maxOffsetX: 9
+    minOffsetZ: -9
+    maxOffsetZ: 9
+    isFixedCount: 0
+    count: 0
+    minRandomCount: 0
+    maxRandomCount: 2
+    isRandomChanceToSpawn: 0
+    chance: 0
+  - id: Rock2
+    positions: []
+    isPositionRandomized: 1
+    isRotationRandomized: 1
+    minOffsetX: -9
+    maxOffsetX: 9
+    minOffsetZ: -9
+    maxOffsetZ: 9
+    isFixedCount: 0
+    count: 0
+    minRandomCount: 0
+    maxRandomCount: 2
+    isRandomChanceToSpawn: 0
+    chance: 0
+  - id: Rock3
+    positions: []
+    isPositionRandomized: 1
+    isRotationRandomized: 1
+    minOffsetX: -9
+    maxOffsetX: 9
+    minOffsetZ: -9
+    maxOffsetZ: 9
+    isFixedCount: 0
+    count: 0
+    minRandomCount: 0
+    maxRandomCount: 2
+    isRandomChanceToSpawn: 0
+    chance: 0
+  - id: Rock4
+    positions: []
+    isPositionRandomized: 1
+    isRotationRandomized: 1
+    minOffsetX: -9
+    maxOffsetX: 9
+    minOffsetZ: -9
+    maxOffsetZ: 9
+    isFixedCount: 0
+    count: 0
+    minRandomCount: 0
+    maxRandomCount: 2
+    isRandomChanceToSpawn: 0
+    chance: 0
+  - id: Rock5
+    positions: []
+    isPositionRandomized: 1
+    isRotationRandomized: 1
+    minOffsetX: -9
+    maxOffsetX: 9
+    minOffsetZ: -9
+    maxOffsetZ: 9
+    isFixedCount: 0
+    count: 0
+    minRandomCount: 0
+    maxRandomCount: 2
+    isRandomChanceToSpawn: 0
+    chance: 0
+  - id: Rock6
+    positions: []
+    isPositionRandomized: 1
+    isRotationRandomized: 1
+    minOffsetX: -9
+    maxOffsetX: 9
+    minOffsetZ: -9
+    maxOffsetZ: 9
+    isFixedCount: 0
+    count: 0
+    minRandomCount: 0
+    maxRandomCount: 2
+    isRandomChanceToSpawn: 0
+    chance: 0
+  - id: Rock7
+    positions: []
+    isPositionRandomized: 1
+    isRotationRandomized: 1
+    minOffsetX: -9
+    maxOffsetX: 9
+    minOffsetZ: -9
+    maxOffsetZ: 9
+    isFixedCount: 0
+    count: 0
+    minRandomCount: 0
+    maxRandomCount: 2
+    isRandomChanceToSpawn: 0
+    chance: 0
+  - id: Rock8
+    positions: []
+    isPositionRandomized: 1
+    isRotationRandomized: 1
+    minOffsetX: -9
+    maxOffsetX: 9
+    minOffsetZ: -9
+    maxOffsetZ: 9
+    isFixedCount: 0
+    count: 0
+    minRandomCount: 0
+    maxRandomCount: 2
+    isRandomChanceToSpawn: 0
+    chance: 0

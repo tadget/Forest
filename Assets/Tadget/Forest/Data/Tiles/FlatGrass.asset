@@ -27,59 +27,59 @@ MonoBehaviour:
     maxRandomCount: 0
     isRandomChanceToSpawn: 0
     chance: 0
-  - id: axe_01
+  - id: grass_01
     positions: []
     isPositionRandomized: 1
     isRotationRandomized: 1
-    minOffsetX: 0
-    maxOffsetX: 0
-    minOffsetZ: 0
-    maxOffsetZ: 0
-    isFixedCount: 1
+    minOffsetX: -8
+    maxOffsetX: 8
+    minOffsetZ: -8
+    maxOffsetZ: 8
+    isFixedCount: 0
     count: 1
     minRandomCount: 0
-    maxRandomCount: 0
-    isRandomChanceToSpawn: 1
-    chance: 0.068
-  - id: hammer_01
+    maxRandomCount: 2
+    isRandomChanceToSpawn: 0
+    chance: 0
+  - id: grass_02
     positions: []
     isPositionRandomized: 1
     isRotationRandomized: 1
-    minOffsetX: -10
-    maxOffsetX: 10
-    minOffsetZ: -10
-    maxOffsetZ: 10
-    isFixedCount: 1
+    minOffsetX: -8
+    maxOffsetX: 8
+    minOffsetZ: -8
+    maxOffsetZ: 8
+    isFixedCount: 0
     count: 1
     minRandomCount: 0
-    maxRandomCount: 0
-    isRandomChanceToSpawn: 1
-    chance: 0.164
-  - id: shovel_01
+    maxRandomCount: 2
+    isRandomChanceToSpawn: 0
+    chance: 0
+  - id: grass_03
     positions: []
     isPositionRandomized: 1
     isRotationRandomized: 1
-    minOffsetX: -10
-    maxOffsetX: 10
-    minOffsetZ: -10
-    maxOffsetZ: 10
-    isFixedCount: 1
+    minOffsetX: -8
+    maxOffsetX: 8
+    minOffsetZ: -8
+    maxOffsetZ: 8
+    isFixedCount: 0
     count: 1
     minRandomCount: 0
-    maxRandomCount: 0
-    isRandomChanceToSpawn: 1
-    chance: 0.103
-  - id: wheels_01
+    maxRandomCount: 2
+    isRandomChanceToSpawn: 0
+    chance: 0
+  - id: grass_04
     positions: []
     isPositionRandomized: 1
     isRotationRandomized: 1
-    minOffsetX: -10
-    maxOffsetX: 10
-    minOffsetZ: -10
-    maxOffsetZ: 10
-    isFixedCount: 1
+    minOffsetX: -8
+    maxOffsetX: 8
+    minOffsetZ: -8
+    maxOffsetZ: 8
+    isFixedCount: 0
     count: 1
     minRandomCount: 0
-    maxRandomCount: 0
-    isRandomChanceToSpawn: 1
-    chance: 0.028
+    maxRandomCount: 2
+    isRandomChanceToSpawn: 0
+    chance: 0

@@ -96,7 +96,6 @@ namespace Tadget.Main
         private void Update()
         {
             CheckForInput();
-            //UpdatePositionDisplay();
             UpdateStateDisplay();
         }
 
@@ -123,7 +122,10 @@ namespace Tadget.Main
         }
 
         private void PlacePlayer()
-        {   
+        {
+            var uiCam = GameObject.Find("UI Camera");
+            if(uiCam)
+                uiCam.SetActive(false);
             if(playerInstance == null)
                 playerInstance = Instantiate(settings.playerPrefab);
             playerInstance.transform.position = settings.playerSpawnPosition;

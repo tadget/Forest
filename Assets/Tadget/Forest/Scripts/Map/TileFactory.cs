@@ -49,7 +49,7 @@
                     {
                         if(item.positions.Count > 0)
                         {
-                            position = item.positions[i % item.positions.Count];
+                            position = origin + item.positions[i % item.positions.Count];
                         }
                         else
                         {

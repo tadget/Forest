@@ -13,8 +13,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   type: 0
   objects:
-  - id: cabin
-    positions: []
+  - id: Cabin_01
+    positions:
+    - {x: 0, y: 0.15, z: 0}
     isPositionRandomized: 0
     isRotationRandomized: 0
     minOffsetX: 0

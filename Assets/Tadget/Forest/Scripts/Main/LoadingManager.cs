@@ -26,13 +26,14 @@
             es3File = new ES3File(System.IO.Path.Combine(Application.persistentDataPath, filePath));
         }
 
-        public GameData GetData()
+        public GameData GetData(bool loadHomeObjects = true)
         {
             var gameData = GameData.Create();
             if (es3File.KeyExists("gameData"))
             {
                 gameData = es3File.Load<GameData>("gameData", gameData);
-                gameData.savedHomeChunkObjects = LoadGameObject("savedHomeChunkObjects");
+                if(loadHomeObjects)
+                    gameData.savedHomeChunkObjects = LoadGameObject("savedHomeChunkObjects");
             }
             else
             {
