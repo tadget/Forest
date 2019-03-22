@@ -9,12 +9,12 @@
     public class ChunkFactory : MonoBehaviour
     {
         private MapSettings mapSettings;
-        private TileFactory tileFactory;
+        //private TileFactory tileFactory;
 
         public ChunkFactory Init(MapSettings mapSettings, TileObjects tileObjects)
         {
             this.mapSettings = mapSettings;
-            tileFactory = new TileFactory(tileObjects);
+            //tileFactory = new TileFactory(tileObjects);
             return this;
         }
 
@@ -128,7 +128,7 @@
                         continue;
                     }
 
-                    var tile_go = tileFactory.Create(
+                    var tile_go = TileFactory.Create(
                         tile,
                         start + new Vector3(
                             x * mapSettings.tileOffsetX,

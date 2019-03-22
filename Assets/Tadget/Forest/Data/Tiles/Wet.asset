@@ -11,9 +11,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 05306f21a86f94b46b0ff82c397238ae, type: 3}
   m_Name: Wet
   m_EditorClassIdentifier: 
-  objs: []
-  terrains: []
-  isRandomized: 0
-  isFixedObjectCount: 0
-  count: 0
   type: 3
+  objects:
+  - go: {fileID: 1124564022722800, guid: 525fda9417ad9c241accacb959259913, type: 2}
+    isPositionRandomized: 0
+    minMaxOffset: {x: -10, y: 8.59006}
+    positions:
+    - {x: 0, y: 0, z: 0}
+    isRotationRandomized: 0
+    isFixedCount: 1
+    count: 1
+    minMaxRandomCount: {x: 5, y: 12}
+    isRandomChanceToSpawn: 0
+    chance: 0.512

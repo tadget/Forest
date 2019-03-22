@@ -13,45 +13,35 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   type: 2
   objects:
-  - id: terrain-plane_grass_02
-    positions: []
+  - objectGroup:
+    - go: {fileID: 197976, guid: 2aad5742d97fdab4c98d95c48ec80453, type: 2}
     isPositionRandomized: 0
+    minMaxOffset: {x: -10, y: 10}
+    positions:
+    - {x: 0, y: 0, z: 0}
     isRotationRandomized: 0
-    minOffsetX: 0
-    maxOffsetX: 0
-    minOffsetZ: 0
-    maxOffsetZ: 0
     isFixedCount: 1
     count: 1
-    minRandomCount: 0
-    maxRandomCount: 0
+    minMaxRandomCount: {x: 1, y: 13}
     isRandomChanceToSpawn: 0
     chance: 0
-  - id: tree_01
-    positions: []
+  - objectGroup:
+    - go: {fileID: 159194, guid: e0892e1ea1bfc4341b9ebc259a36a0c6, type: 2}
+    - go: {fileID: 142528, guid: 6affd7a4d2817d34c86de238de109f8f, type: 2}
+    - go: {fileID: 132534, guid: 35d4951e636d2ad429be57c270484724, type: 2}
+    - go: {fileID: 171372, guid: 94c8ba7c244e81d49a22239ae0d9252b, type: 2}
+    - go: {fileID: 100000, guid: d013c59f8370fb04887e197bee6f990b, type: 3}
+    - go: {fileID: 100000, guid: 870922926f491034ebe583c35c85c291, type: 3}
+    - go: {fileID: 100000, guid: 906dc2c7bb4a47f4f9e324b884777d16, type: 3}
+    - go: {fileID: 100000, guid: ab0c87eac21971e428f02fc170578634, type: 3}
+    - go: {fileID: 100000, guid: d36e0ae298acd9c4992e25f90c9be70b, type: 3}
+    - go: {fileID: 100000, guid: cb65d46200540b9458fb48a5a1077f7e, type: 3}
     isPositionRandomized: 1
-    isRotationRandomized: 1
-    minOffsetX: -9
-    maxOffsetX: 9
-    minOffsetZ: -9
-    maxOffsetZ: 9
-    isFixedCount: 0
-    count: 0
-    minRandomCount: 5
-    maxRandomCount: 15
-    isRandomChanceToSpawn: 0
-    chance: 0
-  - id: tree_02
+    minMaxOffset: {x: -10, y: 10}
     positions: []
-    isPositionRandomized: 1
     isRotationRandomized: 1
-    minOffsetX: -9
-    maxOffsetX: 9
-    minOffsetZ: -9
-    maxOffsetZ: 9
     isFixedCount: 0
-    count: 0
-    minRandomCount: 5
-    maxRandomCount: 15
+    count: 1
+    minMaxRandomCount: {x: 5, y: 18}
     isRandomChanceToSpawn: 0
     chance: 0

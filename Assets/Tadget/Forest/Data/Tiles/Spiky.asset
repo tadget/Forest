@@ -11,75 +11,43 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 05306f21a86f94b46b0ff82c397238ae, type: 3}
   m_Name: Spiky
   m_EditorClassIdentifier: 
-  type: 2
+  type: 3
   objects:
-  - id: terrain-plane_grass_02
-    positions: []
+  - objectGroup:
+    - go: {fileID: 197976, guid: 2aad5742d97fdab4c98d95c48ec80453, type: 2}
     isPositionRandomized: 0
+    minMaxOffset: {x: -10, y: 10}
+    positions:
+    - {x: 0, y: 0, z: 0}
     isRotationRandomized: 0
-    minOffsetX: 0
-    maxOffsetX: 0
-    minOffsetZ: 0
-    maxOffsetZ: 0
     isFixedCount: 1
     count: 1
-    minRandomCount: 0
-    maxRandomCount: 0
+    minMaxRandomCount: {x: 0, y: 0}
     isRandomChanceToSpawn: 0
     chance: 0
-  - id: tree_04
-    positions: []
+  - objectGroup:
+    - go: {fileID: 153954, guid: d935b49771d5ae744bbaa0973bb39f77, type: 2}
+    - go: {fileID: 100000, guid: 9e736dc8d72bee74fa560c1dfdedbb9e, type: 3}
+    - go: {fileID: 100000, guid: bc6d37bc0024e3a4fad1700494387794, type: 3}
+    - go: {fileID: 100000, guid: 1a3aaa238065992479bafe2f76aeebb1, type: 3}
+    - go: {fileID: 190764, guid: b75d513df2c5cdb408d4a022c98cf202, type: 2}
+    - go: {fileID: 100000, guid: 89199666cf50b2d4daa0f148a55d4208, type: 3}
+    - go: {fileID: 100000, guid: 1648e9f87ac1ffe42b82a1389ae9c8f6, type: 3}
+    - go: {fileID: 100000, guid: f7c37c85724fef8468e9745d1360d962, type: 3}
+    - go: {fileID: 100000, guid: bcf903531d6a3b340a45c0ac997472c9, type: 3}
+    - go: {fileID: 100000, guid: 1bd22797afe37aa40a4aec9f7ff8924b, type: 3}
+    - go: {fileID: 100000, guid: a326321d134433f498b1db891bc46870, type: 3}
+    - go: {fileID: 100000, guid: d642bdb2862b6664191fa636b60b4678, type: 3}
+    - go: {fileID: 100000, guid: 5e4f67c457c73564ba23b2275acc6a29, type: 3}
+    - go: {fileID: 100000, guid: 1844a18f1dc23594a9f2ac80a71b3b71, type: 3}
+    - go: {fileID: 100000, guid: e4c4e5e3ac1f22e449fbae4034234845, type: 3}
+    - go: {fileID: 100000, guid: 4a3a23972c03e784abff0dc81a3ace4f, type: 3}
     isPositionRandomized: 1
-    isRotationRandomized: 1
-    minOffsetX: -8
-    maxOffsetX: 8
-    minOffsetZ: -8
-    maxOffsetZ: 8
-    isFixedCount: 0
-    count: 0
-    minRandomCount: 10
-    maxRandomCount: 15
-    isRandomChanceToSpawn: 0
-    chance: 0
-  - id: mushroom_01
+    minMaxOffset: {x: -10, y: 10}
     positions: []
-    isPositionRandomized: 1
     isRotationRandomized: 1
-    minOffsetX: -5
-    maxOffsetX: 5
-    minOffsetZ: -5
-    maxOffsetZ: 5
     isFixedCount: 0
-    count: 0
-    minRandomCount: 0
-    maxRandomCount: 2
-    isRandomChanceToSpawn: 0
-    chance: 0
-  - id: mushroom_02
-    positions: []
-    isPositionRandomized: 1
-    isRotationRandomized: 1
-    minOffsetX: -5
-    maxOffsetX: 5
-    minOffsetZ: -5
-    maxOffsetZ: 5
-    isFixedCount: 0
-    count: 0
-    minRandomCount: 0
-    maxRandomCount: 2
-    isRandomChanceToSpawn: 0
-    chance: 0.125
-  - id: mushroom_03
-    positions: []
-    isPositionRandomized: 1
-    isRotationRandomized: 1
-    minOffsetX: -5
-    maxOffsetX: 5
-    minOffsetZ: -5
-    maxOffsetZ: 5
-    isFixedCount: 0
-    count: 0
-    minRandomCount: 0
-    maxRandomCount: 2
+    count: 1
+    minMaxRandomCount: {x: 10, y: 16}
     isRandomChanceToSpawn: 0
     chance: 0

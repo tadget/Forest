@@ -13,32 +13,27 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   type: 0
   objects:
-  - id: Cabin_01
-    positions:
-    - {x: 0, y: 0.15, z: 0}
+  - objectGroup:
+    - go: {fileID: 1706827740856462, guid: ddde1b136783d9f46ae9037071f4c522, type: 2}
     isPositionRandomized: 0
+    minMaxOffset: {x: -10, y: 10}
+    positions:
+    - {x: 0, y: 0, z: 0}
     isRotationRandomized: 0
-    minOffsetX: 0
-    maxOffsetX: 0
-    minOffsetZ: 0
-    maxOffsetZ: 0
     isFixedCount: 1
     count: 1
-    minRandomCount: 0
-    maxRandomCount: 0
+    minMaxRandomCount: {x: 0, y: 0}
     isRandomChanceToSpawn: 0
     chance: 0
-  - id: terrain-plane_grass_01
-    positions: []
+  - objectGroup:
+    - go: {fileID: 144034, guid: b7a5c51d805970e40af12625f2d90a91, type: 2}
     isPositionRandomized: 0
+    minMaxOffset: {x: -10, y: 10}
+    positions:
+    - {x: 0, y: 0, z: 0}
     isRotationRandomized: 0
-    minOffsetX: 0
-    maxOffsetX: 0
-    minOffsetZ: 0
-    maxOffsetZ: 0
     isFixedCount: 1
     count: 1
-    minRandomCount: 0
-    maxRandomCount: 0
+    minMaxRandomCount: {x: 0, y: 0}
     isRandomChanceToSpawn: 0
     chance: 0

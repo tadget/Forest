@@ -13,73 +13,44 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   type: 1
   objects:
-  - id: terrain-plane_grass_01
-    positions: []
+  - objectGroup:
+    - go: {fileID: 144034, guid: b7a5c51d805970e40af12625f2d90a91, type: 2}
     isPositionRandomized: 0
+    minMaxOffset: {x: -8.789372, y: 8.740071}
+    positions:
+    - {x: 0, y: 0, z: 0}
     isRotationRandomized: 0
-    minOffsetX: 0
-    maxOffsetX: 0
-    minOffsetZ: 0
-    maxOffsetZ: 0
     isFixedCount: 1
     count: 1
-    minRandomCount: 0
-    maxRandomCount: 0
+    minMaxRandomCount: {x: 3, y: 9}
     isRandomChanceToSpawn: 0
     chance: 0
-  - id: grass_01
-    positions: []
+  - objectGroup:
+    - go: {fileID: 169050, guid: ff2098c0501788540ac0f68232a120ca, type: 2}
+    - go: {fileID: 100680, guid: 74c214f0739460f48a3ea12a42918452, type: 2}
+    - go: {fileID: 189718, guid: bdb2dc9adbae3fb479d566153fc7b1a8, type: 2}
     isPositionRandomized: 1
+    minMaxOffset: {x: -10, y: 10}
+    positions: []
     isRotationRandomized: 1
-    minOffsetX: -8
-    maxOffsetX: 8
-    minOffsetZ: -8
-    maxOffsetZ: 8
     isFixedCount: 0
     count: 1
-    minRandomCount: 0
-    maxRandomCount: 2
+    minMaxRandomCount: {x: 5, y: 13}
     isRandomChanceToSpawn: 0
     chance: 0
-  - id: grass_02
-    positions: []
+  - objectGroup:
+    - go: {fileID: 100000, guid: c9526da79d7c7c445adfc7f18f7b57e2, type: 3}
+    - go: {fileID: 100000, guid: 73a60a6a04ced8d4a94f54c14b38cb4e, type: 3}
+    - go: {fileID: 100000, guid: 9fc29836f9cb9bf4da2cad18b346a21b, type: 3}
+    - go: {fileID: 100000, guid: 709b0a34f0459c84eb55864b8d2f7649, type: 3}
+    - go: {fileID: 100000, guid: f7db0cabf40bae3499f345657a8a058a, type: 3}
+    - go: {fileID: 100000, guid: 494dfb9fc97f4484a863dfc91ffae4e9, type: 3}
     isPositionRandomized: 1
+    minMaxOffset: {x: -10, y: 10}
+    positions: []
     isRotationRandomized: 1
-    minOffsetX: -8
-    maxOffsetX: 8
-    minOffsetZ: -8
-    maxOffsetZ: 8
     isFixedCount: 0
     count: 1
-    minRandomCount: 0
-    maxRandomCount: 2
-    isRandomChanceToSpawn: 0
-    chance: 0
-  - id: grass_03
-    positions: []
-    isPositionRandomized: 1
-    isRotationRandomized: 1
-    minOffsetX: -8
-    maxOffsetX: 8
-    minOffsetZ: -8
-    maxOffsetZ: 8
-    isFixedCount: 0
-    count: 1
-    minRandomCount: 0
-    maxRandomCount: 2
-    isRandomChanceToSpawn: 0
-    chance: 0
-  - id: grass_04
-    positions: []
-    isPositionRandomized: 1
-    isRotationRandomized: 1
-    minOffsetX: -8
-    maxOffsetX: 8
-    minOffsetZ: -8
-    maxOffsetZ: 8
-    isFixedCount: 0
-    count: 1
-    minRandomCount: 0
-    maxRandomCount: 2
-    isRandomChanceToSpawn: 0
-    chance: 0
+    minMaxRandomCount: {x: 3, y: 10}
+    isRandomChanceToSpawn: 1
+    chance: 0.15

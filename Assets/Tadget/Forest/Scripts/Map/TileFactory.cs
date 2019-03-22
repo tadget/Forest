@@ -5,14 +5,14 @@
 
     public class TileFactory
     {
-        private TileObjects tileObjects;
+        /*private TileObjects tileObjects;
 
         public TileFactory(TileObjects tileObjects)
         {
             this.tileObjects = tileObjects;
-        }
+        }*/
 
-        public GameObject Create(Tile tile, Vector3 origin, Transform parent)
+        public static GameObject Create(Tile tile, Vector3 origin, Transform parent)
         {
             GameObject tile_go = new GameObject();
             tile_go.transform.position = origin;
@@ -26,23 +26,30 @@
                        continue;
                 }
 
-                int count = item.isFixedCount ? item.count : Random.Range(item.minRandomCount, item.maxRandomCount + 1);
+                int count = item.isFixedCount ? item.count : Random.Range(item.minMaxRandomCount.x, item.minMaxRandomCount.y + 1);
                 Vector3 position;
                 Quaternion rotation;
-
                 GameObject prefab;
-                if (!tileObjects.TryGetObject(item.id, out prefab))
+
+                if (item.objectGroup == null || item.objectGroup.Count < 1)
                 {
-                    Debug.LogWarning("Unable to instantiate " + item.id);
+                    Debug.LogWarning("Unable to instantiate item group in tile " + tile.name);
                     continue;
                 }
 
                 for (int i = 0; i < count; i++)
                 {
+                    prefab = item.objectGroup[Random.Range(0, item.objectGroup.Count)].go;
+                    if (prefab == null)
+                    {
+                        Debug.LogWarning("Unable to instantiate prefab in tile " + tile.name);
+                        continue;
+                    }
+
                     if (item.isPositionRandomized)
                     {
-                        float offset_x = Random.Range(item.minOffsetX, item.maxOffsetX);
-                        float offset_z = Random.Range(item.minOffsetZ, item.maxOffsetZ);
+                        float offset_x = Random.Range(item.minMaxOffset.x, item.minMaxOffset.y);
+                        float offset_z = Random.Range(item.minMaxOffset.x, item.minMaxOffset.y);
                         position = new Vector3(origin.x + offset_x, 0, origin.z + offset_z);
                     }
                     else

@@ -13,185 +13,68 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   type: 3
   objects:
-  - id: terrain-plane_grass_02
-    positions: []
+  - objectGroup:
+    - go: {fileID: 170660, guid: 592d36973335ec54bbf1b1ce35581312, type: 2}
     isPositionRandomized: 0
+    minMaxOffset: {x: -10, y: 10}
+    positions:
+    - {x: 0, y: 0, z: 0}
     isRotationRandomized: 0
-    minOffsetX: 0
-    maxOffsetX: 0
-    minOffsetZ: 0
-    maxOffsetZ: 0
     isFixedCount: 1
     count: 1
-    minRandomCount: 0
-    maxRandomCount: 0
+    minMaxRandomCount: {x: 0, y: 1}
     isRandomChanceToSpawn: 0
     chance: 0
-  - id: tree_05
-    positions: []
+  - objectGroup:
+    - go: {fileID: 190764, guid: b75d513df2c5cdb408d4a022c98cf202, type: 2}
     isPositionRandomized: 1
-    isRotationRandomized: 1
-    minOffsetX: -9
-    maxOffsetX: 9
-    minOffsetZ: -9
-    maxOffsetZ: 9
-    isFixedCount: 0
-    count: 0
-    minRandomCount: 0
-    maxRandomCount: 7
-    isRandomChanceToSpawn: 0
-    chance: 0
-  - id: stone_01
+    minMaxOffset: {x: -8.296357, y: 8.356614}
     positions: []
-    isPositionRandomized: 1
     isRotationRandomized: 1
-    minOffsetX: -9
-    maxOffsetX: 9
-    minOffsetZ: -9
-    maxOffsetZ: 9
     isFixedCount: 0
-    count: 0
-    minRandomCount: 0
-    maxRandomCount: 3
+    count: 1
+    minMaxRandomCount: {x: 5, y: 20}
     isRandomChanceToSpawn: 0
     chance: 0
-  - id: stone_02
+  - objectGroup:
+    - go: {fileID: 100000, guid: 87a986172b8f53343bf5925193846245, type: 3}
+    - go: {fileID: 100000, guid: 3fc1bcce53374864ab60d4c8a68a44f2, type: 3}
+    - go: {fileID: 100000, guid: d693bf1b395c5c34cace2296670430ef, type: 3}
+    - go: {fileID: 100000, guid: 1275cdac7bf6e7c4f83bff30ef907413, type: 3}
+    - go: {fileID: 100000, guid: 64795326e8e0410418cbe1f09b427faa, type: 3}
+    - go: {fileID: 100000, guid: 03cc03edc5f89064d8bf7f3744a1e540, type: 3}
+    - go: {fileID: 100000, guid: bad7d650ba1f041419f329ca6377daf7, type: 3}
+    - go: {fileID: 100000, guid: a21de15aeea8b5d46a77a67a7e26f2e2, type: 3}
+    - go: {fileID: 100000, guid: 3018ac24869de1c438fd3e445db63e92, type: 3}
+    isPositionRandomized: 1
+    minMaxOffset: {x: -6.8720894, y: 3.043002}
     positions: []
-    isPositionRandomized: 1
     isRotationRandomized: 1
-    minOffsetX: -9
-    maxOffsetX: 9
-    minOffsetZ: -9
-    maxOffsetZ: 9
     isFixedCount: 0
-    count: 0
-    minRandomCount: 0
-    maxRandomCount: 2
+    count: 1
+    minMaxRandomCount: {x: 0, y: 5}
     isRandomChanceToSpawn: 0
     chance: 0
-  - id: stone_03
+  - objectGroup:
+    - go: {fileID: 100000, guid: 75eb2c140851eee49a9a9a02073a1871, type: 3}
+    - go: {fileID: 100000, guid: f434e2ba20a1b744db363ce30134bf3a, type: 3}
+    isPositionRandomized: 1
+    minMaxOffset: {x: -10, y: 10}
     positions: []
-    isPositionRandomized: 1
     isRotationRandomized: 1
-    minOffsetX: -9
-    maxOffsetX: 9
-    minOffsetZ: -9
-    maxOffsetZ: 9
     isFixedCount: 0
-    count: 0
-    minRandomCount: 0
-    maxRandomCount: 2
-    isRandomChanceToSpawn: 0
-    chance: 0
-  - id: Rock1
+    count: 1
+    minMaxRandomCount: {x: 1, y: 10}
+    isRandomChanceToSpawn: 1
+    chance: 0.1
+  - objectGroup:
+    - go: {fileID: 192738, guid: eafb6c39ba701a541a6473aa217fa9c3, type: 2}
+    isPositionRandomized: 1
+    minMaxOffset: {x: -7.3563676, y: 2.8753185}
     positions: []
-    isPositionRandomized: 1
     isRotationRandomized: 1
-    minOffsetX: -9
-    maxOffsetX: 9
-    minOffsetZ: -9
-    maxOffsetZ: 9
-    isFixedCount: 0
-    count: 0
-    minRandomCount: 0
-    maxRandomCount: 2
-    isRandomChanceToSpawn: 0
-    chance: 0
-  - id: Rock2
-    positions: []
-    isPositionRandomized: 1
-    isRotationRandomized: 1
-    minOffsetX: -9
-    maxOffsetX: 9
-    minOffsetZ: -9
-    maxOffsetZ: 9
-    isFixedCount: 0
-    count: 0
-    minRandomCount: 0
-    maxRandomCount: 2
-    isRandomChanceToSpawn: 0
-    chance: 0
-  - id: Rock3
-    positions: []
-    isPositionRandomized: 1
-    isRotationRandomized: 1
-    minOffsetX: -9
-    maxOffsetX: 9
-    minOffsetZ: -9
-    maxOffsetZ: 9
-    isFixedCount: 0
-    count: 0
-    minRandomCount: 0
-    maxRandomCount: 2
-    isRandomChanceToSpawn: 0
-    chance: 0
-  - id: Rock4
-    positions: []
-    isPositionRandomized: 1
-    isRotationRandomized: 1
-    minOffsetX: -9
-    maxOffsetX: 9
-    minOffsetZ: -9
-    maxOffsetZ: 9
-    isFixedCount: 0
-    count: 0
-    minRandomCount: 0
-    maxRandomCount: 2
-    isRandomChanceToSpawn: 0
-    chance: 0
-  - id: Rock5
-    positions: []
-    isPositionRandomized: 1
-    isRotationRandomized: 1
-    minOffsetX: -9
-    maxOffsetX: 9
-    minOffsetZ: -9
-    maxOffsetZ: 9
-    isFixedCount: 0
-    count: 0
-    minRandomCount: 0
-    maxRandomCount: 2
-    isRandomChanceToSpawn: 0
-    chance: 0
-  - id: Rock6
-    positions: []
-    isPositionRandomized: 1
-    isRotationRandomized: 1
-    minOffsetX: -9
-    maxOffsetX: 9
-    minOffsetZ: -9
-    maxOffsetZ: 9
-    isFixedCount: 0
-    count: 0
-    minRandomCount: 0
-    maxRandomCount: 2
-    isRandomChanceToSpawn: 0
-    chance: 0
-  - id: Rock7
-    positions: []
-    isPositionRandomized: 1
-    isRotationRandomized: 1
-    minOffsetX: -9
-    maxOffsetX: 9
-    minOffsetZ: -9
-    maxOffsetZ: 9
-    isFixedCount: 0
-    count: 0
-    minRandomCount: 0
-    maxRandomCount: 2
-    isRandomChanceToSpawn: 0
-    chance: 0
-  - id: Rock8
-    positions: []
-    isPositionRandomized: 1
-    isRotationRandomized: 1
-    minOffsetX: -9
-    maxOffsetX: 9
-    minOffsetZ: -9
-    maxOffsetZ: 9
-    isFixedCount: 0
-    count: 0
-    minRandomCount: 0
-    maxRandomCount: 2
-    isRandomChanceToSpawn: 0
-    chance: 0
+    isFixedCount: 1
+    count: 1
+    minMaxRandomCount: {x: 0, y: 0}
+    isRandomChanceToSpawn: 1
+    chance: 0.143

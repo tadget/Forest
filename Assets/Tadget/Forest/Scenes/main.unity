@@ -38,13 +38,13 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 50828256}
-  m_IndirectSpecularColor: {r: 0.37311992, g: 0.38074034, b: 0.35872713, a: 1}
+  m_IndirectSpecularColor: {r: 0, g: 0, b: 0, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 11
-  m_GIWorkflowMode: 0
+  m_GIWorkflowMode: 1
   m_GISettings:
     serializedVersion: 2
     m_BounceScale: 1
@@ -245,12 +245,12 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  timeOfDay: 0
+  timeOfDay: 20
   secondsPerMinute: 60
   secondsPerHour: 0
   secondsPerDay: 0
   currectMonth: 1
-  timeMultiplier: 10
+  timeMultiplier: 0
   sunGradient:
     serializedVersion: 2
     key0: {r: 0.04599964, g: 0, b: 0.203, a: 1}
@@ -359,7 +359,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   data: {fileID: 0}
   state: {fileID: 0}
-  settings: {fileID: 11400000, guid: 8268b97b3fce67e4c9934b1662fb8de8, type: 2}
+  settings: {fileID: 11400000, guid: 05b521c209cdd294ca588b80a14f9053, type: 2}
 --- !u!4 &52570292
 Transform:
   m_ObjectHideFlags: 0
