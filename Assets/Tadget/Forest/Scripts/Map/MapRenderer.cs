@@ -54,7 +54,7 @@
             visibleChunks = new Dictionary<Vector3Int, Chunk>();
             cachedChunks = new Dictionary<Vector3Int, Chunk>();
             chunksUnderConstruction = new List<Vector3Int>();
-            chunkFactory = gameObject.AddComponent<ChunkFactory>().Init(mapSettings, tileObjects);
+            chunkFactory = gameObject.AddComponent<ChunkFactory>().Init(mapSettings);
             return this;
         }
 

@@ -17,7 +17,6 @@
         public Animator textAnimator;
         public TextMeshProUGUI title;
         public Color[] lerpColors;
-        public TileObjects tileObjects;
         public MapSettings mapSettings;
 
         private void Start()
@@ -26,8 +25,7 @@
             GameData gameData = load.GetData(false);
             isLoadingTitle = true;
             title.color = lerpColors[0];
-            tileObjects.Init();
-            chunks = gameObject.AddComponent<ChunkFactory>().Init(mapSettings, tileObjects);
+            chunks = gameObject.AddComponent<ChunkFactory>().Init(mapSettings);
             chunks.Get(Vector3Int.zero, gameData.isFirstTimePlaying ? Chunk.ChunkType.HOME : Chunk.ChunkType.BIOME, OnChunkCreated);
         }
 

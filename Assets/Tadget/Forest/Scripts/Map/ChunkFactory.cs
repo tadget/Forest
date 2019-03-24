@@ -9,12 +9,10 @@
     public class ChunkFactory : MonoBehaviour
     {
         private MapSettings mapSettings;
-        //private TileFactory tileFactory;
 
-        public ChunkFactory Init(MapSettings mapSettings, TileObjects tileObjects)
+        public ChunkFactory Init(MapSettings mapSettings)
         {
             this.mapSettings = mapSettings;
-            //tileFactory = new TileFactory(tileObjects);
             return this;
         }
 

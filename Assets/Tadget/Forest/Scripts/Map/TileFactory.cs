@@ -5,13 +5,6 @@
 
     public class TileFactory
     {
-        /*private TileObjects tileObjects;
-
-        public TileFactory(TileObjects tileObjects)
-        {
-            this.tileObjects = tileObjects;
-        }*/
-
         public static GameObject Create(Tile tile, Vector3 origin, Transform parent)
         {
             GameObject tile_go = new GameObject();
