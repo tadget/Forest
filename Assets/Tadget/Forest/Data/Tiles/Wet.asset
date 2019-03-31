@@ -13,7 +13,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   type: 3
   objects:
-  - go: {fileID: 1124564022722800, guid: 525fda9417ad9c241accacb959259913, type: 2}
+  - objectGroup:
+    - go: {fileID: 133636, guid: a92a9e5e8700b254d855ee64ceb751f1, type: 2}
     isPositionRandomized: 0
     minMaxOffset: {x: -10, y: 8.59006}
     positions:

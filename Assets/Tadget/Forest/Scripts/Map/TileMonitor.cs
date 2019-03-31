@@ -19,7 +19,7 @@
         public event TileEvent<TileData> OnTileEnter;
         public event TileEvent<TileData> OnChunkEnter;
 
-        public void Update ()
+        public void FixedUpdate ()
         {
             RaycastDown();
         }

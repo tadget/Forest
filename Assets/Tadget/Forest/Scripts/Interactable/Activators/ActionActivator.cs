@@ -32,7 +32,7 @@
             waiting = false;
         }
 
-        [Button("Activate"), PropertyOrder(100)]
+        [Button("Activate"), PropertyOrder(100), HideInEditorMode]
         protected void Activate()
         {
             if (busy) return;

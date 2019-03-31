@@ -1,5 +1,6 @@
 ﻿namespace Tadget
 {
+    using System;
     using System.Collections;
     using System.Collections.Generic;
     using UnityEngine;
@@ -15,6 +16,7 @@
         public LayerMask buildMask;
         public LayerMask onlyPickable;
         public LayerMask onlyPlaceable;
+        public LayerMask onlyInteractable;
 
         public GameObject itemInHand;
         public GameObject hand;
@@ -52,7 +54,14 @@
 
         private void Update()
         {
-            for (int i = 0; i < Input.touchCount; i++)
+            if (Input.touchCount > 0)
+            {
+                touch = Input.GetTouch(0);
+                TouchItem();
+            }
+
+
+            /*for (int i = 0; i < Input.touchCount; i++)
             {
                 touch = Input.GetTouch(i);
 
@@ -75,6 +84,30 @@
 
                 playerMovement.doMove = lastItemTouchFingerId == -1;
 
+            }*/
+        }
+
+        private float lastInteractableTouchTime;
+        private void TouchItem()
+        {
+            switch (touch.phase)
+            {
+                case TouchPhase.Began:
+                {
+                    if(IsTouchingItem(touch.position, onlyInteractable))
+                        lastInteractableTouchTime = Time.time;
+                    break;
+                }
+                case TouchPhase.Stationary:
+                {
+                    if (Time.time - lastInteractableTouchTime > 1f)
+                        TryUseItem(touch.position, onlyInteractable);
+                    break;
+                }
+                case TouchPhase.Ended:
+                {
+                    break;
+                }
             }
         }
 
@@ -105,7 +138,7 @@
 
                     if (touch.phase == TouchPhase.Ended)
                     {
-                        TryUseItem(touch.position);
+                        TryUseItem(touch.position, onlyPickable + onlyPlaceable);
                         playerMovement.doMove = false;
                     }
                 }
@@ -256,14 +289,13 @@
         }
 
         private RaycastHit tryUseItemHit;
-        private Crafting tempCrafting;
-        private void TryUseItem(Vector3 pressPosition)
+        private InteractionActivator tempActivator;
+        private void TryUseItem(Vector3 pressPosition, LayerMask layerMask)
         {
-            if (Physics.Raycast(mainCam.ScreenPointToRay(pressPosition), out tryUseItemHit, 5, onlyPickable + onlyPlaceable))
+            if (Physics.Raycast(mainCam.ScreenPointToRay(pressPosition), out tryUseItemHit, 5, layerMask))
             {
-                tempCrafting = tryUseItemHit.transform.GetComponent<Crafting>();
-                if(tempCrafting != null)
-                    tempCrafting.Check4Craft();
+                tempActivator = tryUseItemHit.transform.GetComponent<InteractionActivator>();
+                if(tempActivator) tempActivator.SendMessage("Activate");
             }
         }
 

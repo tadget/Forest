@@ -16,7 +16,6 @@
         private List<Chunk> chunksToRecycle;
 
         public MapSettings mapSettings;
-        public TileObjects tileObjects;
         private GameObject savedObjects;
 
         private readonly Vector3Int[] neighborCoords = new Vector3Int[]
@@ -35,7 +34,6 @@
         private void OnValidate()
         {
             Debug.AssertFormat(mapSettings != null, "Missing Map Settings");
-            Debug.AssertFormat(tileObjects != null, "Missing Tile Objects");
             if(mapSettings != null)
             {
                 Debug.AssertFormat(mapSettings.yardTiles != null &&
@@ -49,7 +47,6 @@
 
         public MapRenderer Init(IMapStateProvider mapStateProvider)
         {
-            tileObjects.Init();
             this.mapStateProvider = mapStateProvider;
             visibleChunks = new Dictionary<Vector3Int, Chunk>();
             cachedChunks = new Dictionary<Vector3Int, Chunk>();

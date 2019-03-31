@@ -14,7 +14,7 @@ MonoBehaviour:
   type: 3
   objects:
   - objectGroup:
-    - go: {fileID: 170660, guid: 592d36973335ec54bbf1b1ce35581312, type: 2}
+    - go: {fileID: 1937043056206460, guid: 62b69d3983f1eba4195f9321d9c7089e, type: 2}
     isPositionRandomized: 0
     minMaxOffset: {x: -10, y: 10}
     positions:
@@ -26,18 +26,6 @@ MonoBehaviour:
     isRandomChanceToSpawn: 0
     chance: 0
   - objectGroup:
-    - go: {fileID: 190764, guid: b75d513df2c5cdb408d4a022c98cf202, type: 2}
-    isPositionRandomized: 1
-    minMaxOffset: {x: -8.296357, y: 8.356614}
-    positions: []
-    isRotationRandomized: 1
-    isFixedCount: 0
-    count: 1
-    minMaxRandomCount: {x: 5, y: 20}
-    isRandomChanceToSpawn: 0
-    chance: 0
-  - objectGroup:
-    - go: {fileID: 100000, guid: 87a986172b8f53343bf5925193846245, type: 3}
     - go: {fileID: 100000, guid: 3fc1bcce53374864ab60d4c8a68a44f2, type: 3}
     - go: {fileID: 100000, guid: d693bf1b395c5c34cace2296670430ef, type: 3}
     - go: {fileID: 100000, guid: 1275cdac7bf6e7c4f83bff30ef907413, type: 3}
@@ -68,7 +56,7 @@ MonoBehaviour:
     isRandomChanceToSpawn: 1
     chance: 0.1
   - objectGroup:
-    - go: {fileID: 192738, guid: eafb6c39ba701a541a6473aa217fa9c3, type: 2}
+    - go: {fileID: 1628947616685288, guid: 9f73fd0bbb47d3b4bbe62ab9323526a4, type: 2}
     isPositionRandomized: 1
     minMaxOffset: {x: -7.3563676, y: 2.8753185}
     positions: []
@@ -77,4 +65,4 @@ MonoBehaviour:
     count: 1
     minMaxRandomCount: {x: 0, y: 0}
     isRandomChanceToSpawn: 1
-    chance: 0.143
+    chance: 0.05

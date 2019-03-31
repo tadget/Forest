@@ -1,20 +1,25 @@
-﻿namespace Tadget
+﻿using Sirenix.OdinInspector;
+
+namespace Tadget
 {
     using System;
     using UnityEngine;
 
     public class DestroyComponent : ActionComponent
     {
+        public bool destroySelf;
+        [HideIf("destroySelf")]
         public GameObject objToDestroy;
 
         public override void Use(Action Complete)
         {
+            if (destroySelf) Complete();
             #if UNITY_EDITOR
-            GameObject.DestroyImmediate(objToDestroy);
+            GameObject.DestroyImmediate(destroySelf ? gameObject : objToDestroy);
             #else
-            GameObject.Destroy(objToDestroy);
+            GameObject.Destroy(destroySelf ? gameObject : objToDestroy);
             #endif
-            Complete();
+            if (!destroySelf) Complete();
         }
     }
 }

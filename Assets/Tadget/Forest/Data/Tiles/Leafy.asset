@@ -14,7 +14,7 @@ MonoBehaviour:
   type: 2
   objects:
   - objectGroup:
-    - go: {fileID: 197976, guid: 2aad5742d97fdab4c98d95c48ec80453, type: 2}
+    - go: {fileID: 1643045942777542, guid: 45708fe969aa98741ac28c1961d332fd, type: 2}
     isPositionRandomized: 0
     minMaxOffset: {x: -10, y: 10}
     positions:
@@ -26,16 +26,17 @@ MonoBehaviour:
     isRandomChanceToSpawn: 0
     chance: 0
   - objectGroup:
-    - go: {fileID: 159194, guid: e0892e1ea1bfc4341b9ebc259a36a0c6, type: 2}
-    - go: {fileID: 142528, guid: 6affd7a4d2817d34c86de238de109f8f, type: 2}
-    - go: {fileID: 132534, guid: 35d4951e636d2ad429be57c270484724, type: 2}
-    - go: {fileID: 171372, guid: 94c8ba7c244e81d49a22239ae0d9252b, type: 2}
-    - go: {fileID: 100000, guid: d013c59f8370fb04887e197bee6f990b, type: 3}
-    - go: {fileID: 100000, guid: 870922926f491034ebe583c35c85c291, type: 3}
-    - go: {fileID: 100000, guid: 906dc2c7bb4a47f4f9e324b884777d16, type: 3}
-    - go: {fileID: 100000, guid: ab0c87eac21971e428f02fc170578634, type: 3}
-    - go: {fileID: 100000, guid: d36e0ae298acd9c4992e25f90c9be70b, type: 3}
-    - go: {fileID: 100000, guid: cb65d46200540b9458fb48a5a1077f7e, type: 3}
+    - go: {fileID: 1793764738503704, guid: 77800b7bee3eaf344b29ea16d405e003, type: 2}
+    - go: {fileID: 1968942535749200, guid: 7c604ed19c00c6e40ba17919076d87b8, type: 2}
+    - go: {fileID: 1763972958183234, guid: f7c2193959d99b2499e080da0a4efd5c, type: 2}
+    - go: {fileID: 1113295234536664, guid: 082685cf0984a1948b0a7a5033bbee96, type: 2}
+    - go: {fileID: 1472056499231510, guid: 420cf28692ad1f34399b8cd82009b5a7, type: 2}
+    - go: {fileID: 1652855288259678, guid: e983fc34cc9dbbb40bb45d37666703fa, type: 2}
+    - go: {fileID: 1936407103710302, guid: 8f424a2e25360b441a4d4ea369690228, type: 2}
+    - go: {fileID: 1257665528075852, guid: e682ce9c2817bce408ba8905ad0fff68, type: 2}
+    - go: {fileID: 1514960287715710, guid: c8ce9f69d177cca4e89822a5bf09297a, type: 2}
+    - go: {fileID: 1483665671081706, guid: 2c51d5e59ca72794295b7061b80eb6d3, type: 2}
+    - go: {fileID: 1825755067800710, guid: b202e811b7d298f49baba80887a9045d, type: 2}
     isPositionRandomized: 1
     minMaxOffset: {x: -10, y: 10}
     positions: []
@@ -45,3 +46,36 @@ MonoBehaviour:
     minMaxRandomCount: {x: 5, y: 18}
     isRandomChanceToSpawn: 0
     chance: 0
+  - objectGroup:
+    - go: {fileID: 1316376689676186, guid: 492f94ccf6b96ef4ca5fa3e9915e5481, type: 2}
+    - go: {fileID: 1708657271266542, guid: 596521dc0c2a7d945bc558eb2e79ab63, type: 2}
+    - go: {fileID: 1288312917254766, guid: 8ed09f310d7ff084aa18a364b3e1ac16, type: 2}
+    isPositionRandomized: 1
+    minMaxOffset: {x: -6.857143, y: 7.619047}
+    positions: []
+    isRotationRandomized: 1
+    isFixedCount: 0
+    count: 1
+    minMaxRandomCount: {x: 1, y: 3}
+    isRandomChanceToSpawn: 1
+    chance: 0.1
+  - objectGroup:
+    - go: {fileID: 1343252488111002, guid: 9328947ac47d6014f82881d959446c07, type: 2}
+    - go: {fileID: 1338240098408732, guid: 73e5b69a92c46904fa736abc045bad09, type: 2}
+    - go: {fileID: 1174057119590202, guid: aa55ba500e3875443a231b83b3e79462, type: 2}
+    - go: {fileID: 1240929139925534, guid: 9176dd013b7249a4a8822dc85ea4e492, type: 2}
+    - go: {fileID: 1137247699313072, guid: 7d8cfdc1f580cd1478a8b072599ee73a, type: 2}
+    - go: {fileID: 1798595994040734, guid: a3a8a6bb51cb39f4cacee1570c3218eb, type: 2}
+    - go: {fileID: 1749088273136124, guid: 9120c206a05713d40b49f93f38cec92f, type: 2}
+    - go: {fileID: 1891143682957348, guid: 65ed880f8ef062a4391811c8e7da0b31, type: 2}
+    - go: {fileID: 1775862434343168, guid: 936ec59a4791a4340ba69f33d44c31c2, type: 2}
+    - go: {fileID: 1987240639137632, guid: 30cfff39642b7ca48a0f89663b154214, type: 2}
+    isPositionRandomized: 1
+    minMaxOffset: {x: -2.8571427, y: 1.2380958}
+    positions: []
+    isRotationRandomized: 1
+    isFixedCount: 1
+    count: 1
+    minMaxRandomCount: {x: 0, y: 0}
+    isRandomChanceToSpawn: 1
+    chance: 0.01

@@ -9,18 +9,19 @@
         private AudioSource source;
         public AudioClip clip;
         [Range(0, 1f)]
-        public float volume;
+        public float volume = 1f;
 
         public override void Use(Action Complete)
         {
             if (source == null)
-                source = source.gameObject.AddComponent<AudioSource>();
+                source = gameObject.AddComponent<AudioSource>();
+            source.playOnAwake = false;
             source.clip = clip;
             source.volume = volume;
-            StartCoroutine(PlaySoundAndDestroy(Complete));
+            StartCoroutine(PlaySound(Complete));
         }
 
-        private IEnumerator PlaySoundAndDestroy(Action Complete)
+        private IEnumerator PlaySound(Action Complete)
         {
             source.Play();
             yield return new WaitWhile(() => source.isPlaying);

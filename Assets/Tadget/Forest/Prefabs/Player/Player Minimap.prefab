@@ -20,7 +20,6 @@ GameObject:
   m_Component:
   - component: {fileID: 4795096683490626}
   - component: {fileID: 54709663492570556}
-  - component: {fileID: 114154698163045786}
   - component: {fileID: 114107111878333650}
   m_Layer: 2
   m_Name: Player Minimap
@@ -106,6 +105,7 @@ GameObject:
   - component: {fileID: 20561887272351738}
   - component: {fileID: 81342615001383314}
   - component: {fileID: 114394672818354816}
+  - component: {fileID: 114551932160305658}
   m_Layer: 0
   m_Name: Camera
   m_TagString: MainCamera
@@ -224,7 +224,7 @@ Camera:
   m_Depth: 0
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 4294967295
+    m_Bits: 7959
   m_RenderingPath: 3
   m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0
@@ -377,31 +377,6 @@ MonoBehaviour:
   moveControlBoundsY: 1
   screenRes: {x: 0, y: 0}
   doMove: 1
---- !u!114 &114154698163045786
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1091742162435720}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 43cd0ec58080d044a9fd03d2b5d40b97, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  noFric: {fileID: 13400000, guid: e0c5fa6da5adabf4da29ea7f4c7c8404, type: 2}
-  buildMat: {fileID: 2100000, guid: 3b209aaf8110c534982a91ba5565e650, type: 2}
-  buildSnapMat: {fileID: 2100000, guid: 63200f27201fad04c9e11ebfdf5ea4ff, type: 2}
-  buildMask:
-    serializedVersion: 2
-    m_Bits: 1847
-  onlyPickable:
-    serializedVersion: 2
-    m_Bits: 1024
-  onlyPlaceable:
-    serializedVersion: 2
-    m_Bits: 0
-  itemInHand: {fileID: 0}
-  hand: {fileID: 1166591399320896}
 --- !u!114 &114394672818354816
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -414,6 +389,21 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   profile: {fileID: 11400000, guid: aa38ad278fca41243948b8549474d0b7, type: 2}
+--- !u!114 &114551932160305658
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1751126226597810}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -768656878, guid: f70555f144d8491a825f0804e09c671c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_EventMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_MaxRayIntersections: 0
 --- !u!114 &114557556973877916
 MonoBehaviour:
   m_ObjectHideFlags: 1

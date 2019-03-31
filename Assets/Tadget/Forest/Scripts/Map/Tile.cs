@@ -43,10 +43,12 @@ namespace Tadget.Map
             [Required("A GameObject must be selected")]
             public GameObject go;
 
+            #if UNITY_EDITOR
             private bool AssetFilter(GameObject _go)
             {
                 return AssetDatabase.GetAssetPath(_go).Contains(".prefab");
             }
+            #endif
 
             #pragma warning disable 0414
             private string name;
@@ -139,6 +141,7 @@ namespace Tadget.Map
         }
 
         public List<Object> objects;
+        #if UNITY_EDITOR
         private GameObject previewTile;
 
         [Button(ButtonSizes.Large)] [PropertyOrder(0)]
@@ -168,6 +171,7 @@ namespace Tadget.Map
             if(previewTile)
                 DestroyImmediate(previewTile);
         }
+        #endif
 
     }
 }

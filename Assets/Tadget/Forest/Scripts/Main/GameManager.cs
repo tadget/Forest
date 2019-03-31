@@ -1,21 +1,19 @@
-﻿using UnityEngine.SceneManagement;
-
-namespace Tadget.Main
+﻿namespace Tadget.Main
 {
     using System;
     using UnityEngine;
     using UnityEngine.UI;
     using System.Collections;
     using System.Collections.Generic;
+    using UnityEngine.SceneManagement;
     using Tadget.Map;
 
     [RequireComponent (typeof(UIManager), typeof(MapRenderer), typeof(LoadingManager))]
-    [RequireComponent((typeof(AudioManager)))]
+    [RequireComponent(typeof(AudioManager))]
     public class GameManager : MonoBehaviour, IMapStateProvider
     {
         /// Map
         private MapRenderer map;
-        private GameObject homeIndicator;
 
         /// Player
         private GameObject playerInstance;
@@ -32,10 +30,8 @@ namespace Tadget.Main
 
         /// Data
         private LoadingManager load;
-        [SerializeField]
         private GameData data;
-        [SerializeField]
-        public GameState state;
+        private GameState state;
 
         [Header("Settings")]
         public GameSettings settings;
@@ -61,23 +57,12 @@ namespace Tadget.Main
             StartCoroutine(mapLoadCoroutine);
             yield return new WaitUntil(() => state.mapLoaded);
             PlacePlayer();
-            if (SceneManager.GetSceneByName("loading").isLoaded)
-            {
-                playerInstance.SetActive(false);
-                yield return SceneManager.UnloadSceneAsync("loading");
-                playerInstance.SetActive(true);
-            }
+            ui.ToggleUICamera(false);
             state.SetPlayerInstantiated(true);
             LinkPlayerData();
             LinkDayCycleEvents();
             LinkGameStateEvents();
             sound.PlayMainTheme();
-
-            // DEBUG TEMPORARY
-            homeIndicator = GameObject.CreatePrimitive(PrimitiveType.Cube);
-            homeIndicator.name = "Home Indicator";
-            homeIndicator.transform.localScale *= 10f;
-            //
         }
 
         private void OnApplicationQuit()
@@ -123,9 +108,6 @@ namespace Tadget.Main
 
         private void PlacePlayer()
         {
-            var uiCam = GameObject.Find("UI Camera");
-            if(uiCam)
-                uiCam.SetActive(false);
             if(playerInstance == null)
                 playerInstance = Instantiate(settings.playerPrefab);
             playerInstance.transform.position = settings.playerSpawnPosition;
@@ -157,9 +139,6 @@ namespace Tadget.Main
                     state.SetHomeAvailable(true);
                     state.SetWasHomeReachedSinceAvailable(false);
                     ChooseNewHomeCoord();
-                    homeIndicator.transform.position = new Vector3(state.homeCoord.x, 0, state.homeCoord.z) *
-                                                       map.mapSettings.tileOffsetX * map.mapSettings.chunkTileCount_x +
-                                                       new Vector3(0.5f, 0, 0.5f) * map.mapSettings.tileOffsetX * map.mapSettings.chunkTileCount_x;
                     Debug.Log(p);
                 });
 

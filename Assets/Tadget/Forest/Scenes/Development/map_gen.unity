@@ -213,9 +213,9 @@ GameObject:
   - component: {fileID: 290345805}
   - component: {fileID: 290345803}
   - component: {fileID: 290345799}
-  - component: {fileID: 290345807}
   - component: {fileID: 290345806}
   - component: {fileID: 290345801}
+  - component: {fileID: 290345807}
   m_Layer: 0
   m_Name: Game Manager
   m_TagString: Untagged
@@ -247,7 +247,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mapSettings: {fileID: 11400000, guid: 08873d48f3894814e97b108260517b24, type: 2}
-  tileObjects: {fileID: 11400000, guid: acb21a09f08d09d4a8ecfc920de3ca9f, type: 2}
 --- !u!114 &290345801
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -626,6 +625,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   sun: {fileID: 0}
   sunLight: {fileID: 0}
+  curve:
+    serializedVersion: 2
+    m_Curve: []
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
   timeOfDay: 0
   secondsPerMinute: 60
   secondsPerHour: 0
